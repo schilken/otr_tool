@@ -73,12 +73,18 @@ class ListTilePullDownMenu extends StatelessWidget {
       icon: CupertinoIcons.ellipsis_circle,
       items: [
         MacosPulldownMenuItem(
-          title: const Text('hide all with same extension'),
-          onTap: () => debugPrint("hide all with same extension"),
+          title: const Text('decode otrfile'),
+          onTap: () => debugPrint("decode otrfile"),
         ),
-        const MacosPulldownMenuDivider(),
         MacosPulldownMenuItem(
-          title: const Text('show only files of this folder'),
+          title: const Text('fetch cutlist'),
+          onTap: () => context.read<AppCubit>().menuAction(
+                SearchResultAction.showOnlyFilesInsameFolder,
+                'a parameter',
+              ),
+        ),
+        MacosPulldownMenuItem(
+          title: const Text('cut video'),
           onTap: () => context.read<AppCubit>().menuAction(
                 SearchResultAction.showOnlyFilesInsameFolder,
                 'a parameter',
