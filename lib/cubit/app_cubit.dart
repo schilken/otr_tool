@@ -3,11 +3,16 @@ import 'dart:io';
 import 'package:bloc/bloc.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:flutter/services.dart';
 import 'package:meta/meta.dart';
 import 'package:otr_browser/cubit/settings_cubit.dart';
 import 'package:otr_browser/files_repository.dart';
 
 part 'app_state.dart';
+
+enum SearchResultAction {
+  showOnlyFilesInsameFolder,
+}
 
 class AppCubit extends Cubit<AppState> {
   AppCubit(
@@ -86,6 +91,7 @@ class AppCubit extends Cubit<AppState> {
         primaryResult.add(Detail(
           title: shortPath.split('/assets').last,
           projectName: shortPath.split('/assets').first,
+        filePathName: shortPath,
         ));
     }
     emit(
@@ -133,6 +139,19 @@ class AppCubit extends Cubit<AppState> {
   
   void openEditor(String? filePathName) {
     Process.run('code', [filePathName!]);
+  }
+
+  showInFinder(String filePath) {
+    Process.run('open', ['-R', filePath]);
+  }
+
+  menuAction(SearchResultAction menuAction, String? folderPath) {
+//    _onlyInThisFolder = folderPath;
+    search();
+  }
+
+  copyToClipboard(String path) {
+    Clipboard.setData(ClipboardData(text: path));
   }
 
 }

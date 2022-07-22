@@ -57,26 +57,7 @@ class MainPage extends StatelessWidget {
                                   state.secondaryWord ?? '@',
                                 ];
 
-                                final detail = state.details[index];
-                                if (state.displayLineCount == 1) {
-                                  return Padding(
-                                    padding: const EdgeInsets.only(
-                                        left: 8.0, right: 8),
-                                    child: Row(children: [
-                                      HighlightedText(
-                                        text:
-                                            detail.previewText ?? 'no preview',
-                                        highlights: highlights,
-                                      ),
-                                      SizedBox(width: 12),
-                                      Spacer(),
-                                      NameWithOpenInEditor(
-                                        name: detail.title ?? 'no name',
-                                        path: detail.filePathName,
-                                      ),
-                                    ]),
-                                  );
-                                }
+                              final detail = state.details[index];
                                 return DetailTile(
                                   detail: detail,
                                   highlights: highlights,
