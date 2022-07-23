@@ -60,7 +60,8 @@ class App extends StatelessWidget {
                 ),
                 BlocProvider(
                   create: (context) => AppCubit(context.read<SettingsCubit>(),
-                      context.read<FilesRepository>()),
+                    context.read<FilesRepository>(),
+                  )..init(),
                 ),
               ],
               child: MacosApp(
@@ -85,8 +86,6 @@ class MainView extends StatefulWidget {
 }
 
 class _MainViewState extends State<MainView> {
-  int _pageIndex = 0;
-
   @override
   Widget build(BuildContext context) {
     return PlatformMenuBar(
@@ -136,43 +135,48 @@ class _MainViewState extends State<MainView> {
           ],
         ),
       ],
-      body: MacosWindow(
-        sidebar: Sidebar(
-          minWidth: 200,
-          top: FilterSettings(),
-          builder: (context, scrollController) => SidebarItems(
-            currentIndex: _pageIndex,
-            onChanged: (index) {
-              setState(() => _pageIndex = index);
-            },
-            items: [
-              const SidebarItem(
-                leading: MacosIcon(CupertinoIcons.search),
-                label: Text('OTR Keys'),
+      body: BlocBuilder<AppCubit, AppState>(
+        builder: (context, state) {
+          if (state is DetailsLoaded) {
+            return MacosWindow(
+              sidebar: Sidebar(
+                minWidth: 200,
+                top: FilterSettings(),
+                builder: (context, scrollController) => SidebarItems(
+                  currentIndex: state.sidebarPageIndex,
+                  onChanged: (index) =>
+                      context.read<AppCubit>().sidebarChanged(index),
+                  items: [
+                    const SidebarItem(
+                      leading: MacosIcon(CupertinoIcons.search),
+                      label: Text('OTR Keys'),
+                    ),
+                    const SidebarItem(
+                      leading: MacosIcon(CupertinoIcons.graph_square),
+                      label: Text('Cutlists'),
+                    ),
+                  ],
+                ),
+                bottom: const MacosListTile(
+                  leading: MacosIcon(CupertinoIcons.profile_circled),
+                  title: Text('Alfred Schilken'),
+                  subtitle: Text('alfred@schilken.de'),
+                ),
               ),
-              const SidebarItem(
-                leading: MacosIcon(CupertinoIcons.graph_square),
-                label: Text('Cutlists'),
-              ),
-            ],
-          ),
-          bottom: const MacosListTile(
-            leading: MacosIcon(CupertinoIcons.profile_circled),
-            title: Text('Alfred Schilken'),
-            subtitle: Text('alfred@schilken.de'),
-          ),
-        ),
-        child: BlocBuilder<AppCubit, AppState>(
-          builder: (context, state) {
-            return IndexedStack(
-              index: _pageIndex,
+              child: IndexedStack(
+                index: state.sidebarPageIndex,
               children: const [
                 MainPage(),
                 CutlistPage(),
               ],
+              ),
             );
-          },
-        ),
+          } else {
+            return Center(
+              child: CircularProgressIndicator(),
+            );
+          }
+        },
       ),
     );
   }

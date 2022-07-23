@@ -34,7 +34,7 @@ class MainPage extends StatelessWidget {
                                 if (state.fileType == null)
                                   const Text('Paths from File: ')
                                 else
-                                  Text('${state.fileType} Files in Folder: '),
+                                Text('${state.fileType} in Folder: '),
                                 Text(state.currentPathname),
                                 const Spacer(),
                                 Text(

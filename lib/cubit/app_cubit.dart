@@ -1,6 +1,7 @@
 import 'dart:io';
 
 import 'package:bloc/bloc.dart';
+import 'package:equatable/equatable.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/services.dart';
@@ -54,6 +55,14 @@ class AppCubit extends Cubit<AppState> {
     }
   }
 
+  init() async {
+    print('AppCubit.init');
+    await scanFolder(
+        type: 'otrkey',
+        folderPath: '/Users/aschilken/flutterdev/my_projects/otr_browser');
+    search();
+  }
+
   Future<void> search() async {
     emit(DetailsLoading());
     print('search: $_primaryWord');
@@ -65,7 +74,8 @@ class AppCubit extends Cubit<AppState> {
             fileCount: _fileCount,
             primaryHitCount: _primaryHitCount,
             details: [],
-            message: 'No filelist loaded'),
+            message: 'No filelist loaded',
+            sidebarPageIndex: 0),
       );
       return;
     }
@@ -94,6 +104,7 @@ class AppCubit extends Cubit<AppState> {
         primaryHitCount: _primaryHitCount,
         details: primaryResult,
         primaryWord: _primaryWord,
+        sidebarPageIndex: 0,
       ),
     );
   }
@@ -151,6 +162,8 @@ class AppCubit extends Cubit<AppState> {
 
   fetchCutlists(String searchString) {
     print('fetchCutlists: $searchString');
+    final currentState = state as DetailsLoaded;
+    emit(currentState.copyWith(sidebarPageIndex: 1));
   }
 
   cutVideo(String filePath) {
@@ -159,6 +172,11 @@ class AppCubit extends Cubit<AppState> {
 
   copyToClipboard(String path) {
     Clipboard.setData(ClipboardData(text: path));
+  }
+
+  sidebarChanged(int index) {
+    final currentState = state as DetailsLoaded;
+    emit(currentState.copyWith(sidebarPageIndex: index));
   }
 
 }

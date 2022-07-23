@@ -2,14 +2,17 @@
 part of 'app_cubit.dart';
 
 @immutable
-abstract class AppState {
+abstract class AppState extends Equatable {
   final String? primaryWord;
   AppState({
     this.primaryWord,
   });
 }
 
-class AppInitial extends AppState {}
+class AppInitial extends AppState {
+  @override
+  List<Object?> get props => [];
+}
 
 class Detail {
   final String? title;
@@ -43,7 +46,9 @@ class Detail {
   }
 }
 
-class DetailsLoading extends AppState {}
+class DetailsLoading extends AppState {
+  List<Object?> get props => [];
+}
 
 class DetailsLoaded extends AppState {
   final String? fileType;
@@ -52,6 +57,7 @@ class DetailsLoaded extends AppState {
   final int fileCount;
   final int primaryHitCount;
   final String? message;
+  final int sidebarPageIndex;
 
   DetailsLoaded({
     this.fileType,
@@ -59,9 +65,9 @@ class DetailsLoaded extends AppState {
     required this.currentPathname,
     required this.fileCount,
     required this.primaryHitCount,
+    required this.sidebarPageIndex,
     this.message,
     String? primaryWord,
-    String? secondaryWord,
   }) : super(
           primaryWord: primaryWord,
         );
@@ -72,9 +78,8 @@ class DetailsLoaded extends AppState {
     String? currentPathname,
     int? fileCount,
     int? primaryHitCount,
-    int? secondaryHitCount,
     String? message,
-    int? displayLineCount,
+    int? sidebarPageIndex,
   }) {
     return DetailsLoaded(
       fileType: fileType ?? this.fileType,
@@ -83,6 +88,16 @@ class DetailsLoaded extends AppState {
       fileCount: fileCount ?? this.fileCount,
       primaryHitCount: primaryHitCount ?? this.primaryHitCount,
       message: message ?? this.message,
+      sidebarPageIndex: sidebarPageIndex ?? this.sidebarPageIndex,
     );
   }
+  List<Object?> get props => [
+        details,
+        currentPathname,
+        fileCount,
+        primaryHitCount,
+        message,
+        sidebarPageIndex,
+      ];
+
 }
