@@ -15,40 +15,32 @@ class AppInitial extends AppState {}
 
 class Detail {
   final String? title;
-  final String? projectName;
+  final String otrKey;
   final String? previewText;
   final String? imageUrl;
-  final int? lineNumber;
-  final String? filePathName;
-  final String? projectPathName;
+  final String filePathName;
 
   Detail({
     this.title,
-    this.projectName,
+    required this.otrKey,
+    required this.filePathName,
     this.previewText,
     this.imageUrl,
-    this.lineNumber,
-    this.filePathName,
-    this.projectPathName,
   });
 
   Detail copyWith({
     String? title,
-    String? projectName,
+    String? otrKey,
     String? previewText,
     String? imageUrl,
-    int? lineNumber,
     String? filePathName,
-    String? projectPathName,
   }) {
     return Detail(
       title: title ?? this.title,
-      projectName: projectName ?? this.projectName,
+      otrKey: otrKey ?? this.otrKey,
       previewText: previewText ?? this.previewText,
       imageUrl: imageUrl ?? this.imageUrl,
-      lineNumber: lineNumber ?? this.lineNumber,
       filePathName: filePathName ?? this.filePathName,
-      projectPathName: projectPathName ?? this.projectPathName,
     );
   }
 }

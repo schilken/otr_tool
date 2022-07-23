@@ -11,7 +11,9 @@ import 'package:otr_browser/files_repository.dart';
 part 'app_state.dart';
 
 enum SearchResultAction {
-  showOnlyFilesInsameFolder,
+  fetchCutlistForOtrKey,
+  fetchCutlistMinimalName,
+  cutVideo,
 }
 
 class AppCubit extends Cubit<AppState> {
@@ -90,7 +92,7 @@ class AppCubit extends Cubit<AppState> {
         }
         primaryResult.add(Detail(
           title: shortPath.split('/assets').last,
-          projectName: shortPath.split('/assets').first,
+        otrKey: shortPath.split('/assets').first,
         filePathName: shortPath,
         ));
     }
@@ -145,9 +147,27 @@ class AppCubit extends Cubit<AppState> {
     Process.run('open', ['-R', filePath]);
   }
 
-  menuAction(SearchResultAction menuAction, String? folderPath) {
-//    _onlyInThisFolder = folderPath;
-    search();
+  menuAction(SearchResultAction menuAction, String parameter) {
+    switch (menuAction) {
+      case SearchResultAction.fetchCutlistForOtrKey:
+        fetchCutlists(parameter);
+        break;
+      case SearchResultAction.fetchCutlistMinimalName:
+        final minimalName = parameter.split('_TVOON').first;
+        fetchCutlists(minimalName);
+        break;
+      case SearchResultAction.cutVideo:
+        cutVideo(parameter);
+        break;
+    }
+  }
+
+  fetchCutlists(String searchString) {
+    print('fetchCutlists: $searchString');
+  }
+
+  cutVideo(String filePath) {
+    print('cutVideo: $filePath');
   }
 
   copyToClipboard(String path) {

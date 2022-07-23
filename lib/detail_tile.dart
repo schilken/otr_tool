@@ -41,7 +41,7 @@ class DetailTile extends StatelessWidget {
               ListTilePullDownMenu(detail: detail),
               const SizedBox(width: 12),
               HighlightedText(
-                text: detail.projectName ?? 'no filename',
+                text: detail.otrKey,
                 style: const TextStyle(
                   color: Colors.blueGrey,
                 ),
@@ -77,37 +77,40 @@ class ListTilePullDownMenu extends StatelessWidget {
           onTap: () => debugPrint("decode otrfile"),
         ),
         MacosPulldownMenuItem(
-          title: const Text('fetch cutlist'),
+          title: const Text('fetch cutlist for full otrkey name'),
           onTap: () => context.read<AppCubit>().menuAction(
-                SearchResultAction.showOnlyFilesInsameFolder,
-                'a parameter',
+                SearchResultAction.fetchCutlistForOtrKey,
+                detail.otrKey,
+              ),
+        ),
+        MacosPulldownMenuItem(
+          title: const Text('fetch cutlist for name, datetime and channel'),
+          onTap: () => context.read<AppCubit>().menuAction(
+                SearchResultAction.fetchCutlistMinimalName,
+                detail.otrKey,
               ),
         ),
         MacosPulldownMenuItem(
           title: const Text('cut video'),
           onTap: () => context.read<AppCubit>().menuAction(
-                SearchResultAction.showOnlyFilesInsameFolder,
-                'a parameter',
+                SearchResultAction.cutVideo,
+                detail.filePathName,
               ),
         ),
         const MacosPulldownMenuDivider(),
         MacosPulldownMenuItem(
           title: const Text('Show File in Finder'),
-          onTap: () => detail.filePathName == null
-              ? null
-              : context.read<AppCubit>().showInFinder(detail.filePathName!),
+          onTap: () =>
+              context.read<AppCubit>().showInFinder(detail.filePathName),
         ),
         MacosPulldownMenuItem(
           title: const Text('Copy FilePath to Clipboard'),
-          onTap: () => detail.filePathName == null
-              ? null
-              : context.read<AppCubit>().copyToClipboard(detail.filePathName!),
+          onTap: () =>
+              context.read<AppCubit>().copyToClipboard(detail.filePathName),
         ),
         MacosPulldownMenuItem(
           title: const Text('Open File in VScode'),
-          onTap: () => detail.filePathName == null
-              ? null
-              : context.read<AppCubit>().openEditor(detail.filePathName!),
+          onTap: () => context.read<AppCubit>().openEditor(detail.filePathName),
         ),
       ],
     );
