@@ -13,7 +13,7 @@ import 'package:otr_browser/files_repository.dart';
 import 'package:otr_browser/filter_settings.dart';
 import 'package:otr_browser/main_page.dart';
 import 'package:otr_browser/settings_window.dart';
-import 'package:otr_browser/statistics_page.dart';
+import 'package:otr_browser/cutlist_page.dart';
 
 void main(List<String> args) {
   print('main: $args');
@@ -148,11 +148,11 @@ class _MainViewState extends State<MainView> {
             items: [
               const SidebarItem(
                 leading: MacosIcon(CupertinoIcons.search),
-                label: Text('Search Result'),
+                label: Text('OTR Keys'),
               ),
               const SidebarItem(
                 leading: MacosIcon(CupertinoIcons.graph_square),
-                label: Text('Package Statistics'),
+                label: Text('Cutlists'),
               ),
             ],
           ),
@@ -162,12 +162,16 @@ class _MainViewState extends State<MainView> {
             subtitle: Text('alfred@schilken.de'),
           ),
         ),
-        child: IndexedStack(
-          index: _pageIndex,
-          children: const [
-            MainPage(),
-            StatisticsPage(),
-          ],
+        child: BlocBuilder<AppCubit, AppState>(
+          builder: (context, state) {
+            return IndexedStack(
+              index: _pageIndex,
+              children: const [
+                MainPage(),
+                CutlistPage(),
+              ],
+            );
+          },
         ),
       ),
     );

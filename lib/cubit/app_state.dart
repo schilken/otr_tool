@@ -4,10 +4,8 @@ part of 'app_cubit.dart';
 @immutable
 abstract class AppState {
   final String? primaryWord;
-  final String? secondaryWord;
   AppState({
     this.primaryWord,
-    this.secondaryWord,
   });
 }
 
@@ -53,9 +51,7 @@ class DetailsLoaded extends AppState {
   final String currentPathname;
   final int fileCount;
   final int primaryHitCount;
-  final int secondaryHitCount;
   final String? message;
-  final int? displayLineCount;
 
   DetailsLoaded({
     this.fileType,
@@ -63,12 +59,12 @@ class DetailsLoaded extends AppState {
     required this.currentPathname,
     required this.fileCount,
     required this.primaryHitCount,
-    required this.secondaryHitCount,
     this.message,
     String? primaryWord,
     String? secondaryWord,
-    this.displayLineCount,
-  }) : super(primaryWord: primaryWord, secondaryWord: secondaryWord);
+  }) : super(
+          primaryWord: primaryWord,
+        );
 
   DetailsLoaded copyWith({
     String? fileType,
@@ -86,9 +82,7 @@ class DetailsLoaded extends AppState {
       currentPathname: currentPathname ?? this.currentPathname,
       fileCount: fileCount ?? this.fileCount,
       primaryHitCount: primaryHitCount ?? this.primaryHitCount,
-      secondaryHitCount: secondaryHitCount ?? this.secondaryHitCount,
       message: message ?? this.message,
-      displayLineCount: displayLineCount ?? this.displayLineCount,
     );
   }
 }

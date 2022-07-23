@@ -38,7 +38,7 @@ class MainPage extends StatelessWidget {
                                 Text(state.currentPathname),
                                 const Spacer(),
                                 Text(
-                                    '${state.fileCount}|${state.primaryHitCount}|${state.secondaryHitCount}'),
+                                  '${state.fileCount}|${state.primaryHitCount}'),
                               ],
                             ),
                           ),
@@ -53,16 +53,13 @@ class MainPage extends StatelessWidget {
                               itemCount: state.details.length,
                               itemBuilder: (context, index) {
                                 final highlights = [
-                                  state.primaryWord ?? '@',
-                                  state.secondaryWord ?? '@',
+                                state.primaryWord ?? '@',
                                 ];
 
                               final detail = state.details[index];
                                 return DetailTile(
                                   detail: detail,
-                                  highlights: highlights,
-                                  displayLinesCount:
-                                      state.displayLineCount ?? 1,
+                                highlights: highlights,
                                   fileType: state.fileType,
                                 );
                               },
@@ -159,15 +156,6 @@ ToolBar getCustomToolBar(BuildContext context) {
             context.read<AppCubit>().setPrimarySearchWord(word),
         onSubmitted: (word) {
           context.read<AppCubit>().setPrimarySearchWord(word);
-          context.read<AppCubit>().search();
-        },
-      ),
-      ToolbarSearchfield(
-        placeholder: 'Secondary word',
-        onChanged: (word) =>
-            context.read<AppCubit>().setSecondarySearchWord(word),
-        onSubmitted: (word) {
-          context.read<AppCubit>().setSecondarySearchWord(word);
           context.read<AppCubit>().search();
         },
       ),

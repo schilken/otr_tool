@@ -7,8 +7,8 @@ import 'package:otr_browser/cubit/statistics_cubit.dart';
 import 'package:otr_browser/files_repository.dart';
 import 'package:otr_browser/main_page.dart';
 
-class StatisticsPage extends StatelessWidget {
-  const StatisticsPage({super.key});
+class CutlistPage extends StatelessWidget {
+  const CutlistPage({super.key});
 
   @override
   Widget build(BuildContext context) {

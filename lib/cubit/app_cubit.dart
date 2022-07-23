@@ -35,10 +35,9 @@ class AppCubit extends Cubit<AppState> {
   }
   final FilesRepository filesRepository; 
   String? _primaryWord;
-  String? _secondaryWord;
   String _currentPathname = "no file selected";
-  String? _fileType;
   int _fileCount = 0;
+  String? _fileType;
   int _primaryHitCount = 0;
   String? _folderPath;
   final SettingsCubit _settingsCubit;
@@ -55,17 +54,9 @@ class AppCubit extends Cubit<AppState> {
     }
   }
 
-  void setSecondarySearchWord(String? word) {
-    print('setSecondarySearchWord: $word');
-    _secondaryWord = word;
-    if (_secondaryWord != null && (_secondaryWord ?? '').isEmpty) {
-      _secondaryWord = null;
-    }
-  }
-
   Future<void> search() async {
     emit(DetailsLoading());
-    print('search: $_primaryWord $_secondaryWord');
+    print('search: $_primaryWord');
     if (_currentPathname == "no filelist selected") {
       emit(
         DetailsLoaded(
@@ -73,7 +64,6 @@ class AppCubit extends Cubit<AppState> {
             fileType: _fileType,
             fileCount: _fileCount,
             primaryHitCount: _primaryHitCount,
-            secondaryHitCount: 0,
             details: [],
             message: 'No filelist loaded'),
       );
@@ -102,11 +92,8 @@ class AppCubit extends Cubit<AppState> {
         fileType: _fileType,
         fileCount: _fileCount,
         primaryHitCount: _primaryHitCount,
-        secondaryHitCount: 0,
         details: primaryResult,
         primaryWord: _primaryWord,
-        secondaryWord: _secondaryWord,
-        displayLineCount: 0,
       ),
     );
   }

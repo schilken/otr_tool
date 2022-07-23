@@ -14,12 +14,10 @@ class DetailTile extends StatelessWidget {
     Key? key,
     required this.detail,
     required this.highlights,
-    required this.displayLinesCount,
     this.fileType,
   }) : super(key: key);
   final Detail detail;
   final List<String> highlights;
-  final int displayLinesCount;
   final String? fileType;
 
   @override
