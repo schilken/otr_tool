@@ -59,7 +59,7 @@ class AppCubit extends Cubit<AppState> {
     print('AppCubit.init');
     await scanFolder(
         type: 'otrkey',
-        folderPath: '/Users/aschilken/flutterdev/my_projects/otr_browser');
+        folderPath: _settingsCubit.otrkeyFolder);
     search();
   }
 
@@ -112,6 +112,7 @@ class AppCubit extends Cubit<AppState> {
   Future<void> scanFolder(
       {required String type, required String folderPath}) async {
     print('scanFolder: $folderPath for $type');
+    _settingsCubit.setOtrkeyFolder(folderPath);
     _folderPath = folderPath;
     _fileType = type;
     

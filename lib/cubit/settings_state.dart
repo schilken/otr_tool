@@ -10,31 +10,13 @@ class SettingsInitial extends SettingsState {
 }
 
 class SettingsLoaded extends SettingsState {
-  String examplesFolder;
-  String packagesFolder;
-  String flutterFolder;
-  String myProjectsFolder;
-  String lineFilter;
-  String testFileFilter;
-  String exampleFileFilter;
+  String otrkeyFolder;
   SettingsLoaded({
-    required this.examplesFolder,
-    required this.packagesFolder,
-    required this.flutterFolder,
-    required this.myProjectsFolder,
-    required this.lineFilter,
-    required this.testFileFilter,
-    required this.exampleFileFilter,
+    required this.otrkeyFolder,
   });
   
   @override
   List<Object?> get props => [
-        examplesFolder,
-        packagesFolder,
-        flutterFolder,
-        myProjectsFolder,
-        lineFilter,
-        testFileFilter,
-        exampleFileFilter,
+        otrkeyFolder,
       ];
 }

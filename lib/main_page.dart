@@ -117,7 +117,7 @@ ToolBar getCustomToolBar(BuildContext context) {
         items: [
 
           MacosPulldownMenuItem(
-            title: const Text("Open Folder to scan for OTRKEY Files"),
+            title: const Text("Set Folder to scan for OTRKEY Files"),
             onTap: () async {
               String? selectedDirectory =
                   await FilePicker.platform.getDirectoryPath();
@@ -128,18 +128,18 @@ ToolBar getCustomToolBar(BuildContext context) {
               }
             },
           ),
-          MacosPulldownMenuItem(
-            title: const Text("Open Folder to scan for cutlist Files"),
-            onTap: () async {
-              String? selectedDirectory =
-                  await FilePicker.platform.getDirectoryPath();
-              if (selectedDirectory != null) {
-                context
-                    .read<AppCubit>()
-                    .scanFolder(folderPath: selectedDirectory, type: 'cutlist');
-              }
-            },
-          ),
+          // MacosPulldownMenuItem(
+          //   title: const Text("Set Folder to scan for cutlist Files"),
+          //   onTap: () async {
+          //     String? selectedDirectory =
+          //         await FilePicker.platform.getDirectoryPath();
+          //     if (selectedDirectory != null) {
+          //       context
+          //           .read<AppCubit>()
+          //           .scanFolder(folderPath: selectedDirectory, type: 'cutlist');
+          //     }
+          //   },
+          // ),
           const MacosPulldownMenuDivider(),
           MacosPulldownMenuItem(
             label: "Remove",
