@@ -3,28 +3,30 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:macos_ui/macos_ui.dart';
 import 'package:otr_browser/cubit/app_cubit.dart';
-import 'package:otr_browser/cubit/statistics_cubit.dart';
+import 'package:otr_browser/cubit/cutlist_cubit.dart';
 import 'package:otr_browser/files_repository.dart';
 import 'package:otr_browser/main_page.dart';
 
+import 'cutlist_tile.dart';
+
 class CutlistPage extends StatelessWidget {
-  const CutlistPage({super.key});
+  const CutlistPage({super.key, required this.filePath});
+  final String? filePath;
 
   @override
   Widget build(BuildContext context) {
-    print('StatisticsPage.build');
-    return BlocProvider<StatisticsCubit>(
-      create: (context) => StatisticsCubit(context.read<FilesRepository>()),
-      child: Builder(builder: (context) {
+    print('CutlistPage.build $filePath');
+    return Builder(builder: (context) {
+      context.read<CutlistCubit>().load(filePath);
         return MacosScaffold(
           toolBar: getCustomToolBar(context),
           children: [
             ContentArea(
               builder: (context, scrollController) {
-                return BlocBuilder<StatisticsCubit, StatisticsState>(
+              return BlocBuilder<CutlistCubit, CutlistState>(
                   builder: (context, state) {
 //                    print('builder: $state');
-                    if (state is StatisticsLoaded) {
+                  if (state is CutlistLoaded) {
                       return Column(
                         children: [
                           Container(
@@ -33,32 +35,26 @@ class CutlistPage extends StatelessWidget {
                             child: Row(
                               mainAxisAlignment: MainAxisAlignment.start,
                               children: [
-                                const Text('Paths from File: '),
-                                Text(state.currentPathname),
+                              const Text('search: '),
+                              Text(state.searchString),
                                 const Spacer(),
-                                Text('${state.fileCount}'),
+                              Text('${state.items.length}'),
                               ],
                             ),
                           ),
-                          Center(
-                              child: TextButton(
-                                  onPressed: () =>
-                                      context.read<StatisticsCubit>().load(),
-                                  child: Text('refresh'))),
+
                           Expanded(
                             child: ListView.separated(
                               controller: ScrollController(),
-                              itemCount: state.frequencies.length,
+                            itemCount: state.items.length,
                               itemBuilder: (context, index) {
-                                final nameAndCount = state.frequencies[index];
+                              final item = state.items[index];
                                 return Padding(
                                   padding: const EdgeInsets.only(
                                       left: 8.0, right: 8),
-                                  child: Row(children: [
-                                    Text(nameAndCount.name),
-                                    SizedBox(width: 12),
-                                    Text(nameAndCount.count.toString()),
-                                  ]),
+                                child: CutlistTile(
+                                  cutlistItem: item,
+                                ),
                                 );
                               },
                               separatorBuilder:
@@ -71,13 +67,13 @@ class CutlistPage extends StatelessWidget {
                           )
                         ],
                       );
-                    } else if (state is StatisticsLoading) {
+                  } else if (state is CutlistLoading) {
                       return const CupertinoActivityIndicator();
                     }
                     return Center(
                         child: TextButton(
                             onPressed: () =>
-                                context.read<StatisticsCubit>().load(),
+                              context.read<CutlistCubit>().refresh(),
                             child: Text('refresh')));
                   },
                 );
@@ -85,7 +81,6 @@ class CutlistPage extends StatelessWidget {
             ),
           ],
         );
-      }),
-    );
+    });
   }
 }

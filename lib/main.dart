@@ -15,6 +15,8 @@ import 'package:otr_browser/main_page.dart';
 import 'package:otr_browser/settings_window.dart';
 import 'package:otr_browser/cutlist_page.dart';
 
+import 'cubit/cutlist_cubit.dart';
+
 void main(List<String> args) {
   print('main: $args');
   if (args.firstOrNull == 'multi_window') {
@@ -62,6 +64,10 @@ class App extends StatelessWidget {
                   create: (context) => AppCubit(context.read<SettingsCubit>(),
                     context.read<FilesRepository>(),
                   )..init(),
+                ),
+                BlocProvider<CutlistCubit>(
+                  create: (context) =>
+                      CutlistCubit(context.read<FilesRepository>()),
                 ),
               ],
               child: MacosApp(
@@ -153,7 +159,7 @@ class _MainViewState extends State<MainView> {
                     ),
                     const SidebarItem(
                       leading: MacosIcon(CupertinoIcons.graph_square),
-                      label: Text('Cutlists'),
+                      label: Text('Cutlist'),
                     ),
                   ],
                 ),
@@ -165,9 +171,9 @@ class _MainViewState extends State<MainView> {
               ),
               child: IndexedStack(
                 index: state.sidebarPageIndex,
-              children: const [
+                children: [
                 MainPage(),
-                CutlistPage(),
+                  CutlistPage(filePath: state.selectedOtrkeyPath),
               ],
               ),
             );

@@ -58,6 +58,7 @@ class DetailsLoaded extends AppState {
   final int primaryHitCount;
   final String? message;
   final int sidebarPageIndex;
+  final String? selectedOtrkeyPath;
 
   DetailsLoaded({
     this.fileType,
@@ -68,6 +69,7 @@ class DetailsLoaded extends AppState {
     required this.sidebarPageIndex,
     this.message,
     String? primaryWord,
+    this.selectedOtrkeyPath,
   }) : super(
           primaryWord: primaryWord,
         );
@@ -80,6 +82,7 @@ class DetailsLoaded extends AppState {
     int? primaryHitCount,
     String? message,
     int? sidebarPageIndex,
+    String? selectedOtrkeyPath,
   }) {
     return DetailsLoaded(
       fileType: fileType ?? this.fileType,
@@ -89,6 +92,7 @@ class DetailsLoaded extends AppState {
       primaryHitCount: primaryHitCount ?? this.primaryHitCount,
       message: message ?? this.message,
       sidebarPageIndex: sidebarPageIndex ?? this.sidebarPageIndex,
+      selectedOtrkeyPath: selectedOtrkeyPath ?? this.selectedOtrkeyPath,
     );
   }
   List<Object?> get props => [
@@ -98,6 +102,7 @@ class DetailsLoaded extends AppState {
         primaryHitCount,
         message,
         sidebarPageIndex,
+        selectedOtrkeyPath,
       ];
 
 }

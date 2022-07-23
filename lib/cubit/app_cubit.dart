@@ -112,6 +112,9 @@ class AppCubit extends Cubit<AppState> {
   Future<void> scanFolder(
       {required String type, required String folderPath}) async {
     print('scanFolder: $folderPath for $type');
+    emit(DetailsLoading());
+    await Future.delayed(Duration(seconds: 1));
+
     _settingsCubit.setOtrkeyFolder(folderPath);
     _folderPath = folderPath;
     _fileType = type;
@@ -164,7 +167,8 @@ class AppCubit extends Cubit<AppState> {
   fetchCutlists(String searchString) {
     print('fetchCutlists: $searchString');
     final currentState = state as DetailsLoaded;
-    emit(currentState.copyWith(sidebarPageIndex: 1));
+    emit(currentState.copyWith(
+        sidebarPageIndex: 1, selectedOtrkeyPath: searchString));
   }
 
   cutVideo(String filePath) {
