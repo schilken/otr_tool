@@ -141,7 +141,7 @@ class _MainViewState extends State<MainView> {
                       label: Text('Cutlist'),
                     ),
                     const SidebarItem(
-                      leading: MacosIcon(CupertinoIcons.graph_square),
+                      leading: MacosIcon(CupertinoIcons.settings),
                       label: Text('Einstellungen'),
                     ),
                   ],

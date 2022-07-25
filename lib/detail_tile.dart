@@ -72,7 +72,8 @@ class ListTilePullDownMenu extends StatelessWidget {
       items: [
         MacosPulldownMenuItem(
           title: const Text('decode otrfile'),
-          onTap: () => debugPrint("decode otrfile"),
+          onTap: () =>
+              context.read<AppCubit>().decodeVideo(detail.filePathName),
         ),
         MacosPulldownMenuItem(
           title: const Text('fetch cutlist for full otrkey name'),

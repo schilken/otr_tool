@@ -1,5 +1,7 @@
+import 'dart:convert';
 import 'dart:io';
 
+import 'package:path/path.dart' as p;
 import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
 import 'package:file_picker/file_picker.dart';
@@ -172,8 +174,9 @@ class AppCubit extends Cubit<AppState> {
         sidebarPageIndex: 1, selectedOtrkeyPath: searchString));
   }
 
-  cutVideo(String filePath) {
-    print('cutVideo: $filePath');
+
+  cutVideo(String filename) {
+    print('cutVideo: $filename');
   }
 
   copyToClipboard(String path) {
@@ -185,4 +188,28 @@ class AppCubit extends Cubit<AppState> {
     emit(currentState.copyWith(sidebarPageIndex: index));
   }
 
+  decodeVideo(String filename) async {
+    print('decodeVideo: $filename');
+    _runDecodeCommand(filename);
+  }
+
+  Future<String> _runDecodeCommand(String filename) async {
+    final workingDirectory = _settingsCubit.otrFolder;
+    final otrEmail = _settingsCubit.otrEmail;
+    final otrPassword = _settingsCubit.otrPassword;
+    var process = await Process.start(
+      './otrdecoder',
+      ['-i', filename, '-e', otrEmail, '-p', otrPassword],
+      workingDirectory: workingDirectory,
+    );
+
+    await process.stdout
+        .transform(utf8.decoder)
+        .transform(const LineSplitter())
+        .forEach((line) {
+      print(line);
+    });
+    int rc = await process.exitCode;
+    return 'exit code: $rc';
+  }
 }
