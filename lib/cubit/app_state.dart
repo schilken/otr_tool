@@ -59,6 +59,7 @@ class DetailsLoaded extends AppState {
   final String? message;
   final int sidebarPageIndex;
   final String? selectedOtrkeyPath;
+  final Stream<String>? commandStdoutStream;
 
   DetailsLoaded({
     this.fileType,
@@ -70,6 +71,7 @@ class DetailsLoaded extends AppState {
     this.message,
     String? primaryWord,
     this.selectedOtrkeyPath,
+    this.commandStdoutStream,
   }) : super(
           primaryWord: primaryWord,
         );
@@ -83,6 +85,7 @@ class DetailsLoaded extends AppState {
     String? message,
     int? sidebarPageIndex,
     String? selectedOtrkeyPath,
+    Stream<String>? commandStdoutStream,
   }) {
     return DetailsLoaded(
       fileType: fileType ?? this.fileType,
@@ -93,6 +96,7 @@ class DetailsLoaded extends AppState {
       message: message ?? this.message,
       sidebarPageIndex: sidebarPageIndex ?? this.sidebarPageIndex,
       selectedOtrkeyPath: selectedOtrkeyPath ?? this.selectedOtrkeyPath,
+      commandStdoutStream: commandStdoutStream ?? this.commandStdoutStream,
     );
   }
   List<Object?> get props => [
@@ -103,6 +107,7 @@ class DetailsLoaded extends AppState {
         message,
         sidebarPageIndex,
         selectedOtrkeyPath,
+        commandStdoutStream,
       ];
 
 }

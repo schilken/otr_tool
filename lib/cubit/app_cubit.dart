@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:convert';
 import 'dart:io';
 
@@ -23,8 +24,7 @@ class AppCubit extends Cubit<AppState> {
   AppCubit(
     SettingsCubit settingsCubit,
     this.filesRepository,
-  )
-      : _settingsCubit = settingsCubit,
+  )   : _settingsCubit = settingsCubit,
         super(AppInitial()) {
     print('create AppCubit');
     if (settingsCubit.state is SettingsLoaded) {
@@ -35,9 +35,8 @@ class AppCubit extends Cubit<AppState> {
 //        _applyFilters(settings);
       }
     });
-
   }
-  final FilesRepository filesRepository; 
+  final FilesRepository filesRepository;
   String? _primaryWord;
   String _currentPathname = "no file selected";
   int _fileCount = 0;
@@ -60,9 +59,7 @@ class AppCubit extends Cubit<AppState> {
 
   init() async {
     print('AppCubit.init');
-    await scanFolder(
-        type: 'otrkey',
-        folderPath: _settingsCubit.otrFolder);
+    await scanFolder(type: 'otrkey', folderPath: _settingsCubit.otrFolder);
     search();
   }
 
@@ -88,16 +85,16 @@ class AppCubit extends Cubit<AppState> {
   Future<void> searchInFilename() async {
     final primaryResult = <Detail>[];
     for (final path in _allFilePaths!) {
-        _primaryHitCount++;
-        var shortPath = path;
-        if (_folderPath != null) {
-          shortPath = path.replaceFirst('${_folderPath!}/', '');
-        }
-        primaryResult.add(Detail(
-          title: shortPath.split('/assets').last,
+      _primaryHitCount++;
+      var shortPath = path;
+      if (_folderPath != null) {
+        shortPath = path.replaceFirst('${_folderPath!}/', '');
+      }
+      primaryResult.add(Detail(
+        title: shortPath.split('/assets').last,
         otrKey: shortPath.split('/assets').first,
         filePathName: shortPath,
-        ));
+      ));
     }
     emit(
       DetailsLoaded(
@@ -121,7 +118,7 @@ class AppCubit extends Cubit<AppState> {
     _settingsCubit.setOtrFolder(folderPath);
     _folderPath = folderPath;
     _fileType = type;
-    
+
     if (folderPath != null) {
       filesRepository.currentFolderPath = folderPath;
       await filesRepository.runFindCommand(type);
@@ -143,7 +140,7 @@ class AppCubit extends Cubit<AppState> {
   }
 
   void saveFileList() {}
-  
+
   void openEditor(String? filePathName) {
     Process.run('code', [filePathName!]);
   }
@@ -174,9 +171,19 @@ class AppCubit extends Cubit<AppState> {
         sidebarPageIndex: 1, selectedOtrkeyPath: searchString));
   }
 
-
   cutVideo(String filename) {
     print('cutVideo: $filename');
+    final currentState = state as DetailsLoaded;
+    final streamController = StreamController<String>();
+    emit(currentState.copyWith(
+        sidebarPageIndex: 2, commandStdoutStream: streamController.stream));
+    Timer.periodic(Duration(seconds: 2), (timer) {
+      if (streamController.isClosed) {
+        timer.cancel();
+      } else {
+        streamController.add('Line ${timer.tick}');
+      }
+    });
   }
 
   copyToClipboard(String path) {
@@ -190,26 +197,35 @@ class AppCubit extends Cubit<AppState> {
 
   decodeVideo(String filename) async {
     print('decodeVideo: $filename');
-    _runDecodeCommand(filename);
+    final streamController = StreamController<String>();
+    _runDecodeCommand(filename, streamController);
+    final currentState = state as DetailsLoaded;
+    emit(currentState.copyWith(
+        sidebarPageIndex: 2, commandStdoutStream: streamController.stream));
   }
 
-  Future<String> _runDecodeCommand(String filename) async {
+  void _runDecodeCommand(String filename, StreamController streamController) {
     final workingDirectory = _settingsCubit.otrFolder;
     final otrEmail = _settingsCubit.otrEmail;
     final otrPassword = _settingsCubit.otrPassword;
-    var process = await Process.start(
+    final process = Process.start(
       './otrdecoder',
       ['-i', filename, '-e', otrEmail, '-p', otrPassword],
       workingDirectory: workingDirectory,
+    ).then(
+      (proc) => proc.stdout
+          .transform(utf8.decoder)
+          .transform(const LineSplitter())
+          .forEach(
+            (line) => streamController.add(line),
+          )
+          .whenComplete(() {
+        streamController.add('Stream closed in whenComplete');
+        return streamController.close();
+      }).onError((error, stackTrace) {
+        streamController.add('Stream closed onError');
+        return streamController.close();
+      }),
     );
-
-    await process.stdout
-        .transform(utf8.decoder)
-        .transform(const LineSplitter())
-        .forEach((line) {
-      print(line);
-    });
-    int rc = await process.exitCode;
-    return 'exit code: $rc';
   }
 }

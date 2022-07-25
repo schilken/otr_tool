@@ -16,6 +16,7 @@ import 'package:otr_browser/settings_page.dart';
 import 'package:otr_browser/cutlist_page.dart';
 
 import 'cubit/cutlist_cubit.dart';
+import 'logger_page.dart';
 
 void main(List<String> args) {
   print('main: $args');
@@ -141,6 +142,10 @@ class _MainViewState extends State<MainView> {
                       label: Text('Cutlist'),
                     ),
                     const SidebarItem(
+                      leading: MacosIcon(CupertinoIcons.graph_square),
+                      label: Text('Log'),
+                    ),
+                    const SidebarItem(
                       leading: MacosIcon(CupertinoIcons.settings),
                       label: Text('Einstellungen'),
                     ),
@@ -157,6 +162,7 @@ class _MainViewState extends State<MainView> {
                 children: [
                   MainPage(),
                   CutlistPage(filePath: state.selectedOtrkeyPath),
+                  LoggerPage(state.commandStdoutStream),
                   SettingsPage(),
                 ],
               ),
