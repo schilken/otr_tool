@@ -12,7 +12,7 @@ import 'package:otr_browser/cubit/settings_cubit.dart';
 import 'package:otr_browser/files_repository.dart';
 import 'package:otr_browser/filter_settings.dart';
 import 'package:otr_browser/main_page.dart';
-import 'package:otr_browser/settings_window.dart';
+import 'package:otr_browser/settings_page.dart';
 import 'package:otr_browser/cutlist_page.dart';
 
 import 'cubit/cutlist_cubit.dart';
@@ -29,14 +29,9 @@ void main(List<String> args) {
         windowController: WindowController.fromWindowId(windowId),
         args: arguments,
       ));
-    } else if (arguments['args1'] == 'Preferences') {
-      runApp(SettingsWindow(
-        windowController: WindowController.fromWindowId(windowId),
-        args: arguments,
-      ));
-    }
+    } 
   } else {
-    runApp(const App());
+    runApp(App());
   }
 }
 
@@ -61,7 +56,8 @@ class App extends StatelessWidget {
                   value: snapshot.data!,
                 ),
                 BlocProvider(
-                  create: (context) => AppCubit(context.read<SettingsCubit>(),
+                  create: (context) => AppCubit(
+                    context.read<SettingsCubit>(),
                     context.read<FilesRepository>(),
                   )..init(),
                 ),
@@ -117,24 +113,7 @@ class _MainViewState extends State<MainView> {
                   ..show();
               },
             ),
-            PlatformMenuItem(
-              label: 'Preferences',
-              onSelected: () async {
-                final window = await DesktopMultiWindow.createWindow(jsonEncode(
-                  {
-                    'args1': 'Preferences',
-                    'args2': 500,
-                    'args3': true,
-                  },
-                ));
-                debugPrint('$window');
-                window
-                  ..setFrame(const Offset(0, 0) & const Size(350, 350))
-                  ..center()
-                  ..setTitle('The Preferences')
-                  ..show();
-              },
-            ),
+
             const PlatformProvidedMenuItem(
               type: PlatformProvidedMenuItemType.quit,
             ),
@@ -161,6 +140,10 @@ class _MainViewState extends State<MainView> {
                       leading: MacosIcon(CupertinoIcons.graph_square),
                       label: Text('Cutlist'),
                     ),
+                    const SidebarItem(
+                      leading: MacosIcon(CupertinoIcons.graph_square),
+                      label: Text('Einstellungen'),
+                    ),
                   ],
                 ),
                 bottom: const MacosListTile(
@@ -172,9 +155,10 @@ class _MainViewState extends State<MainView> {
               child: IndexedStack(
                 index: state.sidebarPageIndex,
                 children: [
-                MainPage(),
+                  MainPage(),
                   CutlistPage(filePath: state.selectedOtrkeyPath),
-              ],
+                  SettingsPage(),
+                ],
               ),
             );
           } else {

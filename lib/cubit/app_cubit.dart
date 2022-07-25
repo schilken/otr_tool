@@ -33,6 +33,7 @@ class AppCubit extends Cubit<AppState> {
 //        _applyFilters(settings);
       }
     });
+
   }
   final FilesRepository filesRepository; 
   String? _primaryWord;
@@ -59,7 +60,7 @@ class AppCubit extends Cubit<AppState> {
     print('AppCubit.init');
     await scanFolder(
         type: 'otrkey',
-        folderPath: _settingsCubit.otrkeyFolder);
+        folderPath: _settingsCubit.otrFolder);
     search();
   }
 
@@ -115,7 +116,7 @@ class AppCubit extends Cubit<AppState> {
     emit(DetailsLoading());
     await Future.delayed(Duration(seconds: 1));
 
-    _settingsCubit.setOtrkeyFolder(folderPath);
+    _settingsCubit.setOtrFolder(folderPath);
     _folderPath = folderPath;
     _fileType = type;
     

@@ -10,13 +10,12 @@ class SettingsInitial extends SettingsState {
 }
 
 class SettingsLoaded extends SettingsState {
-  String otrkeyFolder;
-  SettingsLoaded({
-    required this.otrkeyFolder,
-  });
-  
+  final String email;
+  final String password;
+  final String otrFolder;
+
+  SettingsLoaded(this.email, this.password, this.otrFolder);
+
   @override
-  List<Object?> get props => [
-        otrkeyFolder,
-      ];
+  List<Object?> get props => [email, password, otrFolder];
 }
