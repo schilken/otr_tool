@@ -1,5 +1,10 @@
+// ignore_for_file: public_member_api_docs, sort_constructors_first
 import 'dart:io';
+
+import 'package:collection/collection.dart';
 import 'package:path/path.dart' as p;
+
+import 'model/otr_data.dart';
 
 class FilesRepository {
   String? currentFolderPath;
@@ -48,9 +53,36 @@ class FilesRepository {
     final Directory dir = Directory(folderPath);
     final list = await dir
         .list()
-        .where((entry) => p.basename(entry.path).contains('_TVOON_'))
+        .where((entry) => p.basename(entry.path).contains('_TVOON_DE'))
         .map((entity) => p.basename(entity.path))
         .toList();
+    return list;
+  }
+
+  String nameFromPath(String path) => path.split('_TVOON_DE').first;
+
+  List<OtrData> consolidateOtrFiles(List<String> filePaths) {
+    final List<OtrData> list = [];
+    final nameSet = filePaths.map(nameFromPath).toSet();
+    for (final name in nameSet) {
+      final otrData = OtrData(
+        name,
+        filePaths.firstWhereOrNull((path) =>
+            nameFromPath(path) == name && p.extension(path) == '.otrkey'),
+        filePaths.firstWhereOrNull((path) =>
+            nameFromPath(path) == name && p.extension(path) == '.cutlist'),
+        filePaths.firstWhereOrNull((path) {
+          return nameFromPath(path) == name &&
+              p.extension(path) != '.otrkey' &&
+              p.extension(path) != '.cutlist' &&
+              !p.basename(path).contains('_TVOON_DE-cut');
+        }),
+        filePaths.firstWhereOrNull((path) =>
+            nameFromPath(path) == name &&
+            p.basename(path).contains('_TVOON_DE-cut')),
+      );
+      list.add(otrData);
+    }
     return list;
   }
 

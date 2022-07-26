@@ -92,7 +92,7 @@ class AppCubit extends Cubit<AppState> {
       }
       primaryResult.add(Detail(
         title: shortPath.split('/assets').last,
-        otrKey: shortPath.split('/assets').first,
+        otrKey: shortPath.split('_TVOON_').first,
         filePathName: shortPath,
       ));
     }
