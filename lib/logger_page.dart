@@ -2,7 +2,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:macos_ui/macos_ui.dart';
 
-class LoggerPage extends StatelessWidget {
+class LoggerPage extends StatefulWidget {
   LoggerPage(Stream<String>? commandStdout, {super.key}) {
     print('LoggerPage: $commandStdout');
     // commandStdout?.listen((line) {
@@ -12,6 +12,12 @@ class LoggerPage extends StatelessWidget {
   }
   Stream<String>? _commandStdout;
 
+  @override
+  State<LoggerPage> createState() => _LoggerPageState();
+}
+
+class _LoggerPageState extends State<LoggerPage> {
+  final List<String> _lines = <String>[];
   @override
   Widget build(BuildContext context) {
     return MacosScaffold(
@@ -35,14 +41,21 @@ class LoggerPage extends StatelessWidget {
                     style: TextStyle(fontWeight: FontWeight.bold),
                   ),
                   SizedBox(height: 8),
-                  StreamBuilder(
-                    stream: _commandStdout,
-                    initialData: 'initialData',
-                    builder: (BuildContext context, AsyncSnapshot snapshot) {
-                      return Container(
-                        child: Text(snapshot.data),
-                      );
-                    },
+                  Expanded(
+                    child: StreamBuilder(
+                      stream: widget._commandStdout,
+                      initialData: 'initialData',
+                      builder: (BuildContext context, AsyncSnapshot snapshot) {
+                        _lines.add(snapshot.data);
+                        return ListView.builder(
+                          controller: scrollController,
+                          itemCount: _lines.length,
+                          itemBuilder: (BuildContext context, int index) {
+                            return Text(_lines[index]);
+                          },
+                        );
+                      },
+                    ),
                   ),
                 ],
               ),

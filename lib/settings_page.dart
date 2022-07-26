@@ -153,6 +153,39 @@ class SettingsPage extends StatelessWidget {
                           ],
                         ),
                         SizedBox(height: 16),
+                        const Text(
+                          'Avidemux Programm',
+                          style: TextStyle(fontWeight: FontWeight.bold),
+                        ),
+                        SizedBox(height: 8),
+                        Row(
+                          children: [
+                            Text(
+                              state.otrFolder,
+                            ),
+                            MacosIconButton(
+                              icon: const MacosIcon(
+                                CupertinoIcons.folder_open,
+                              ),
+                              shape: BoxShape.rectangle,
+                              borderRadius: BorderRadius.circular(7),
+                              onPressed: () async {
+                                FilePickerResult? filePickerResult =
+                                    await FilePicker.platform.pickFiles(
+                                  type: FileType.custom,
+                                  allowedExtensions: ['app'],
+                                );
+                                if (filePickerResult != null) {
+                                  await context
+                                      .read<SettingsCubit>()
+                                      .setAvidemuxBinary(
+                                          filePickerResult.paths.first);
+                                }
+                              },
+                            ),
+                          ],
+                        ),
+                        SizedBox(height: 16),
                       ],
                     );
                   } else {

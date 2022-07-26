@@ -121,8 +121,10 @@ class AppCubit extends Cubit<AppState> {
 
     if (folderPath != null) {
       filesRepository.currentFolderPath = folderPath;
-      await filesRepository.runFindCommand(type);
-      _allFilePaths = filesRepository.allFilePaths;
+//      await filesRepository.runFindCommand(type);
+//      _allFilePaths = filesRepository.allFilePaths;
+      _allFilePaths = await filesRepository.findOtrFiles(folderPath);
+      _allFilePaths?.sort((a, b) => a.compareTo(b));
       _currentPathname = folderPath;
       _fileCount = _allFilePaths?.length ?? 0;
     } else {
@@ -228,4 +230,22 @@ class AppCubit extends Cubit<AppState> {
       }),
     );
   }
+
+  Future<void> moveOtrkey() async {
+    // final clipboardData = await Clipboard.getData('text/plain');
+    // final url = clipboardData?.text;
+    print('moveOtrkey called');
+    final successCount = await filesRepository.moveAllOtrFiles(
+      '/Users/aschilken/Downloads',
+      _settingsCubit.otrFolder,
+    );
+    if (successCount > 0) {
+      print('moveOtrkey: $successCount files moved');
+      scanFolder(type: 'otr', folderPath: _settingsCubit.otrFolder);
+    } else {
+      print('moveOtrkey: no files moved');
+    }
+  }
+
+
 }

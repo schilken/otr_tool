@@ -55,6 +55,10 @@ class SettingsCubit extends Cubit<SettingsState> {
     ));
   }
 
+  setAvidemuxBinary(String? first) {
+    print('setAvidemuxBinary: $first');
+  }
+
 
 
 }

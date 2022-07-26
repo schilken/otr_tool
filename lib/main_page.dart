@@ -128,6 +128,12 @@ ToolBar getCustomToolBar(BuildContext context) {
               }
             },
           ),
+          MacosPulldownMenuItem(
+              title: const Text("Move OTRKEY + cutlist from Downloads Folder"),
+              onTap: () async {
+                context.read<AppCubit>().moveOtrkey();
+              }),
+
           // MacosPulldownMenuItem(
           //   title: const Text("Set Folder to scan for cutlist Files"),
           //   onTap: () async {
