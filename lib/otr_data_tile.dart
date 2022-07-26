@@ -25,11 +25,40 @@ class OtrDataTile extends StatelessWidget {
     return MacosListTile(
       title: HighlightedText(
         text: otrData.name,
+        style: TextStyle(fontWeight: FontWeight.bold),
         highlights: highlights,
       ),
       subtitle: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
+          const SizedBox(
+            height: 12,
+          ),
+          Row(children: [
+            AlternativeTexts(
+              showFirst: otrData.hasOtrkey,
+              first: 'OTR Key noch vorhanden',
+              second: 'Kein OTR Key vorhanden',
+            ),
+            SizedBox(width: 12),
+            AlternativeTexts(
+              showFirst: otrData.hasCutlist,
+              first: 'Cutlist noch vorhanden',
+              second: 'Keine Cutlist vorhanden',
+            ),
+            SizedBox(width: 12),
+            AlternativeTexts(
+              showFirst: otrData.isdeCoded,
+              first: 'ist schon decodiert',
+              second: 'ist noch nicht decodiert',
+            ),
+            SizedBox(width: 12),
+            AlternativeTexts(
+              showFirst: otrData.isCutted,
+              first: 'ist schon geschnitten',
+              second: 'ist noch nicht geschnitten',
+            ),
+          ]),
           const SizedBox(
             height: 12,
           ),
@@ -51,6 +80,35 @@ class OtrDataTile extends StatelessWidget {
         ],
       ),
     );
+  }
+}
+
+class AlternativeTexts extends StatelessWidget {
+  const AlternativeTexts({
+    Key? key,
+    required this.showFirst,
+    required this.first,
+    required this.second,
+    this.firstColor = Colors.blueGrey,
+    this.secondColor = Colors.red,
+  }) : super(key: key);
+  final bool showFirst;
+  final String first;
+  final String second;
+  final Color firstColor;
+  final Color secondColor;
+
+  @override
+  Widget build(BuildContext context) {
+    return showFirst
+        ? Text(
+            first,
+            style: TextStyle(color: firstColor),
+          )
+        : Text(
+            second,
+            style: TextStyle(color: secondColor),
+          );
   }
 }
 

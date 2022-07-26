@@ -15,6 +15,11 @@ class OtrData extends Equatable {
     this.cuttedBasename,
   );
 
+  bool get hasOtrkey => otrkeyBasename != null;
+  bool get hasCutlist => cutlistBasename != null;
+  bool get isdeCoded => decodedBasename != null;
+  bool get isCutted => cuttedBasename != null;
+
   @override
   List<Object?> get props => [
         name,

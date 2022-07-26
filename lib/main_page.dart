@@ -47,6 +47,7 @@ class MainPage extends StatelessWidget {
                                 padding: const EdgeInsets.all(20),
                                 color: Colors.red[100],
                                 child: Text(state.message!)),
+                        const SizedBox(height: 12),
                           Expanded(
                             child: ListView.separated(
                               controller: ScrollController(),
