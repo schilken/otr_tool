@@ -5,9 +5,9 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:macos_ui/macos_ui.dart';
 import 'package:otr_browser/cubit/app_cubit.dart';
 import 'package:otr_browser/cubit/settings_cubit.dart';
-import 'package:otr_browser/detail_tile.dart';
-import 'package:otr_browser/highlighted_text.dart';
 import 'package:otr_browser/toolbar_searchfield.dart';
+
+import 'otr_data_tile.dart';
 
 class MainPage extends StatelessWidget {
   const MainPage({super.key});
@@ -57,10 +57,9 @@ class MainPage extends StatelessWidget {
                                 ];
 
                               final detail = state.details[index];
-                                return DetailTile(
-                                  detail: detail,
+                              return OtrDataTile(
+                                otrData: detail,
                                 highlights: highlights,
-                                  fileType: state.fileType,
                                 );
                               },
                               separatorBuilder:
@@ -134,18 +133,6 @@ ToolBar getCustomToolBar(BuildContext context) {
                 context.read<AppCubit>().moveOtrkey();
               }),
 
-          // MacosPulldownMenuItem(
-          //   title: const Text("Set Folder to scan for cutlist Files"),
-          //   onTap: () async {
-          //     String? selectedDirectory =
-          //         await FilePicker.platform.getDirectoryPath();
-          //     if (selectedDirectory != null) {
-          //       context
-          //           .read<AppCubit>()
-          //           .scanFolder(folderPath: selectedDirectory, type: 'cutlist');
-          //     }
-          //   },
-          // ),
           const MacosPulldownMenuDivider(),
           MacosPulldownMenuItem(
             label: "Remove",

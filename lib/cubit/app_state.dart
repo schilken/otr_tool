@@ -52,7 +52,7 @@ class DetailsLoading extends AppState {
 
 class DetailsLoaded extends AppState {
   final String? fileType;
-  final List<Detail> details;
+  final List<OtrData> details;
   final String currentPathname;
   final int fileCount;
   final int primaryHitCount;
@@ -78,7 +78,7 @@ class DetailsLoaded extends AppState {
 
   DetailsLoaded copyWith({
     String? fileType,
-    List<Detail>? details,
+    List<OtrData>? details,
     String? currentPathname,
     int? fileCount,
     int? primaryHitCount,
@@ -99,6 +99,7 @@ class DetailsLoaded extends AppState {
       commandStdoutStream: commandStdoutStream ?? this.commandStdoutStream,
     );
   }
+  @override
   List<Object?> get props => [
         details,
         currentPathname,

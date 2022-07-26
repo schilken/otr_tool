@@ -12,6 +12,8 @@ import 'package:meta/meta.dart';
 import 'package:otr_browser/cubit/settings_cubit.dart';
 import 'package:otr_browser/files_repository.dart';
 
+import '../model/otr_data.dart';
+
 part 'app_state.dart';
 
 enum SearchResultAction {
@@ -79,41 +81,27 @@ class AppCubit extends Cubit<AppState> {
       );
       return;
     }
-    await searchInFilename();
-  }
-
-  Future<void> searchInFilename() async {
-    final primaryResult = <Detail>[];
-    for (final path in _allFilePaths!) {
-      _primaryHitCount++;
-      var shortPath = path;
-      if (_folderPath != null) {
-        shortPath = path.replaceFirst('${_folderPath!}/', '');
-      }
-      primaryResult.add(Detail(
-        title: shortPath.split('/assets').last,
-        otrKey: shortPath.split('_TVOON_').first,
-        filePathName: shortPath,
-      ));
-    }
+    final otrDataList =
+        await filesRepository.consolidateOtrFiles(_allFilePaths!);
     emit(
       DetailsLoaded(
         currentPathname: _currentPathname,
         fileType: _fileType,
         fileCount: _fileCount,
         primaryHitCount: _primaryHitCount,
-        details: primaryResult,
+        details: otrDataList,
         primaryWord: _primaryWord,
         sidebarPageIndex: 0,
       ),
     );
+
   }
 
   Future<void> scanFolder(
       {required String type, required String folderPath}) async {
     print('scanFolder: $folderPath for $type');
     emit(DetailsLoading());
-    await Future.delayed(Duration(seconds: 1));
+    await Future.delayed(const Duration(seconds: 1));
 
     _settingsCubit.setOtrFolder(folderPath);
     _folderPath = folderPath;
@@ -121,8 +109,6 @@ class AppCubit extends Cubit<AppState> {
 
     if (folderPath != null) {
       filesRepository.currentFolderPath = folderPath;
-//      await filesRepository.runFindCommand(type);
-//      _allFilePaths = filesRepository.allFilePaths;
       _allFilePaths = await filesRepository.findOtrFiles(folderPath);
       _allFilePaths?.sort((a, b) => a.compareTo(b));
       _currentPathname = folderPath;
@@ -132,13 +118,6 @@ class AppCubit extends Cubit<AppState> {
       _fileCount = 0;
     }
     search();
-  }
-
-  Future<List<String>> _runFindCommand(
-      String workingDir, String extension) async {
-    var process = await Process.run(
-        'find', [workingDir, '-name', '*$extension', '-type', 'f']);
-    return process.stdout.split('\n');
   }
 
   void saveFileList() {}
