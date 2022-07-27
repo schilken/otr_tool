@@ -3,23 +3,29 @@ import 'package:flutter/material.dart';
 import 'package:macos_ui/macos_ui.dart';
 
 class LoggerPage extends StatefulWidget {
-  LoggerPage(Stream<String>? commandStdout, {super.key}) {
-    print('LoggerPage: $commandStdout');
-    // commandStdout?.listen((line) {
-    //   print('LoggerPage: $line');
-    // });
-    _commandStdout = commandStdout;
-  }
-  Stream<String>? _commandStdout;
+  const LoggerPage(Stream<String>? commandStdout, {super.key})
+      : _commandStdout = commandStdout;
+  final Stream<String>? _commandStdout;
 
   @override
   State<LoggerPage> createState() => _LoggerPageState();
+
 }
 
 class _LoggerPageState extends State<LoggerPage> {
   final List<String> _lines = <String>[];
+
+  void onClear() {
+    setState(
+      () {
+        _lines.clear();
+      },
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
+    print('_LoggerPageState build');
     return MacosScaffold(
       children: [
         ContentArea(
@@ -31,9 +37,14 @@ class _LoggerPageState extends State<LoggerPage> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 mainAxisAlignment: MainAxisAlignment.start,
                 children: [
-                  Text(
-                    'Logger Ausgabe',
-                    style: MacosTheme.of(context).typography.largeTitle,
+                  Row(
+                    children: [
+                      Text(
+                        'Logger Ausgabe',
+                        style: MacosTheme.of(context).typography.largeTitle,
+                      ),
+                      TextButton(onPressed: onClear, child: Text('clear'))
+                    ],
                   ),
                   const SizedBox(height: 20),
                   const Text(
@@ -44,7 +55,7 @@ class _LoggerPageState extends State<LoggerPage> {
                   Expanded(
                     child: StreamBuilder(
                       stream: widget._commandStdout,
-                      initialData: 'initialData',
+                      initialData: '',
                       builder: (BuildContext context, AsyncSnapshot snapshot) {
                         _lines.add(snapshot.data);
                         return ListView.builder(
@@ -65,4 +76,5 @@ class _LoggerPageState extends State<LoggerPage> {
       ],
     );
   }
+
 }
