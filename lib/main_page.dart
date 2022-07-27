@@ -140,6 +140,16 @@ ToolBar getCustomToolBar(BuildContext context) {
               onTap: () async {
                 context.read<AppCubit>().moveOtrkey();
               }),
+          MacosPulldownMenuItem(
+              title: const Text("Move cutted Otrkeys to Videos Folder"),
+              onTap: () async {
+                context.read<AppCubit>().moveCutVideosToVideoFolder();
+              }),
+          MacosPulldownMenuItem(
+              title: const Text("Delete Otrkeys, cutlists and uncut Videos"),
+              onTap: () async {
+                context.read<AppCubit>().cleanUp();
+              }),
 
           const MacosPulldownMenuDivider(),
           MacosPulldownMenuItem(

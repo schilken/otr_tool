@@ -127,7 +127,7 @@ class AppCubit extends Cubit<AppState> {
   void openEditor(String? filename) {
     final filePath = p.join(_settingsCubit.otrFolder, filename);
     print('openEditor: $filePath');
-    Process.run('code', [filePath]);
+    Process.run('/usr/local/bin/code', [filePath]);
   }
 
   showInFinder(String filename) {
@@ -229,6 +229,14 @@ class AppCubit extends Cubit<AppState> {
     } else {
       print('moveOtrkey: no files moved');
     }
+  }
+
+  void moveCutVideosToVideoFolder() {
+    print('moveCutVideosToVideoFolder');
+  }
+
+  void cleanUp() {
+    print('cleanUp');
   }
 
 
