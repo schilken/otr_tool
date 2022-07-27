@@ -122,11 +122,14 @@ class AppCubit extends Cubit<AppState> {
 
   void saveFileList() {}
 
-  void openEditor(String? filePathName) {
-    Process.run('code', [filePathName!]);
+  void openEditor(String? filename) {
+    final filePath = p.join(_settingsCubit.otrFolder, filename);
+    print('openEditor: $filePath');
+    Process.run('code', [filePath]);
   }
 
-  showInFinder(String filePath) {
+  showInFinder(String filename) {
+    final filePath = p.join(_settingsCubit.otrFolder, filename);
     Process.run('open', ['-R', filePath]);
   }
 
