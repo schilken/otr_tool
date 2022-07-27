@@ -37,26 +37,26 @@ class OtrDataTile extends StatelessWidget {
           Row(children: [
             AlternativeTexts(
               showFirst: otrData.hasOtrkey,
-              first: 'OTR Key noch vorhanden',
+              first: 'OTR Key vorhanden',
               second: 'Kein OTR Key vorhanden',
             ),
             SizedBox(width: 12),
             AlternativeTexts(
+              showFirst: otrData.isdeCoded,
+              first: 'schon decodiert',
+              second: 'noch nicht decodiert',
+            ),
+            SizedBox(width: 12),
+            AlternativeTexts(
               showFirst: otrData.hasCutlist,
-              first: 'Cutlist noch vorhanden',
+              first: 'Cutlist vorhanden',
               second: 'Keine Cutlist vorhanden',
             ),
             SizedBox(width: 12),
             AlternativeTexts(
-              showFirst: otrData.isdeCoded,
-              first: 'ist schon decodiert',
-              second: 'ist noch nicht decodiert',
-            ),
-            SizedBox(width: 12),
-            AlternativeTexts(
               showFirst: otrData.isCutted,
-              first: 'ist schon geschnitten',
-              second: 'ist noch nicht geschnitten',
+              first: 'schon geschnitten',
+              second: 'noch nicht geschnitten',
             ),
           ]),
           const SizedBox(
@@ -126,13 +126,13 @@ class ListTilePullDownMenu extends StatelessWidget {
       icon: CupertinoIcons.ellipsis_circle,
       items: [
         MacosPulldownMenuItem(
-          title: const Text('decode otrfile'),
+          title: const Text('Decode otrfile'),
           enabled: otrData.otrkeyBasename != null,
           onTap: () =>
               context.read<AppCubit>().decodeVideo(otrData.otrkeyBasename!),
         ),
         MacosPulldownMenuItem(
-          title: const Text('fetch cutlist for full otrkey name'),
+          title: const Text('Fetch cutlist for full otrkey name'),
           enabled: otrData.otrkeyBasename != null,
           onTap: () => context.read<AppCubit>().menuAction(
                 SearchResultAction.fetchCutlistForOtrKey,
@@ -140,14 +140,14 @@ class ListTilePullDownMenu extends StatelessWidget {
               ),
         ),
         MacosPulldownMenuItem(
-          title: const Text('fetch cutlist for name, datetime and channel'),
+          title: const Text('Fetch cutlist for name, datetime and channel'),
           onTap: () => context.read<AppCubit>().menuAction(
                 SearchResultAction.fetchCutlistMinimalName,
                 otrData.name,
               ),
         ),
         MacosPulldownMenuItem(
-          title: const Text('cut video'),
+          title: const Text('Cut video'),
           enabled:
               otrData.otrkeyBasename != null && otrData.cutlistBasename != null,
           onTap: () => context.read<AppCubit>().menuAction(
@@ -163,10 +163,10 @@ class ListTilePullDownMenu extends StatelessWidget {
               context.read<AppCubit>().showInFinder(otrData.otrkeyBasename!),
         ),
         MacosPulldownMenuItem(
-          title: const Text('Copy OTR Filename to Clipboard'),
+          title: const Text('Copy OTR Name to Clipboard'),
           enabled: otrData.otrkeyBasename != null,
           onTap: () =>
-              context.read<AppCubit>().copyToClipboard(otrData.otrkeyBasename!),
+              context.read<AppCubit>().copyToClipboard(otrData.name),
         ),
         MacosPulldownMenuItem(
           title: const Text('Open Cutlist File in VScode'),

@@ -47,6 +47,5 @@ app.*.map.json
 /android/app/release
 *.otrkey
 *.avi
-Wilsberg_22.03.30_21-40_zdfneo_90_TVOON_DE.mpg.HQ.avi
+*.cutlist
 otrdecoder
-Wilsberg_22.07.06_21-45_zdfneo_90_TVOON_DE.mpg.HQ.avi.cutlist
