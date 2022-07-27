@@ -23,6 +23,14 @@ class _LoggerPageState extends State<LoggerPage> {
     );
   }
 
+  void _scrollToEnd(ScrollController scrollController) {
+    scrollController.animateTo(
+      scrollController.position.maxScrollExtent,
+      curve: Curves.easeOut,
+      duration: const Duration(milliseconds: 50),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     print('_LoggerPageState build');
@@ -58,6 +66,8 @@ class _LoggerPageState extends State<LoggerPage> {
                       initialData: '',
                       builder: (BuildContext context, AsyncSnapshot snapshot) {
                         _lines.add(snapshot.data);
+                        Future.delayed(Duration(milliseconds: 100),
+                            () => _scrollToEnd(scrollController));
                         return ListView.builder(
                           controller: scrollController,
                           itemCount: _lines.length,
