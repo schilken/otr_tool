@@ -34,8 +34,15 @@ class MainPage extends StatelessWidget {
                                 if (state.fileType == null)
                                   const Text('Paths from File: ')
                                 else
-                                Text('${state.fileType} in Folder: '),
+                                Text('Inhalt von: '),
                                 Text(state.currentPathname),
+                              MacosIconButton(
+                                onPressed: () =>
+                                    context.read<AppCubit>().reScanFolder(),
+                                icon: const MacosIcon(
+                                  CupertinoIcons.refresh,
+                                ),
+                              ),
                                 const Spacer(),
                                 Text(
                                   '${state.fileCount}|${state.primaryHitCount}'),
@@ -124,7 +131,7 @@ ToolBar getCustomToolBar(BuildContext context) {
               if (selectedDirectory != null) {
                 context
                     .read<AppCubit>()
-                    .scanFolder(folderPath: selectedDirectory, type: 'otrkey');
+                    .scanFolder(folderPath: selectedDirectory);
               }
             },
           ),

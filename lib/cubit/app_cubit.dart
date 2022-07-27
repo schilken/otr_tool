@@ -42,7 +42,7 @@ class AppCubit extends Cubit<AppState> {
   String? _primaryWord;
   String _currentPathname = "no file selected";
   int _fileCount = 0;
-  String? _fileType;
+//  String? _fileType;
   int _primaryHitCount = 0;
   String? _folderPath;
   final SettingsCubit _settingsCubit;
@@ -61,18 +61,18 @@ class AppCubit extends Cubit<AppState> {
 
   init() async {
     print('AppCubit.init');
-    await scanFolder(type: 'otrkey', folderPath: _settingsCubit.otrFolder);
+    await scanFolder(folderPath: _settingsCubit.otrFolder);
     search();
   }
 
   Future<void> search() async {
     emit(DetailsLoading());
     print('search: $_primaryWord');
+    await Future.delayed(const Duration(milliseconds: 500));
     if (_currentPathname == "no filelist selected") {
       emit(
         DetailsLoaded(
             currentPathname: _currentPathname,
-            fileType: _fileType,
             fileCount: _fileCount,
             primaryHitCount: _primaryHitCount,
             details: [],
@@ -86,7 +86,6 @@ class AppCubit extends Cubit<AppState> {
     emit(
       DetailsLoaded(
         currentPathname: _currentPathname,
-        fileType: _fileType,
         fileCount: _fileCount,
         primaryHitCount: _primaryHitCount,
         details: otrDataList,
@@ -97,15 +96,18 @@ class AppCubit extends Cubit<AppState> {
 
   }
 
+  Future<void> reScanFolder() async {
+    return scanFolder(folderPath: _folderPath!);
+  }
+
   Future<void> scanFolder(
-      {required String type, required String folderPath}) async {
-    print('scanFolder: $folderPath for $type');
+      {required String folderPath}) async {
+    print('scanFolder: $folderPath');
     emit(DetailsLoading());
     await Future.delayed(const Duration(seconds: 1));
 
     _settingsCubit.setOtrFolder(folderPath);
     _folderPath = folderPath;
-    _fileType = type;
 
     if (folderPath != null) {
       filesRepository.currentFolderPath = folderPath;
@@ -223,7 +225,7 @@ class AppCubit extends Cubit<AppState> {
     );
     if (successCount > 0) {
       print('moveOtrkey: $successCount files moved');
-      scanFolder(type: 'otr', folderPath: _settingsCubit.otrFolder);
+      scanFolder(folderPath: _settingsCubit.otrFolder);
     } else {
       print('moveOtrkey: no files moved');
     }
