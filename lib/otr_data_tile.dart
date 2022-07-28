@@ -157,9 +157,9 @@ class ListTilePullDownMenu extends StatelessWidget {
           enabled:
               otrData.decodedBasename != null &&
               otrData.cutlistBasename != null,
-          onTap: () => context.read<AppCubit>().menuAction(
-                SearchResultAction.cutVideo,
+          onTap: () => context.read<AppCubit>().cutVideo(
                 otrData.decodedBasename!,
+                otrData.cutlistBasename!,
               ),
         ),
         const MacosPulldownMenuDivider(),

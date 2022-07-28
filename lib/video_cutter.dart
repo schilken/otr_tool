@@ -6,19 +6,20 @@ import 'package:path/path.dart' as p;
 import 'cutlist_parser.dart';
 
 class VideoCutter {
-  cutVideo(String videoFilename, StreamController<String> streamController,
+  cutVideo(String videoFilename, cutlistFilename,
+      StreamController<String> streamController,
       {bool dryRun = true}) async {
     streamController.add('Starting video cut... $videoFilename');
     streamController.add('loadScriptTemplate()...');
     List<String> lines = await loadScriptTemplate();
     streamController.add('getSegmentsFromFile()...');
-    final extension = p.extension(videoFilename);
-    final cutlistFilename =
-        videoFilename.replaceFirst(extension, '$extension.cutlist');
-    if (!(await fileExists(cutlistFilename))) {
-      streamController.add('cutlist nicht vorhanden: $cutlistFilename');
-      return;
-    }
+    // final extension = p.extension(videoFilename);
+    // final cutlistFilename =
+    //     videoFilename.replaceFirst(extension, '$extension.cutlist');
+    // if (!(await fileExists(cutlistFilename))) {
+    //   streamController.add('cutlist nicht vorhanden: $cutlistFilename');
+    //   return;
+    // }
     List<String> segmentLines =
         await getSegmentsFromFile(videoFilename, cutlistFilename);
     if (segmentLines.isEmpty) {

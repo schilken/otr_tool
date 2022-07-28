@@ -9,7 +9,7 @@ class CutlistParser {
   );
 
   isValid() {
-    return getValue('General', 'ApplyToFile') == _videoFilename;
+    return true; // getValue('General', 'ApplyToFile') == _videoFilename;
   }
 
   List<String> get segmentLines => getAllSegmentStrings();

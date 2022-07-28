@@ -146,7 +146,6 @@ class AppCubit extends Cubit<AppState> {
         fetchCutlists(minimalName);
         break;
       case SearchResultAction.cutVideo:
-        cutVideo(parameter);
         break;
     }
   }
@@ -158,13 +157,14 @@ class AppCubit extends Cubit<AppState> {
         sidebarPageIndex: 1, selectedOtrkeyPath: searchString));
   }
 
-  cutVideo(String filename) async {
-    print('cutVideo: $filename');
+  cutVideo(String videoFilename, String cutlistFilename) async {
+    print('cutVideo: $videoFilename');
     final currentState = state as DetailsLoaded;
     final streamController = StreamController<String>();
 
     final videoCutter = VideoCutter();
-    videoCutter.cutVideo(filename, streamController, dryRun: false);
+    videoCutter.cutVideo(videoFilename, cutlistFilename, streamController,
+        dryRun: false);
 
     emit(currentState.copyWith(
         sidebarPageIndex: 2, commandStdoutStream: streamController.stream));
