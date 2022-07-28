@@ -13,6 +13,7 @@ import 'package:otr_browser/cubit/settings_cubit.dart';
 import 'package:otr_browser/files_repository.dart';
 
 import '../model/otr_data.dart';
+import '../video_cutter.dart';
 
 part 'app_state.dart';
 
@@ -157,19 +158,16 @@ class AppCubit extends Cubit<AppState> {
         sidebarPageIndex: 1, selectedOtrkeyPath: searchString));
   }
 
-  cutVideo(String filename) {
+  cutVideo(String filename) async {
     print('cutVideo: $filename');
     final currentState = state as DetailsLoaded;
     final streamController = StreamController<String>();
+
+    final videoCutter = VideoCutter();
+    videoCutter.cutVideo(filename, streamController, dryRun: false);
+
     emit(currentState.copyWith(
         sidebarPageIndex: 2, commandStdoutStream: streamController.stream));
-    Timer.periodic(Duration(seconds: 2), (timer) {
-      if (streamController.isClosed) {
-        timer.cancel();
-      } else {
-        streamController.add('Line ${timer.tick}');
-      }
-    });
   }
 
   copyToClipboard(String path) {
@@ -190,7 +188,8 @@ class AppCubit extends Cubit<AppState> {
         sidebarPageIndex: 2, commandStdoutStream: streamController.stream));
   }
 
-  void _runDecodeCommand(String filename, StreamController streamController) {
+  void _runDecodeCommand(
+      String filename, StreamController<String> streamController) {
     final workingDirectory = _settingsCubit.otrFolder;
     final otrEmail = _settingsCubit.otrEmail;
     final otrPassword = _settingsCubit.otrPassword;

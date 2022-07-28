@@ -49,3 +49,4 @@ app.*.map.json
 *.avi
 *.cutlist
 otrdecoder
+custom_cut_script.py

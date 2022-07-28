@@ -149,10 +149,11 @@ class ListTilePullDownMenu extends StatelessWidget {
         MacosPulldownMenuItem(
           title: const Text('Cut video'),
           enabled:
-              otrData.otrkeyBasename != null && otrData.cutlistBasename != null,
+              otrData.decodedBasename != null &&
+              otrData.cutlistBasename != null,
           onTap: () => context.read<AppCubit>().menuAction(
                 SearchResultAction.cutVideo,
-                otrData.otrkeyBasename!,
+                otrData.decodedBasename!,
               ),
         ),
         const MacosPulldownMenuDivider(),
