@@ -14,7 +14,7 @@ main() {
     'otrkey_cutlist_decoded_cut_TVOON_DE.mpg.HQ.avi.cutlist',
     'otrkey_cutlist_decoded_cut_TVOON_DE.mpg.HQ.avi',
     'otrkey_cutlist_decoded_cut_TVOON_DE-cut.mpg.HQ.avi',
-    'otrkey_not_exact_cutlist_decoded_TVOON_DE.mpg.HQ.avi.otrkey',
+    'otrkey_not_exact_cutlist_decoded_TVOON_DE.mpg.HQ.avi',
     'otrkey_not_exact_cutlist_decoded_TVOON_DE.mpg.HD.avi.cutlist',
   ];
 
@@ -58,6 +58,18 @@ main() {
             'otrkey_cutlist_decoded_cut_TVOON_DE.mpg.HQ.avi',
             'otrkey_cutlist_decoded_cut_TVOON_DE-cut.mpg.HQ.avi',
           ));
+      expect(otrDataList[3].isExactCutlist, true, reason: 'isExactCutlist');
+      expect(
+          otrDataList[4],
+          OtrData(
+            'otrkey_not_exact_cutlist_decoded',
+            null,
+            'otrkey_not_exact_cutlist_decoded_TVOON_DE.mpg.HD.avi.cutlist',
+            'otrkey_not_exact_cutlist_decoded_TVOON_DE.mpg.HQ.avi',
+            null,
+          ));
+      expect(otrDataList[4].isExactCutlist, false,
+          reason: 'is not ExactCutlist');   
     });
   });
 }

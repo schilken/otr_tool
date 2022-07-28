@@ -54,6 +54,12 @@ class OtrDataTile extends StatelessWidget {
             ),
             SizedBox(width: 12),
             AlternativeTexts(
+              showFirst: otrData.isExactCutlist,
+              first: 'exakter Name',
+              second: 'anderer Name',
+            ),
+            SizedBox(width: 12),
+            AlternativeTexts(
               showFirst: otrData.isCutted,
               first: 'schon geschnitten',
               second: 'noch nicht geschnitten',
