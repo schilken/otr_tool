@@ -1,15 +1,15 @@
 // ignore_for_file: public_member_api_docs, sort_constructors_first
 class CutlistParser {
   final List<String> _lines;
-  final String _inputFilename;
+  final String _videoFilename;
 
   CutlistParser(
-    this._inputFilename,
+    this._videoFilename,
     this._lines,
   );
 
   isValid() {
-    return getValue('General', 'ApplyToFile') == _inputFilename;
+    return getValue('General', 'ApplyToFile') == _videoFilename;
   }
 
   List<String> get segmentLines => getAllSegmentStrings();

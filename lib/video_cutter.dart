@@ -12,7 +12,15 @@ class VideoCutter {
     streamController.add('loadScriptTemplate()...');
     List<String> lines = await loadScriptTemplate();
     streamController.add('getSegmentsFromFile()...');
-    List<String> segmentLines = await getSegmentsFromFile(videoFilename);
+    final extension = p.extension(videoFilename);
+    final cutlistFilename =
+        videoFilename.replaceFirst(extension, '$extension.cutlist');
+    if (!(await fileExists(cutlistFilename))) {
+      streamController.add('cutlist nicht vorhanden: $cutlistFilename');
+      return;
+    }
+    List<String> segmentLines =
+        await getSegmentsFromFile(videoFilename, cutlistFilename);
     if (segmentLines.isEmpty) {
       print('No segments found in input file');
       exit(2);
@@ -20,7 +28,6 @@ class VideoCutter {
     lines.addAll(segmentLines);
     streamController.add('${segmentLines.length} segment(s) found');
     await saveScript(lines, 'custom_cut_script.py');
-    final basenameWithoutExtension = p.basenameWithoutExtension(videoFilename);
     String outputFilename =
         videoFilename.replaceFirst('_TVOON_DE', '_TVOON_DE-cut');
     if (dryRun) {
@@ -31,12 +38,16 @@ class VideoCutter {
     }
   }
 
-  Future<List<String>> getSegmentsFromFile(String inputFilename) async {
-    final extension = p.extension(inputFilename);
-    final cutlistFilename =
-        inputFilename.replaceFirst(extension, '$extension.cutlist');
-    final cutlist = await File(cutlistFilename).readAsLines();
-    final cutlistParser = CutlistParser(inputFilename, cutlist);
+Future<bool> fileExists(String filename) async {
+    final dir = await currentDirectory;
+    final filePath = p.join(dir.path, filename);
+    return await File(filePath).exists();
+  }
+
+  Future<List<String>> getSegmentsFromFile(
+      String videoFilename, String cutlistFilename) async {
+    final cutlistLines = await File(cutlistFilename).readAsLines();
+    final cutlistParser = CutlistParser(videoFilename, cutlistLines);
     if (cutlistParser.isValid()) {
       return cutlistParser.segmentLines;
     } else {
