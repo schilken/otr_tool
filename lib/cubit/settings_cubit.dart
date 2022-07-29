@@ -5,7 +5,6 @@ import 'package:equatable/equatable.dart';
 import 'package:meta/meta.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-
 part 'settings_state.dart';
 
 class SettingsCubit extends Cubit<SettingsState> {
@@ -13,10 +12,9 @@ class SettingsCubit extends Cubit<SettingsState> {
     print('create SettingsCubit');
   }
   late SharedPreferences _prefs;
+  bool showPassword = false;
 
   Future<SettingsCubit> initialize() async {
-    print('SettingsCubit: eventBus: ');
-
     await Future.delayed(Duration(milliseconds: 1000));
     _prefs = await SharedPreferences.getInstance();
     emitSettingsLoaded();
@@ -79,7 +77,17 @@ class SettingsCubit extends Cubit<SettingsState> {
       videoFolder,
       avidemuxApp,
       otrdecoderBinary,
+      showPassword,
     ));
+  }
+
+  void toggleShowPassword() {
+    final currentState = state as SettingsLoaded;
+    emit(
+      currentState.copyWith(
+          showPassword: !currentState.showPassword,
+          password: currentState.showPassword ? otrPassword : '**********'),
+    );
   }
 
 }

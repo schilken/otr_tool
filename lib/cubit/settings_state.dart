@@ -16,6 +16,7 @@ class SettingsLoaded extends SettingsState {
   final String videoFolder;
   final String avidemuxApp;
   final String otrdecoderBinary;
+  final bool showPassword;
 
   SettingsLoaded(
     this.email,
@@ -24,6 +25,7 @@ class SettingsLoaded extends SettingsState {
     this.videoFolder,
     this.avidemuxApp,
     this.otrdecoderBinary,
+    this.showPassword,
   );
 
   @override
@@ -34,5 +36,26 @@ class SettingsLoaded extends SettingsState {
         videoFolder,
         avidemuxApp,
         otrdecoderBinary,
+        showPassword,
       ];
+
+  SettingsLoaded copyWith({
+    String? email,
+    String? password,
+    String? otrFolder,
+    String? videoFolder,
+    String? avidemuxApp,
+    String? otrdecoderBinary,
+    bool? showPassword,
+  }) {
+    return SettingsLoaded(
+      email ?? this.email,
+      password ?? this.password,
+      otrFolder ?? this.otrFolder,
+      videoFolder ?? this.videoFolder,
+      avidemuxApp ?? this.avidemuxApp,
+      otrdecoderBinary ?? this.otrdecoderBinary,
+      showPassword ?? this.showPassword,
+    );
+  }
 }

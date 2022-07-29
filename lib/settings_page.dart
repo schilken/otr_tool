@@ -77,7 +77,7 @@ class SettingsPage extends StatelessWidget {
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
                         Text(
-                          'Preferences',
+                          'Einstellungen',
                           style: MacosTheme.of(context).typography.largeTitle,
                         ),
                         const SizedBox(height: 20),
@@ -111,6 +111,21 @@ class SettingsPage extends StatelessWidget {
                           children: [
                             Text(
                               state.password,
+                            ),
+                            MacosIconButton(
+                              icon: MacosIcon(
+                                size: 60,
+                                state.showPassword
+                                    ? CupertinoIcons.eye
+                                    : CupertinoIcons.eye_slash_fill,
+                              ),
+                              // shape: BoxShape.rectangle,
+                              // borderRadius: BorderRadius.circular(7),
+                              onPressed: () async {
+                                context
+                                    .read<SettingsCubit>()
+                                    .toggleShowPassword();
+                              },
                             ),
                             MacosIconButton(
                               icon: const MacosIcon(
@@ -169,7 +184,7 @@ class SettingsPage extends StatelessWidget {
 
                         SizedBox(height: 16),
                         const Text(
-                          'otrdecode Programm',
+                          'otrdecoder Programm',
                           style: TextStyle(fontWeight: FontWeight.bold),
                         ),
                         SizedBox(height: 8),
