@@ -34,19 +34,26 @@ class FilesRepository {
   //   return process.stdout.split('\n');
   // }
 
-  Future<int> moveAllOtrFiles(String downloadsFolder, String otrFolder) async {
+  Future<int> moveAllOtrFiles(
+      String sourceFolder, String destinationFolder) async {
     var successCount = 0;
-    List<String> list = await findOtrFiles(downloadsFolder);
+    List<String> list = await findOtrFiles(sourceFolder);
     for (final file in list) {
-      final src = p.join(downloadsFolder, file);
-      final dst = p.join(otrFolder, file);
-      print('moveOtrFile: $src -> $dst');
-      bool rc = await moveFile(src, dst);
+      bool rc = await moveOtrFile(sourceFolder, destinationFolder, file);
       if (rc) {
         successCount++;
       }
     }
     return successCount;
+  }
+
+  Future<bool> moveOtrFile(
+      String sourceFolder, String destinationFolder, String filename) async {
+    final src = p.join(sourceFolder, filename);
+    final dst = p.join(destinationFolder, filename);
+    print('moveOtrFile: $src -> $dst');
+    bool rc = await moveFile(src, dst);
+    return rc;
   }
 
   Future<List<String>> findOtrFiles(String folderPath) async {
@@ -98,6 +105,15 @@ class FilesRepository {
       await sourceFile.delete();
       return await newFile.exists();
     }
+  }
+
+// osascript -e "tell application \"Finder\" to delete POSIX file \"${PWD}/${InputFile}\""
+  Future<List<String>> moveToTrash(String workingDir, String filename) async {
+    var process = await Process.run('osascript', [
+      '-e',
+      'tell application "Finder" to delete POSIX file "${workingDir}/${filename}"'
+    ]);
+    return process.stdout.split('\n');
   }
 
 

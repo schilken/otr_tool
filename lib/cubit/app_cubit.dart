@@ -41,7 +41,8 @@ class AppCubit extends Cubit<AppState> {
   String? _primaryWord;
   String _currentFolderPath = "no file selected";
   final SettingsCubit _settingsCubit;
-  List<String> _allFilePaths = [];
+  List<OtrData> _fullOtrDataList = [];
+  final List<OtrData> _filteredOtrDataList = [];
 
   // pathname → loist of 10 lines following hit
   final sectionsMap = <String, List<String>>{};
@@ -61,25 +62,21 @@ class AppCubit extends Cubit<AppState> {
   }
 
   Future<void> search() async {
-    var primaryHitCount = 0;
     emit(DetailsLoading());
     print('search: $_primaryWord');
     await Future.delayed(const Duration(milliseconds: 500));
-    final otrDataList =
-        await filesRepository.consolidateOtrFiles(_allFilePaths);
-    final filteredOtrDataList = <OtrData>[];
-    for (final otrData in otrDataList) {
+    _filteredOtrDataList.clear();
+    for (final otrData in _fullOtrDataList) {
       if (otrData.name.contains(_primaryWord ?? '')) {
-        primaryHitCount++;
-        filteredOtrDataList.add(otrData);
+        _filteredOtrDataList.add(otrData);
       }
     }
     emit(
       DetailsLoaded(
         currentPathname: _currentFolderPath,
-        fileCount: otrDataList.length,
-        primaryHitCount: primaryHitCount,
-        details: filteredOtrDataList,
+        fileCount: _fullOtrDataList.length,
+        primaryHitCount: _filteredOtrDataList.length,
+        details: _filteredOtrDataList,
         primaryWord: _primaryWord,
         sidebarPageIndex: 0,
       ),
@@ -92,18 +89,16 @@ class AppCubit extends Cubit<AppState> {
 
   Future<void> scanFolder({required String folderPath}) async {
     print('scanFolder: $folderPath');
+    _settingsCubit.setOtrFolder(folderPath);
     emit(DetailsLoading());
     await Future.delayed(const Duration(seconds: 1));
-
-    _settingsCubit.setOtrFolder(folderPath);
-
     filesRepository.currentFolderPath = folderPath;
-    _allFilePaths = await filesRepository.findOtrFiles(folderPath);
-    _allFilePaths.sort((a, b) => a.compareTo(b));
+    final allFilePaths = await filesRepository.findOtrFiles(folderPath);
+    allFilePaths.sort((a, b) => a.compareTo(b));
+    _fullOtrDataList = filesRepository.consolidateOtrFiles(allFilePaths);
     _currentFolderPath = folderPath;
     search();
   }
-
 
   void openEditor(String? filename) {
     final filePath = p.join(_settingsCubit.otrFolder, filename);
@@ -194,8 +189,6 @@ class AppCubit extends Cubit<AppState> {
   }
 
   Future<void> moveOtrkey() async {
-    // final clipboardData = await Clipboard.getData('text/plain');
-    // final url = clipboardData?.text;
     print('moveOtrkey called');
     final successCount = await filesRepository.moveAllOtrFiles(
       '/Users/aschilken/Downloads',
@@ -211,9 +204,53 @@ class AppCubit extends Cubit<AppState> {
 
   void moveCutVideosToVideoFolder() {
     print('moveCutVideosToVideoFolder');
+    for (final otrData in _filteredOtrDataList) {
+      if (otrData.isCutted) {
+        print('${otrData.decodedBasename}');
+        print('${otrData.otrkeyBasename}');
+        print('${otrData.cutlistBasename}');
+      }
+    }
+
   }
 
   void cleanUp() {
     print('cleanUp');
+  }
+
+  Future<void> moveToTrashOrToMovies(String name) async {
+    final otrData =
+        _filteredOtrDataList.firstWhere((otrData) => otrData.name == name);
+    bool removeDecodedFile = otrData.isdeCoded;
+    if (otrData.isCutted) {
+      bool rc = await filesRepository.moveOtrFile(
+        _settingsCubit.otrFolder,
+        _settingsCubit.videoFolder,
+        otrData.cuttedBasename!,
+      );
+    } else {
+      if (otrData.isdeCoded) {
+        bool rc = await filesRepository.moveOtrFile(
+          _settingsCubit.otrFolder,
+          _settingsCubit.videoFolder,
+          otrData.decodedBasename!,
+        );
+        removeDecodedFile = false;
+      }
+    }
+
+    if (otrData.hasOtrkey) {
+      await filesRepository.moveToTrash(
+          _currentFolderPath, otrData.otrkeyBasename!);
+    }
+    if (otrData.hasCutlist) {
+      await filesRepository.moveToTrash(
+          _currentFolderPath, otrData.cutlistBasename!);
+    }
+    if (removeDecodedFile) {
+      await filesRepository.moveToTrash(
+          _currentFolderPath, otrData.decodedBasename!);
+    }
+    scanFolder(folderPath: _settingsCubit.otrFolder);
   }
 }

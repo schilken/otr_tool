@@ -181,6 +181,16 @@ class ListTilePullDownMenu extends StatelessWidget {
           onTap: () =>
               context.read<AppCubit>().openEditor(otrData.cutlistBasename),
         ),
+        const MacosPulldownMenuDivider(),
+        MacosPulldownMenuItem(
+          title: const Text(
+              'Alles außer geschnittenes Video in Papierkorb verschieben'),
+          enabled: otrData.isCutted,
+          onTap: () async => await context
+              .read<AppCubit>()
+              .moveToTrashOrToMovies(otrData.name),
+        ),
+
       ],
     );
   }
