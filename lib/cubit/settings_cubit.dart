@@ -31,8 +31,25 @@ class SettingsCubit extends Cubit<SettingsState> {
       _prefs.getString('otrFolder') ??
       '/Users/aschilken/flutterdev/my_projects/otr_browser';
 
+  String get videoFolder =>
+      _prefs.getString('videoFolder') ?? '/Users/aschilken/movies';
+
+  String get avidemuxApp =>
+      _prefs.getString('avidemuxApp') ?? '/Applications/avidemux2.8.app';
+
+
   Future<void> setOtrFolder(value) async {
     await _prefs.setString('otrFolder', value);
+    emitSettingsLoaded();
+  }
+
+  Future<void> setVideoFolder(value) async {
+    await _prefs.setString('videoFolder', value);
+    emitSettingsLoaded();
+  }
+
+  Future<void> setAvidemuxApp(value) async {
+    await _prefs.setString('avidemuxApp', value);
     emitSettingsLoaded();
   }
 
@@ -52,13 +69,9 @@ class SettingsCubit extends Cubit<SettingsState> {
       otrEmail,
       otrPassword,
       otrFolder,
+      videoFolder,
+      avidemuxApp,
     ));
   }
-
-  setAvidemuxBinary(String? first) {
-    print('setAvidemuxBinary: $first');
-  }
-
-
 
 }

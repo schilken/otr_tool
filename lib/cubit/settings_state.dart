@@ -13,9 +13,23 @@ class SettingsLoaded extends SettingsState {
   final String email;
   final String password;
   final String otrFolder;
+  final String videoFolder;
+  final String avidemuxApp;
 
-  SettingsLoaded(this.email, this.password, this.otrFolder);
+  SettingsLoaded(
+    this.email,
+    this.password,
+    this.otrFolder,
+    this.videoFolder,
+    this.avidemuxApp,
+  );
 
   @override
-  List<Object?> get props => [email, password, otrFolder];
+  List<Object?> get props => [
+        email,
+        password,
+        otrFolder,
+        videoFolder,
+        avidemuxApp,
+      ];
 }

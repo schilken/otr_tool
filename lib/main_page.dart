@@ -78,6 +78,7 @@ class MainPage extends StatelessWidget {
                               },
                             ),
                           ),
+                        const SizedBox(height: 12),
                         ],
                       );
                     } else if (state is DetailsLoading) {

@@ -7,6 +7,8 @@ import 'package:macos_ui/macos_ui.dart';
 import 'cubit/settings_cubit.dart';
 import 'textfield_dialog.dart';
 
+typedef StringCallback = void Function(String);
+
 class SettingsPage extends StatelessWidget {
   SettingsPage({super.key});
 
@@ -128,29 +130,27 @@ class SettingsPage extends StatelessWidget {
                           style: TextStyle(fontWeight: FontWeight.bold),
                         ),
                         SizedBox(height: 8),
-                        Row(
-                          children: [
-                            Text(
-                              state.otrFolder,
-                            ),
-                            MacosIconButton(
-                              icon: const MacosIcon(
-                                CupertinoIcons.folder_open,
-                              ),
-                              shape: BoxShape.rectangle,
-                              borderRadius: BorderRadius.circular(7),
-                              onPressed: () async {
-                                String? selectedDirectory = await FilePicker
-                                    .platform
-                                    .getDirectoryPath();
-                                if (selectedDirectory != null) {
-                                  await context
-                                      .read<SettingsCubit>()
-                                      .setOtrFolder(selectedDirectory);
-                                }
-                              },
-                            ),
-                          ],
+                        ShowAndSelectFolder(
+                          folder: state.otrFolder,
+                          onSelected: (String? value) async {
+                            await context
+                                .read<SettingsCubit>()
+                                .setOtrFolder(value);
+                          },
+                        ),
+                        SizedBox(height: 16),
+                        const Text(
+                          'Video Folder',
+                          style: TextStyle(fontWeight: FontWeight.bold),
+                        ),
+                        SizedBox(height: 8),
+                        ShowAndSelectFolder(
+                          folder: state.videoFolder,
+                          onSelected: (String? value) async {
+                            await context
+                                .read<SettingsCubit>()
+                                .setVideoFolder(value);
+                          },
                         ),
                         SizedBox(height: 16),
                         const Text(
@@ -161,7 +161,7 @@ class SettingsPage extends StatelessWidget {
                         Row(
                           children: [
                             Text(
-                              state.otrFolder,
+                              state.avidemuxApp,
                             ),
                             MacosIconButton(
                               icon: const MacosIcon(
@@ -178,7 +178,7 @@ class SettingsPage extends StatelessWidget {
                                 if (filePickerResult != null) {
                                   await context
                                       .read<SettingsCubit>()
-                                      .setAvidemuxBinary(
+                                      .setAvidemuxApp(
                                           filePickerResult.paths.first);
                                 }
                               },
@@ -196,6 +196,41 @@ class SettingsPage extends StatelessWidget {
                 },
               ),
             );
+          },
+        ),
+      ],
+    );
+  }
+}
+
+class ShowAndSelectFolder extends StatelessWidget {
+  const ShowAndSelectFolder({
+    super.key,
+    required this.folder,
+    required this.onSelected,
+  });
+  final String folder;
+  final StringCallback onSelected;
+
+  @override
+  Widget build(BuildContext context) {
+    return Row(
+      children: [
+        Text(
+          folder,
+        ),
+        MacosIconButton(
+          icon: const MacosIcon(
+            CupertinoIcons.folder_open,
+          ),
+          shape: BoxShape.rectangle,
+          borderRadius: BorderRadius.circular(7),
+          onPressed: () async {
+            String? selectedDirectory =
+                await FilePicker.platform.getDirectoryPath();
+            if (selectedDirectory != null) {
+              onSelected(selectedDirectory);
+            }
           },
         ),
       ],
