@@ -162,21 +162,25 @@ class AppCubit extends Cubit<AppState> {
         sidebarPageIndex: 2, commandStdoutStream: streamController.stream));
   }
 
-  void _runDecodeCommand(
-      String filename, StreamController<String> streamController) {
+  Future<void> _runDecodeCommand(
+      String filename, StreamController<String> streamController) async {
     final workingDirectory = _settingsCubit.otrFolder;
     final otrEmail = _settingsCubit.otrEmail;
     final otrPassword = _settingsCubit.otrPassword;
-    final process = Process.start(
-      './otrdecoder',
+    final process = await Process.start(
+      _settingsCubit.otrdecoderBinary,
       ['-i', filename, '-e', otrEmail, '-p', otrPassword],
       workingDirectory: workingDirectory,
-    ).then(
-      (proc) => proc.stdout
+    );
+
+    process.stdout
           .transform(utf8.decoder)
           .transform(const LineSplitter())
           .forEach(
-            (line) => streamController.add(line),
+      (line) {
+        streamController.add(line);
+        print(line);
+      },
           )
           .whenComplete(() {
         streamController.add('Stream closed in whenComplete');
@@ -184,8 +188,15 @@ class AppCubit extends Cubit<AppState> {
       }).onError((error, stackTrace) {
         streamController.add('Stream closed onError');
         return streamController.close();
-      }),
+      },
     );
+    process.stderr
+        .transform(utf8.decoder)
+        .transform(const LineSplitter())
+        .forEach((line) {
+      streamController.add(line);
+      print('stderr >> $line');
+    });
   }
 
   Future<void> moveOtrkey() async {
