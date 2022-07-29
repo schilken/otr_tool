@@ -193,23 +193,8 @@ class ListTilePullDownMenu extends StatelessWidget {
               .moveToTrashOrToMovies(otrData.name);
             BotToast.showText(
               text: 'Dateien in Papierkorb bzw. Filem-Ornder verschoben',
-              duration: Duration(seconds: 3),
-//                      onlyOne: onlyOne,
-//                      clickClose: clickClose,
-//                      crossPage: crossPage,
-//                      backButtonBehavior: backButtonBehavior,
-              align: Alignment(0, 0.3),
-//                      animationDuration:
-              //     Duration(milliseconds: animationMilliseconds),
-              // animationReverseDuration:
-              //     Duration(milliseconds: animationReverseMilliseconds),
-              // textStyle: TextStyle(
-              //     color: Color(fontColor),
-              //     fontSize: fontSize.toDouble()),
-              // borderRadius:
-              //     BorderRadius.circular(borderRadius.toDouble()),
-              // backgroundColor: Color(backgroundColor),
-              // contentColor: Color(contentColor));
+              duration: const Duration(seconds: 3),
+              align: const Alignment(0, 0.3),
             );
           },
         ),
