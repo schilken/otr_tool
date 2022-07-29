@@ -5,7 +5,6 @@ import 'dart:io';
 import 'package:path/path.dart' as p;
 import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
-import 'package:file_picker/file_picker.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/services.dart';
 import 'package:meta/meta.dart';
@@ -20,7 +19,6 @@ part 'app_state.dart';
 enum SearchResultAction {
   fetchCutlistForOtrKey,
   fetchCutlistMinimalName,
-  cutVideo,
 }
 
 class AppCubit extends Cubit<AppState> {
@@ -41,11 +39,9 @@ class AppCubit extends Cubit<AppState> {
   }
   final FilesRepository filesRepository;
   String? _primaryWord;
-  String _currentPathname = "no file selected";
+  String _currentFolderPath = "no file selected";
   int _fileCount = 0;
-//  String? _fileType;
   int _primaryHitCount = 0;
-  String? _folderPath;
   final SettingsCubit _settingsCubit;
   List<String>? _allFilePaths;
 
@@ -70,10 +66,10 @@ class AppCubit extends Cubit<AppState> {
     emit(DetailsLoading());
     print('search: $_primaryWord');
     await Future.delayed(const Duration(milliseconds: 500));
-    if (_currentPathname == "no filelist selected") {
+    if (_currentFolderPath == "no filelist selected") {
       emit(
         DetailsLoaded(
-            currentPathname: _currentPathname,
+            currentPathname: _currentFolderPath,
             fileCount: _fileCount,
             primaryHitCount: _primaryHitCount,
             details: [],
@@ -86,7 +82,7 @@ class AppCubit extends Cubit<AppState> {
         await filesRepository.consolidateOtrFiles(_allFilePaths!);
     emit(
       DetailsLoaded(
-        currentPathname: _currentPathname,
+        currentPathname: _currentFolderPath,
         fileCount: _fileCount,
         primaryHitCount: _primaryHitCount,
         details: otrDataList,
@@ -94,32 +90,24 @@ class AppCubit extends Cubit<AppState> {
         sidebarPageIndex: 0,
       ),
     );
-
   }
 
   Future<void> reScanFolder() async {
-    return scanFolder(folderPath: _folderPath!);
+    return scanFolder(folderPath: _currentFolderPath);
   }
 
-  Future<void> scanFolder(
-      {required String folderPath}) async {
+  Future<void> scanFolder({required String folderPath}) async {
     print('scanFolder: $folderPath');
     emit(DetailsLoading());
     await Future.delayed(const Duration(seconds: 1));
 
     _settingsCubit.setOtrFolder(folderPath);
-    _folderPath = folderPath;
 
-    if (folderPath != null) {
-      filesRepository.currentFolderPath = folderPath;
-      _allFilePaths = await filesRepository.findOtrFiles(folderPath);
-      _allFilePaths?.sort((a, b) => a.compareTo(b));
-      _currentPathname = folderPath;
-      _fileCount = _allFilePaths?.length ?? 0;
-    } else {
-      _currentPathname = "no file selected";
-      _fileCount = 0;
-    }
+    filesRepository.currentFolderPath = folderPath;
+    _allFilePaths = await filesRepository.findOtrFiles(folderPath);
+    _allFilePaths?.sort((a, b) => a.compareTo(b));
+    _currentFolderPath = folderPath;
+    _fileCount = _allFilePaths?.length ?? 0;
     search();
   }
 
@@ -144,8 +132,6 @@ class AppCubit extends Cubit<AppState> {
       case SearchResultAction.fetchCutlistMinimalName:
         final minimalName = parameter.split('_TVOON').first;
         fetchCutlists(minimalName);
-        break;
-      case SearchResultAction.cutVideo:
         break;
     }
   }
@@ -238,6 +224,4 @@ class AppCubit extends Cubit<AppState> {
   void cleanUp() {
     print('cleanUp');
   }
-
-
 }

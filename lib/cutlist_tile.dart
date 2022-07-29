@@ -1,21 +1,18 @@
 // ignore_for_file: public_member_api_docs, sort_constructors_first
-import 'dart:io';
-
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:macos_ui/macos_ui.dart';
 
 import 'package:otr_browser/cubit/app_cubit.dart';
-import 'package:otr_browser/highlighted_text.dart';
 
 import 'cubit/cutlist_item.dart';
 
 class CutlistTile extends StatelessWidget {
   const CutlistTile({
-    Key? key,
+    super.key,
     required this.cutlistItem,
-  }) : super(key: key);
+  });
   final CutlistItem cutlistItem;
 
   @override
@@ -53,8 +50,11 @@ class CutlistTile extends StatelessWidget {
 }
 
 class LabelValueRow extends StatelessWidget {
-  const LabelValueRow({Key? key, required this.label, required this.value})
-      : super(key: key);
+  const LabelValueRow({
+    super.key,
+    required this.label,
+    required this.value,
+  });
   final String label;
   final String value;
 
@@ -72,9 +72,9 @@ class LabelValueRow extends StatelessWidget {
 
 class ListTilePullDownMenu extends StatelessWidget {
   const ListTilePullDownMenu({
-    Key? key,
+    super.key,
     required this.cutlistItem,
-  }) : super(key: key);
+  });
 
   final CutlistItem cutlistItem;
 
@@ -88,17 +88,10 @@ class ListTilePullDownMenu extends StatelessWidget {
           onTap: () => debugPrint("decode otrfile"),
         ),
         MacosPulldownMenuItem(
-          title: const Text('cut'),
+          title: const Text('fetch cutlist'),
           onTap: () => context.read<AppCubit>().menuAction(
                 SearchResultAction.fetchCutlistForOtrKey,
                 'detail.otrKey',
-              ),
-        ),
-        MacosPulldownMenuItem(
-          title: const Text('cut video'),
-          onTap: () => context.read<AppCubit>().menuAction(
-                SearchResultAction.cutVideo,
-                'detail.filePathName',
               ),
         ),
         const MacosPulldownMenuDivider(),
