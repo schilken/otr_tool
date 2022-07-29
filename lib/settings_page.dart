@@ -146,7 +146,7 @@ class SettingsPage extends StatelessWidget {
                         SizedBox(height: 8),
                         ShowAndSelectFolder(
                           folder: state.videoFolder,
-                          onSelected: (String? value) async {
+                          onSelected: (String value) async {
                             await context
                                 .read<SettingsCubit>()
                                 .setVideoFolder(value);
@@ -158,32 +158,28 @@ class SettingsPage extends StatelessWidget {
                           style: TextStyle(fontWeight: FontWeight.bold),
                         ),
                         SizedBox(height: 8),
-                        Row(
-                          children: [
-                            Text(
-                              state.avidemuxApp,
-                            ),
-                            MacosIconButton(
-                              icon: const MacosIcon(
-                                CupertinoIcons.folder_open,
-                              ),
-                              shape: BoxShape.rectangle,
-                              borderRadius: BorderRadius.circular(7),
-                              onPressed: () async {
-                                FilePickerResult? filePickerResult =
-                                    await FilePicker.platform.pickFiles(
-                                  type: FileType.custom,
-                                  allowedExtensions: ['app'],
-                                );
-                                if (filePickerResult != null) {
-                                  await context
-                                      .read<SettingsCubit>()
-                                      .setAvidemuxApp(
-                                          filePickerResult.paths.first);
-                                }
-                              },
-                            ),
-                          ],
+                        ShowAndSelectFile(
+                          filename: state.avidemuxApp,
+                          onSelected: (String value) async {
+                            await context
+                                .read<SettingsCubit>()
+                                .setAvidemuxApp(value);
+                          },
+                        ),
+
+                        SizedBox(height: 16),
+                        const Text(
+                          'otrdecode Programm',
+                          style: TextStyle(fontWeight: FontWeight.bold),
+                        ),
+                        SizedBox(height: 8),
+                        ShowAndSelectFile(
+                          filename: state.otrdecoderBinary,
+                          onSelected: (String value) async {
+                            await context
+                                .read<SettingsCubit>()
+                                .setOtrdecoderBinary(value);
+                          },
                         ),
                         SizedBox(height: 16),
                       ],
@@ -230,6 +226,44 @@ class ShowAndSelectFolder extends StatelessWidget {
                 await FilePicker.platform.getDirectoryPath();
             if (selectedDirectory != null) {
               onSelected(selectedDirectory);
+            }
+          },
+        ),
+      ],
+    );
+  }
+}
+
+class ShowAndSelectFile extends StatelessWidget {
+  const ShowAndSelectFile({
+    super.key,
+    required this.filename,
+    required this.onSelected,
+  });
+  final String filename;
+  final StringCallback onSelected;
+
+  @override
+  Widget build(BuildContext context) {
+    return Row(
+      children: [
+        Text(
+          filename,
+        ),
+        MacosIconButton(
+          icon: const MacosIcon(
+            CupertinoIcons.folder_open,
+          ),
+          shape: BoxShape.rectangle,
+          borderRadius: BorderRadius.circular(7),
+          onPressed: () async {
+            FilePickerResult? filePickerResult =
+                await FilePicker.platform.pickFiles(
+              type: FileType.custom,
+              allowedExtensions: ['app'],
+            );
+            if (filePickerResult?.paths.first != null) {
+              onSelected(filePickerResult!.paths.first!);
             }
           },
         ),

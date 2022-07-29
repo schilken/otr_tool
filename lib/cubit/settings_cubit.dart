@@ -37,6 +37,8 @@ class SettingsCubit extends Cubit<SettingsState> {
   String get avidemuxApp =>
       _prefs.getString('avidemuxApp') ?? '/Applications/avidemux2.8.app';
 
+  String get otrdecoderBinary =>
+      _prefs.getString('otrdecoderBinary') ?? '/Applications/avidemux2.8.app';
 
   Future<void> setOtrFolder(value) async {
     await _prefs.setString('otrFolder', value);
@@ -50,6 +52,11 @@ class SettingsCubit extends Cubit<SettingsState> {
 
   Future<void> setAvidemuxApp(value) async {
     await _prefs.setString('avidemuxApp', value);
+    emitSettingsLoaded();
+  }
+
+  Future<void> setOtrdecoderBinary(value) async {
+    await _prefs.setString('otrdecoderBinary', value);
     emitSettingsLoaded();
   }
 
@@ -71,6 +78,7 @@ class SettingsCubit extends Cubit<SettingsState> {
       otrFolder,
       videoFolder,
       avidemuxApp,
+      otrdecoderBinary,
     ));
   }
 

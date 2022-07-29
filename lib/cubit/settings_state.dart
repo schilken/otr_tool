@@ -15,6 +15,7 @@ class SettingsLoaded extends SettingsState {
   final String otrFolder;
   final String videoFolder;
   final String avidemuxApp;
+  final String otrdecoderBinary;
 
   SettingsLoaded(
     this.email,
@@ -22,6 +23,7 @@ class SettingsLoaded extends SettingsState {
     this.otrFolder,
     this.videoFolder,
     this.avidemuxApp,
+    this.otrdecoderBinary,
   );
 
   @override
@@ -31,5 +33,6 @@ class SettingsLoaded extends SettingsState {
         otrFolder,
         videoFolder,
         avidemuxApp,
+        otrdecoderBinary,
       ];
 }
