@@ -1,11 +1,13 @@
+import 'dart:async';
+
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:macos_ui/macos_ui.dart';
 
 class LoggerPage extends StatefulWidget {
-  const LoggerPage(Stream<String>? commandStdout, {super.key})
+  const LoggerPage(Stream<String> commandStdout, {super.key})
       : _commandStdout = commandStdout;
-  final Stream<String>? _commandStdout;
+  final Stream<String> _commandStdout;
 
   @override
   State<LoggerPage> createState() => _LoggerPageState();
@@ -14,6 +16,7 @@ class LoggerPage extends StatefulWidget {
 
 class _LoggerPageState extends State<LoggerPage> {
   final List<String> _lines = <String>[];
+  late StreamSubscription<String> _streamSubscription;
 
   void onClear() {
     setState(
@@ -23,17 +26,35 @@ class _LoggerPageState extends State<LoggerPage> {
     );
   }
 
+  @override
+  void didUpdateWidget(covariant LoggerPage oldWidget) {
+    _streamSubscription = widget._commandStdout.listen(
+      (line) {
+        setState(
+          () {
+            _lines.add(line);
+          },
+        );
+      },
+    );
+    super.didUpdateWidget(oldWidget);
+  }
+
+  onDispose() {
+    _streamSubscription.cancel();
+    super.dispose();
+  }
+
   void _scrollToEnd(ScrollController scrollController) {
     scrollController.animateTo(
       scrollController.position.maxScrollExtent,
       curve: Curves.easeOut,
-      duration: const Duration(milliseconds: 50),
+      duration: Duration(milliseconds: 10),
     );
   }
 
   @override
   Widget build(BuildContext context) {
-    print('_LoggerPageState build');
     return MacosScaffold(
       children: [
         ContentArea(
@@ -61,20 +82,14 @@ class _LoggerPageState extends State<LoggerPage> {
                   ),
                   SizedBox(height: 8),
                   Expanded(
-                    child: StreamBuilder(
-                      stream: widget._commandStdout,
-                      initialData: '',
-                      builder: (BuildContext context, AsyncSnapshot snapshot) {
-                        _lines.add(snapshot.data);
-                        Future.delayed(Duration(milliseconds: 100),
-                            () => _scrollToEnd(scrollController));
-                        return ListView.builder(
+                    child: ListView.builder(
                           controller: scrollController,
                           itemCount: _lines.length,
                           itemBuilder: (BuildContext context, int index) {
-                            return Text(_lines[index]);
-                          },
-                        );
+                        Future.delayed(Duration.zero, () {
+                          _scrollToEnd(scrollController);
+                        }); 
+                        return Text(_lines[index]);
                       },
                     ),
                   ),

@@ -162,12 +162,13 @@ class AppCubit extends Cubit<AppState> {
     final currentState = state as DetailsLoaded;
     final streamController = StreamController<String>();
 
+    emit(currentState.copyWith(
+        sidebarPageIndex: 2, commandStdoutStream: streamController.stream));
+
+    await Future.delayed(const Duration(milliseconds: 500));
     final videoCutter = VideoCutter();
     videoCutter.cutVideo(videoFilename, cutlistFilename, streamController,
         dryRun: false);
-
-    emit(currentState.copyWith(
-        sidebarPageIndex: 2, commandStdoutStream: streamController.stream));
   }
 
   copyToClipboard(String path) {

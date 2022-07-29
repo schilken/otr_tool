@@ -162,7 +162,7 @@ class _MainViewState extends State<MainView> {
                 children: [
                   MainPage(),
                   CutlistPage(filePath: state.selectedOtrkeyPath),
-                  LoggerPage(state.commandStdoutStream),
+                  LoggerPage(state.commandStdoutStream ?? Stream.empty()),
                   SettingsPage(),
                 ],
               ),
