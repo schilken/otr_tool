@@ -40,10 +40,8 @@ class AppCubit extends Cubit<AppState> {
   final FilesRepository filesRepository;
   String? _primaryWord;
   String _currentFolderPath = "no file selected";
-  int _fileCount = 0;
-  int _primaryHitCount = 0;
   final SettingsCubit _settingsCubit;
-  List<String>? _allFilePaths;
+  List<String> _allFilePaths = [];
 
   // pathname → loist of 10 lines following hit
   final sectionsMap = <String, List<String>>{};
@@ -63,29 +61,25 @@ class AppCubit extends Cubit<AppState> {
   }
 
   Future<void> search() async {
+    var primaryHitCount = 0;
     emit(DetailsLoading());
     print('search: $_primaryWord');
     await Future.delayed(const Duration(milliseconds: 500));
-    if (_currentFolderPath == "no filelist selected") {
-      emit(
-        DetailsLoaded(
-            currentPathname: _currentFolderPath,
-            fileCount: _fileCount,
-            primaryHitCount: _primaryHitCount,
-            details: [],
-            message: 'No filelist loaded',
-            sidebarPageIndex: 0),
-      );
-      return;
-    }
     final otrDataList =
-        await filesRepository.consolidateOtrFiles(_allFilePaths!);
+        await filesRepository.consolidateOtrFiles(_allFilePaths);
+    final filteredOtrDataList = <OtrData>[];
+    for (final otrData in otrDataList) {
+      if (otrData.name.contains(_primaryWord ?? '')) {
+        primaryHitCount++;
+        filteredOtrDataList.add(otrData);
+      }
+    }
     emit(
       DetailsLoaded(
         currentPathname: _currentFolderPath,
-        fileCount: _fileCount,
-        primaryHitCount: _primaryHitCount,
-        details: otrDataList,
+        fileCount: otrDataList.length,
+        primaryHitCount: primaryHitCount,
+        details: filteredOtrDataList,
         primaryWord: _primaryWord,
         sidebarPageIndex: 0,
       ),
@@ -105,13 +99,11 @@ class AppCubit extends Cubit<AppState> {
 
     filesRepository.currentFolderPath = folderPath;
     _allFilePaths = await filesRepository.findOtrFiles(folderPath);
-    _allFilePaths?.sort((a, b) => a.compareTo(b));
+    _allFilePaths.sort((a, b) => a.compareTo(b));
     _currentFolderPath = folderPath;
-    _fileCount = _allFilePaths?.length ?? 0;
     search();
   }
 
-  void saveFileList() {}
 
   void openEditor(String? filename) {
     final filePath = p.join(_settingsCubit.otrFolder, filename);
