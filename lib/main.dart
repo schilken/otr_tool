@@ -1,5 +1,6 @@
 import 'dart:convert';
 
+import 'package:bot_toast/bot_toast.dart';
 import 'package:collection/collection.dart';
 import 'package:desktop_multi_window/desktop_multi_window.dart';
 import 'package:flutter/cupertino.dart';
@@ -74,6 +75,8 @@ class App extends StatelessWidget {
                 themeMode: ThemeMode.system,
                 home: const MainView(),
                 debugShowCheckedModeBanner: false,
+                builder: BotToastInit(),
+                navigatorObservers: [BotToastNavigatorObserver()],
               ),
             ),
           );

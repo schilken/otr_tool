@@ -1,6 +1,7 @@
 // ignore_for_file: public_member_api_docs, sort_constructors_first
 import 'dart:io';
 
+import 'package:bot_toast/bot_toast.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -186,9 +187,31 @@ class ListTilePullDownMenu extends StatelessWidget {
           title: const Text(
               'Alles außer geschnittenes Video in Papierkorb verschieben'),
           enabled: otrData.isCutted,
-          onTap: () async => await context
+          onTap: () async {
+            await context
               .read<AppCubit>()
-              .moveToTrashOrToMovies(otrData.name),
+              .moveToTrashOrToMovies(otrData.name);
+            BotToast.showText(
+              text: 'Dateien in Papierkorb bzw. Filem-Ornder verschoben',
+              duration: Duration(seconds: 3),
+//                      onlyOne: onlyOne,
+//                      clickClose: clickClose,
+//                      crossPage: crossPage,
+//                      backButtonBehavior: backButtonBehavior,
+              align: Alignment(0, 0.3),
+//                      animationDuration:
+              //     Duration(milliseconds: animationMilliseconds),
+              // animationReverseDuration:
+              //     Duration(milliseconds: animationReverseMilliseconds),
+              // textStyle: TextStyle(
+              //     color: Color(fontColor),
+              //     fontSize: fontSize.toDouble()),
+              // borderRadius:
+              //     BorderRadius.circular(borderRadius.toDouble()),
+              // backgroundColor: Color(backgroundColor),
+              // contentColor: Color(contentColor));
+            );
+          },
         ),
 
       ],
