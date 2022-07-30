@@ -6,7 +6,7 @@ import 'package:path/path.dart' as p;
 import 'cutlist_parser.dart';
 
 class VideoCutter {
-  cutVideo(String videoFilename, cutlistFilename,
+  cutVideo(String otrFolder, String videoFilename, cutlistFilename,
       StreamController<String> streamController,
       {bool dryRun = true}) async {
     streamController.add('Starting video cut... $videoFilename');
@@ -20,8 +20,10 @@ class VideoCutter {
     //   streamController.add('cutlist nicht vorhanden: $cutlistFilename');
     //   return;
     // }
+    final videoFilePath = p.join(otrFolder, videoFilename);
+    final cutlistFilePath = p.join(otrFolder, cutlistFilename);
     List<String> segmentLines =
-        await getSegmentsFromFile(videoFilename, cutlistFilename);
+        await getSegmentsFromFile(videoFilePath, cutlistFilePath);
     if (segmentLines.isEmpty) {
       print('No segments found in input file');
       exit(2);
@@ -29,13 +31,13 @@ class VideoCutter {
     lines.addAll(segmentLines);
     streamController.add('${segmentLines.length} segment(s) found');
     await saveScript(lines, 'custom_cut_script.py');
-    String outputFilename =
-        videoFilename.replaceFirst('_TVOON_DE', '_TVOON_DE-cut');
+    String outputFilePath =
+        videoFilePath.replaceFirst('_TVOON_DE', '_TVOON_DE-cut');
     if (dryRun) {
       streamController.add(
           'Dry run, not cutting inputfile, but custom_cut_script.py is generated');
     } else {
-      runCutCommand(videoFilename, outputFilename, streamController);
+      runCutCommand(videoFilePath, outputFilePath, streamController);
     }
   }
 
