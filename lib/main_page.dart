@@ -1,3 +1,4 @@
+import 'package:bot_toast/bot_toast.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -125,7 +126,7 @@ ToolBar getCustomToolBar(BuildContext context) {
         items: [
 
           MacosPulldownMenuItem(
-            title: const Text("Set Folder to scan for OTRKEY Files"),
+            title: const Text("Wähle Verzeichnis der otrkey Dateien"),
             onTap: () async {
               String? selectedDirectory =
                   await FilePicker.platform.getDirectoryPath();
@@ -137,12 +138,20 @@ ToolBar getCustomToolBar(BuildContext context) {
             },
           ),
           MacosPulldownMenuItem(
-              title: const Text("Move OTRKEY + cutlist from Downloads Folder"),
+              title: const Text(
+                  "Kopiere OTRKEY + cutlist vom Downloads Verzeichnis"),
               onTap: () async {
-                context.read<AppCubit>().moveOtrkey();
+                final result = await context.read<AppCubit>().moveOtrkey();
+                BotToast.showText(
+                  text: result,
+                  duration: const Duration(seconds: 3),
+                  align: const Alignment(0, 0.3),
+                );
+
               }),
           MacosPulldownMenuItem(
-              title: const Text("Move cutted Otrkeys to Videos Folder"),
+              title: const Text(
+                  "Verschiebe geschnittene Otrkeys ins Video-Verzeichnis"),
               onTap: () async {
                 context.read<AppCubit>().moveCutVideosToVideoFolder();
               }),
@@ -153,12 +162,6 @@ ToolBar getCustomToolBar(BuildContext context) {
               }),
 
           const MacosPulldownMenuDivider(),
-          MacosPulldownMenuItem(
-            label: "Remove",
-            enabled: false,
-            title: const Text('Remove'),
-            onTap: () => debugPrint("Deleting..."),
-          ),
         ],
       ),
       const ToolBarDivider(),
