@@ -60,7 +60,8 @@ class FilesRepository {
     final Directory dir = Directory(folderPath);
     final list = await dir
         .list()
-        .where((entry) => p.basename(entry.path).contains('_TVOON_DE'))
+        .where((entry) =>
+            p.basename(entry.path).contains('_TVOON_DE') && entry is File)
         .map((entity) => p.basename(entity.path))
         .toList();
     return list;
