@@ -140,7 +140,8 @@ class AppCubit extends Cubit<AppState> {
 
     await Future.delayed(const Duration(milliseconds: 500));
     final videoCutter = VideoCutter();
-    videoCutter.cutVideo(videoFilename, cutlistFilename, streamController,
+    videoCutter.cutVideo(_settingsCubit.otrFolder, videoFilename,
+        cutlistFilename, streamController,
         dryRun: false);
   }
 
@@ -199,18 +200,20 @@ class AppCubit extends Cubit<AppState> {
     });
   }
 
-  Future<void> moveOtrkey() async {
-    print('moveOtrkey called');
+  Future<String> moveOtrkey() async {
+    String result;
+//    print('moveOtrkey called');
     final successCount = await filesRepository.moveAllOtrFiles(
       '/Users/aschilken/Downloads',
       _settingsCubit.otrFolder,
     );
     if (successCount > 0) {
-      print('moveOtrkey: $successCount files moved');
+      result = 'moveOtrkey: $successCount Dateien Kopiert';
       scanFolder(folderPath: _settingsCubit.otrFolder);
     } else {
-      print('moveOtrkey: no files moved');
+      result = 'moveOtrkey: keine Dateien gefunden';
     }
+    return result;
   }
 
   void moveCutVideosToVideoFolder() {
@@ -222,7 +225,6 @@ class AppCubit extends Cubit<AppState> {
         print('${otrData.cutlistBasename}');
       }
     }
-
   }
 
   void cleanUp() {
@@ -261,6 +263,20 @@ class AppCubit extends Cubit<AppState> {
     if (removeDecodedFile) {
       await filesRepository.moveToTrash(
           _currentFolderPath, otrData.decodedBasename!);
+    }
+    scanFolder(folderPath: _settingsCubit.otrFolder);
+  }
+
+  moveAllToTrash(String name) async {
+    final otrData =
+        _filteredOtrDataList.firstWhere((otrData) => otrData.name == name);
+    if (otrData.hasOtrkey) {
+      await filesRepository.moveToTrash(
+          _currentFolderPath, otrData.otrkeyBasename!);
+    }
+    if (otrData.hasCutlist) {
+      await filesRepository.moveToTrash(
+          _currentFolderPath, otrData.cutlistBasename!);
     }
     scanFolder(folderPath: _settingsCubit.otrFolder);
   }
