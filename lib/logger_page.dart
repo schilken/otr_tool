@@ -11,12 +11,11 @@ class LoggerPage extends StatefulWidget {
 
   @override
   State<LoggerPage> createState() => _LoggerPageState();
-
 }
 
 class _LoggerPageState extends State<LoggerPage> {
   final List<String> _lines = <String>[];
-  late StreamSubscription<String> _streamSubscription;
+  StreamSubscription<String>? _streamSubscription;
 
   void onClear() {
     setState(
@@ -28,20 +27,25 @@ class _LoggerPageState extends State<LoggerPage> {
 
   @override
   void didUpdateWidget(covariant LoggerPage oldWidget) {
-    _streamSubscription = widget._commandStdout.listen(
-      (line) {
-        setState(
-          () {
-            _lines.add(line);
-          },
-        );
-      },
-    );
+    if (_streamSubscription == null) {
+      _streamSubscription = widget._commandStdout.listen(
+        (line) {
+          setState(
+            () {
+              _lines.add(line);
+            },
+          );
+        },
+      )..onDone(() {
+          print('_LoggerPageState done');
+          _streamSubscription = null;
+        });
+    }
     super.didUpdateWidget(oldWidget);
   }
 
   onDispose() {
-    _streamSubscription.cancel();
+    _streamSubscription?.cancel();
     super.dispose();
   }
 
@@ -83,12 +87,12 @@ class _LoggerPageState extends State<LoggerPage> {
                   SizedBox(height: 8),
                   Expanded(
                     child: ListView.builder(
-                          controller: scrollController,
-                          itemCount: _lines.length,
-                          itemBuilder: (BuildContext context, int index) {
+                      controller: scrollController,
+                      itemCount: _lines.length,
+                      itemBuilder: (BuildContext context, int index) {
                         Future.delayed(Duration.zero, () {
                           _scrollToEnd(scrollController);
-                        }); 
+                        });
                         return Text(_lines[index]);
                       },
                     ),
@@ -101,5 +105,4 @@ class _LoggerPageState extends State<LoggerPage> {
       ],
     );
   }
-
 }

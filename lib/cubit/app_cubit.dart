@@ -133,7 +133,7 @@ class AppCubit extends Cubit<AppState> {
   cutVideo(String videoFilename, String cutlistFilename) async {
     print('cutVideo: $videoFilename');
     final currentState = state as DetailsLoaded;
-    final streamController = StreamController<String>();
+    final streamController = StreamController<String>.broadcast();
 
     emit(currentState.copyWith(
         sidebarPageIndex: 2, commandStdoutStream: streamController.stream));
@@ -156,7 +156,7 @@ class AppCubit extends Cubit<AppState> {
 
   decodeVideo(String filename) async {
     print('decodeVideo: $filename');
-    final streamController = StreamController<String>();
+    final streamController = StreamController<String>.broadcast();
     _runDecodeCommand(filename, streamController);
     final currentState = state as DetailsLoaded;
     emit(currentState.copyWith(
