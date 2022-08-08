@@ -108,11 +108,11 @@ Future<bool> fileExists(String filename) async {
           .transform(const LineSplitter())
           .forEach((line) {
         if (line.contains('Yes')) {
-          streamController.add('stdout >>>>>Yes or No found!, entered yes');
+          streamController.add('stdout >>>>>Yes or No asked!, answered yes');
           proc.stdin.writeln('y');
         }
         if (line.contains('%')) {
-          print(line);
+//          print(line);
           streamController.add(line);
         }
       }).whenComplete(() {
