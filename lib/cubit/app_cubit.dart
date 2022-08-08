@@ -143,6 +143,11 @@ class AppCubit extends Cubit<AppState> {
     videoCutter.cutVideo(_settingsCubit.otrFolder, videoFilename,
         cutlistFilename, streamController,
         dryRun: false);
+    streamController.stream.listen((line) {}).onDone(() {
+      print('cutVideo: done');
+      Future<void>.delayed(const Duration(milliseconds: 500));
+      reScanFolder();
+    });
   }
 
   copyToClipboard(String path) {
@@ -161,6 +166,11 @@ class AppCubit extends Cubit<AppState> {
     final currentState = state as DetailsLoaded;
     emit(currentState.copyWith(
         sidebarPageIndex: 2, commandStdoutStream: streamController.stream));
+    streamController.stream.listen((line) {}).onDone(() {
+      print('decodeVideo: done');
+      Future<void>.delayed(const Duration(milliseconds: 500));
+      reScanFolder();
+    });
   }
 
   Future<void> _runDecodeCommand(
@@ -180,7 +190,7 @@ class AppCubit extends Cubit<AppState> {
           .forEach(
       (line) {
         streamController.add(line);
-        print(line);
+//        print(line);
       },
           )
           .whenComplete(() {
