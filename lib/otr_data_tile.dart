@@ -133,26 +133,26 @@ class ListTilePullDownMenu extends StatelessWidget {
       icon: CupertinoIcons.ellipsis_circle,
       items: [
         MacosPulldownMenuItem(
-          title: const Text('Decodiere otrkey DateH'),
+          title: const Text('Decodiere otrkey'),
           enabled: otrData.otrkeyBasename != null,
           onTap: () =>
               context.read<AppCubit>().decodeVideo(otrData.otrkeyBasename!),
         ),
-        MacosPulldownMenuItem(
-          title: const Text('Hole cutlist für otrkey Namen'),
-          enabled: otrData.otrkeyBasename != null,
-          onTap: () => context.read<AppCubit>().menuAction(
-                SearchResultAction.fetchCutlistForOtrKey,
-                otrData.otrkeyBasename!,
-              ),
-        ),
-        MacosPulldownMenuItem(
-          title: const Text('Hole cutlist für Name, Datum und Kanal'),
-          onTap: () => context.read<AppCubit>().menuAction(
-                SearchResultAction.fetchCutlistMinimalName,
-                otrData.name,
-              ),
-        ),
+        // MacosPulldownMenuItem(
+        //   title: const Text('Hole cutlist für otrkey Namen'),
+        //   enabled: otrData.otrkeyBasename != null,
+        //   onTap: () => context.read<AppCubit>().menuAction(
+        //         SearchResultAction.fetchCutlistForOtrKey,
+        //         otrData.otrkeyBasename!,
+        //       ),
+        // ),
+        // MacosPulldownMenuItem(
+        //   title: const Text('Hole cutlist für Name, Datum und Kanal'),
+        //   onTap: () => context.read<AppCubit>().menuAction(
+        //         SearchResultAction.fetchCutlistMinimalName,
+        //         otrData.name,
+        //       ),
+        // ),
         MacosPulldownMenuItem(
           title: const Text('Schneide video'),
           enabled:

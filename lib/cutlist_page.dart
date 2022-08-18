@@ -2,12 +2,10 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:macos_ui/macos_ui.dart';
-import 'package:otr_browser/cubit/app_cubit.dart';
 import 'package:otr_browser/cubit/cutlist_cubit.dart';
-import 'package:otr_browser/files_repository.dart';
-import 'package:otr_browser/main_page.dart';
 
 import 'cutlist_tile.dart';
+import 'get_custom_toolbar.dart';
 
 class CutlistPage extends StatelessWidget {
   const CutlistPage({super.key, required this.filePath});

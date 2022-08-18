@@ -125,9 +125,9 @@ class AppCubit extends Cubit<AppState> {
 
   fetchCutlists(String searchString) {
     print('fetchCutlists: $searchString');
-    final currentState = state as DetailsLoaded;
-    emit(currentState.copyWith(
-        sidebarPageIndex: 1, selectedOtrkeyPath: searchString));
+    // final currentState = state as DetailsLoaded;
+    // emit(currentState.copyWith(
+    //     sidebarPageIndex: 1, selectedOtrkeyPath: searchString));
   }
 
   cutVideo(String videoFilename, String cutlistFilename) async {
@@ -136,7 +136,7 @@ class AppCubit extends Cubit<AppState> {
     final streamController = StreamController<String>.broadcast();
 
     emit(currentState.copyWith(
-        sidebarPageIndex: 2, commandStdoutStream: streamController.stream));
+        sidebarPageIndex: 1, commandStdoutStream: streamController.stream));
 
     await Future.delayed(const Duration(milliseconds: 500));
     final videoCutter = VideoCutter();
@@ -165,7 +165,7 @@ class AppCubit extends Cubit<AppState> {
     _runDecodeCommand(filename, streamController);
     final currentState = state as DetailsLoaded;
     emit(currentState.copyWith(
-        sidebarPageIndex: 2, commandStdoutStream: streamController.stream));
+        sidebarPageIndex: 1, commandStdoutStream: streamController.stream));
     streamController.stream.listen((line) {}).onDone(() {
       print('decodeVideo: done');
       Future<void>.delayed(const Duration(milliseconds: 500));

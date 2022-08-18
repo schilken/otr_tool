@@ -1,43 +1,38 @@
 import 'dart:async';
 import 'dart:convert';
 import 'dart:io';
+import 'package:flutter/services.dart';
 import 'package:path/path.dart' as p;
 
 import 'cutlist_parser.dart';
 
 class VideoCutter {
+
   cutVideo(String otrFolder, String videoFilename, cutlistFilename,
-      StreamController<String> streamController,
+      StreamController<String> loggingStreamController,
       {bool dryRun = true}) async {
-    streamController.add('Starting video cut... $videoFilename');
-    streamController.add('loadScriptTemplate()...');
-    List<String> lines = await loadScriptTemplate();
-    streamController.add('getSegmentsFromFile()...');
-    // final extension = p.extension(videoFilename);
-    // final cutlistFilename =
-    //     videoFilename.replaceFirst(extension, '$extension.cutlist');
-    // if (!(await fileExists(cutlistFilename))) {
-    //   streamController.add('cutlist nicht vorhanden: $cutlistFilename');
-    //   return;
-    // }
+    loggingStreamController.add('Starting video cut... $videoFilename');
+    loggingStreamController.add('loadScriptTemplate()...');
+    List<String> scrtiptLines = await loadScriptTemplate();
+    loggingStreamController.add('getSegmentsFromFile()...');
     final videoFilePath = p.join(otrFolder, videoFilename);
     final cutlistFilePath = p.join(otrFolder, cutlistFilename);
     List<String> segmentLines =
         await getSegmentsFromFile(videoFilePath, cutlistFilePath);
     if (segmentLines.isEmpty) {
-      print('No segments found in input file');
-      exit(2);
+      loggingStreamController.add('No segments found in input file');
+      return;
     }
-    lines.addAll(segmentLines);
-    streamController.add('${segmentLines.length} segment(s) found');
-    await saveScript(lines, 'custom_cut_script.py');
+    scrtiptLines.addAll(segmentLines);
+    loggingStreamController.add('${segmentLines.length} segment(s) found');
+    await saveScript(scrtiptLines, 'custom_cut_script.py');
     String outputFilePath =
         videoFilePath.replaceFirst('_TVOON_DE', '_TVOON_DE-cut');
     if (dryRun) {
-      streamController.add(
+      loggingStreamController.add(
           'Dry run, not cutting inputfile, but custom_cut_script.py is generated');
     } else {
-      runCutCommand(videoFilePath, outputFilePath, streamController);
+      runCutCommand(videoFilePath, outputFilePath, loggingStreamController);
     }
   }
 
@@ -59,21 +54,18 @@ Future<bool> fileExists(String filename) async {
     }
   }
 
-  List<String> parseSegmentLines(List<String> cutlist) {
-    List<String> segmentLines = [];
-    segmentLines.add('adm.addSegment(0, 542180000, 8160020000');
-    return segmentLines;
-  }
-
   Future<Directory> get currentDirectory async {
     return Directory.current;
   }
 
   Future<List<String>> loadScriptTemplate() async {
-    final dir = await currentDirectory;
-    final filePath = p.join(dir.path, 'cut_script_template.py');
-    final File infoFile = File(filePath);
-    final lines = await infoFile.readAsLines();
+    String textasset = "assets/files/cut_script_template.py";
+    String text = await rootBundle.loadString(textasset);
+    final lines = text.split('\n');
+    // final dir = await currentDirectory;
+    // final filePath = p.join(dir.path, 'cut_script_template.py');
+    // final File infoFile = File(filePath);
+    // final lines = await infoFile.readAsLines();
     return lines;
   }
 

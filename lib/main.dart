@@ -140,10 +140,10 @@ class _MainViewState extends State<MainView> {
                       leading: MacosIcon(CupertinoIcons.search),
                       label: Text('OTR Keys'),
                     ),
-                    const SidebarItem(
-                      leading: MacosIcon(CupertinoIcons.graph_square),
-                      label: Text('Cutlist'),
-                    ),
+                    // const SidebarItem(
+                    //   leading: MacosIcon(CupertinoIcons.graph_square),
+                    //   label: Text('Cutlist'),
+                    // ),
                     const SidebarItem(
                       leading: MacosIcon(CupertinoIcons.graph_square),
                       label: Text('Log'),
@@ -164,7 +164,7 @@ class _MainViewState extends State<MainView> {
                 index: state.sidebarPageIndex,
                 children: [
                   MainPage(),
-                  CutlistPage(filePath: state.selectedOtrkeyPath),
+//                  CutlistPage(filePath: state.selectedOtrkeyPath),
                   LoggerPage(state.commandStdoutStream ?? Stream.empty()),
                   SettingsPage(),
                 ],
