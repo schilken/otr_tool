@@ -14,9 +14,7 @@ import 'package:otr_browser/files_repository.dart';
 import 'package:otr_browser/filter_settings.dart';
 import 'package:otr_browser/main_page.dart';
 import 'package:otr_browser/settings_page.dart';
-import 'package:otr_browser/cutlist_page.dart';
 
-import 'cubit/cutlist_cubit.dart';
 import 'logger_page.dart';
 
 void main(List<String> args) {
@@ -62,10 +60,6 @@ class App extends StatelessWidget {
                     context.read<SettingsCubit>(),
                     context.read<FilesRepository>(),
                   )..init(),
-                ),
-                BlocProvider<CutlistCubit>(
-                  create: (context) =>
-                      CutlistCubit(context.read<FilesRepository>()),
                 ),
               ],
               child: MacosApp(
@@ -140,10 +134,6 @@ class _MainViewState extends State<MainView> {
                       leading: MacosIcon(CupertinoIcons.search),
                       label: Text('OTR Keys'),
                     ),
-                    // const SidebarItem(
-                    //   leading: MacosIcon(CupertinoIcons.graph_square),
-                    //   label: Text('Cutlist'),
-                    // ),
                     const SidebarItem(
                       leading: MacosIcon(CupertinoIcons.graph_square),
                       label: Text('Log'),

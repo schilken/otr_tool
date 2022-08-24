@@ -16,11 +16,6 @@ import '../video_cutter.dart';
 
 part 'app_state.dart';
 
-enum SearchResultAction {
-  fetchCutlistForOtrKey,
-  fetchCutlistMinimalName,
-}
-
 class AppCubit extends Cubit<AppState> {
   AppCubit(
     SettingsCubit settingsCubit,
@@ -111,25 +106,6 @@ class AppCubit extends Cubit<AppState> {
     Process.run('open', ['-R', filePath]);
   }
 
-  menuAction(SearchResultAction menuAction, String parameter) {
-    switch (menuAction) {
-      case SearchResultAction.fetchCutlistForOtrKey:
-        fetchCutlists(parameter);
-        break;
-      case SearchResultAction.fetchCutlistMinimalName:
-        final minimalName = parameter.split('_TVOON').first;
-        fetchCutlists(minimalName);
-        break;
-    }
-  }
-
-  fetchCutlists(String searchString) {
-    print('fetchCutlists: $searchString');
-    // final currentState = state as DetailsLoaded;
-    // emit(currentState.copyWith(
-    //     sidebarPageIndex: 1, selectedOtrkeyPath: searchString));
-  }
-
   cutVideo(String videoFilename, String cutlistFilename) async {
     print('cutVideo: $videoFilename');
     final currentState = state as DetailsLoaded;
@@ -174,7 +150,9 @@ class AppCubit extends Cubit<AppState> {
   }
 
   Future<void> _runDecodeCommand(
-      String filename, StreamController<String> streamController) async {
+    String filename,
+    StreamController<String> streamController,
+  ) async {
     final workingDirectory = _settingsCubit.otrFolder;
     final otrEmail = _settingsCubit.otrEmail;
     final otrPassword = _settingsCubit.otrPassword;
