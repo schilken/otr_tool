@@ -63,33 +63,33 @@ ToolBar getCustomToolBar(BuildContext context) {
           const MacosPulldownMenuDivider(),
         ],
       ),
-      const ToolBarDivider(),
-      ToolbarSearchfield(
-        placeholder: 'Primary word',
-        onChanged: (word) =>
-            context.read<AppCubit>().setPrimarySearchWord(word),
-        onSubmitted: (word) {
-          context.read<AppCubit>().setPrimarySearchWord(word);
-          context.read<AppCubit>().search();
-        },
-      ),
-      ToolBarIconButton(
-        label: "Search",
-        icon: const MacosIcon(
-          CupertinoIcons.search,
-        ),
-        onPressed: () => context.read<AppCubit>().search(),
-        showLabel: false,
-      ),
-      const ToolBarDivider(),
-      ToolBarIconButton(
-        label: "Share",
-        icon: const MacosIcon(
-          CupertinoIcons.share,
-        ),
-        onPressed: () => debugPrint("pressed"),
-        showLabel: false,
-      ),
+      // const ToolBarDivider(),
+      // ToolbarSearchfield(
+      //   placeholder: 'Primary word',
+      //   onChanged: (word) =>
+      //       context.read<AppCubit>().setPrimarySearchWord(word),
+      //   onSubmitted: (word) {
+      //     context.read<AppCubit>().setPrimarySearchWord(word);
+      //     context.read<AppCubit>().search();
+      //   },
+      // ),
+      // ToolBarIconButton(
+      //   label: "Search",
+      //   icon: const MacosIcon(
+      //     CupertinoIcons.search,
+      //   ),
+      //   onPressed: () => context.read<AppCubit>().search(),
+      //   showLabel: false,
+      // ),
+      // const ToolBarDivider(),
+      // ToolBarIconButton(
+      //   label: "Share",
+      //   icon: const MacosIcon(
+      //     CupertinoIcons.share,
+      //   ),
+      //   onPressed: () => debugPrint("pressed"),
+      //   showLabel: false,
+      // ),
     ],
   );
 }
