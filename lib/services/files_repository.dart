@@ -4,13 +4,12 @@ import 'dart:io';
 import 'package:collection/collection.dart';
 import 'package:path/path.dart' as p;
 
-import 'model/otr_data.dart';
+import '../model/otr_data.dart';
 
 class FilesRepository {
   String? currentFolderPath;
   String? _fileType;
   List<String> _allFilePaths = [];
-
 
   // Future<int> runFindCommand(String fileType) async {
   //   _fileType = fileType;
@@ -116,6 +115,4 @@ class FilesRepository {
     ]);
     return process.stdout.split('\n');
   }
-
-
 }

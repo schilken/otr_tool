@@ -8,11 +8,11 @@ import 'package:equatable/equatable.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/services.dart';
 import 'package:meta/meta.dart';
-import 'package:otr_browser/cubit/settings_cubit.dart';
-import 'package:otr_browser/files_repository.dart';
+import 'package:otr_browser/services/files_repository.dart';
 
 import '../model/otr_data.dart';
-import '../video_cutter.dart';
+import '../preferences/settings_cubit.dart';
+import '../services/video_cutter.dart';
 
 part 'app_state.dart';
 

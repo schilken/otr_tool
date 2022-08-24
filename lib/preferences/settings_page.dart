@@ -4,8 +4,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:macos_ui/macos_ui.dart';
 
-import 'cubit/settings_cubit.dart';
-import 'textfield_dialog.dart';
+import 'settings_cubit.dart';
+import '../components/textfield_dialog.dart';
 
 typedef StringCallback = void Function(String);
 
@@ -72,6 +72,7 @@ class SettingsPage extends StatelessWidget {
               child: BlocBuilder<SettingsCubit, SettingsState>(
                 builder: (context, state) {
                   if (state is SettingsLoaded) {
+                    print('settingsLoadd: $state');
                     return Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       mainAxisAlignment: MainAxisAlignment.center,
@@ -116,8 +117,8 @@ class SettingsPage extends StatelessWidget {
                               icon: MacosIcon(
                                 size: 60,
                                 state.showPassword
-                                    ? CupertinoIcons.eye
-                                    : CupertinoIcons.eye_slash_fill,
+                                    ? CupertinoIcons.eye_slash_fill
+                                    : CupertinoIcons.eye,
                               ),
                               // shape: BoxShape.rectangle,
                               // borderRadius: BorderRadius.circular(7),
@@ -181,7 +182,6 @@ class SettingsPage extends StatelessWidget {
                                 .setAvidemuxApp(value);
                           },
                         ),
-
                         SizedBox(height: 16),
                         const Text(
                           'otrdecoder Programm',

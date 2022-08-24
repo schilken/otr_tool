@@ -7,15 +7,15 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:macos_ui/macos_ui.dart';
-import 'package:otr_browser/about_window.dart';
+import 'package:otr_browser/pages/about_window.dart';
 import 'package:otr_browser/cubit/app_cubit.dart';
-import 'package:otr_browser/cubit/settings_cubit.dart';
-import 'package:otr_browser/files_repository.dart';
-import 'package:otr_browser/filter_settings.dart';
-import 'package:otr_browser/main_page.dart';
-import 'package:otr_browser/settings_page.dart';
+import 'package:otr_browser/services/files_repository.dart';
+import 'package:otr_browser/components/filter_settings.dart';
 
-import 'logger_page.dart';
+import 'pages/logger_page.dart';
+import 'pages/main_page.dart';
+import 'preferences/settings_cubit.dart';
+import 'preferences/settings_page.dart';
 
 void main(List<String> args) {
   print('main: $args');
@@ -154,7 +154,6 @@ class _MainViewState extends State<MainView> {
                 index: state.sidebarPageIndex,
                 children: [
                   MainPage(),
-//                  CutlistPage(filePath: state.selectedOtrkeyPath),
                   LoggerPage(state.commandStdoutStream ?? Stream.empty()),
                   SettingsPage(),
                 ],

@@ -8,9 +8,9 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:macos_ui/macos_ui.dart';
 
 import 'package:otr_browser/cubit/app_cubit.dart';
-import 'package:otr_browser/highlighted_text.dart';
+import 'package:otr_browser/components/highlighted_text.dart';
 
-import 'model/otr_data.dart';
+import '../model/otr_data.dart';
 
 class OtrDataTile extends StatelessWidget {
   const OtrDataTile({
@@ -155,8 +155,7 @@ class ListTilePullDownMenu extends StatelessWidget {
         // ),
         MacosPulldownMenuItem(
           title: const Text('Schneide video'),
-          enabled:
-              otrData.decodedBasename != null &&
+          enabled: otrData.decodedBasename != null &&
               otrData.cutlistBasename != null,
           onTap: () => context.read<AppCubit>().cutVideo(
                 otrData.decodedBasename!,
@@ -173,8 +172,7 @@ class ListTilePullDownMenu extends StatelessWidget {
         MacosPulldownMenuItem(
           title: const Text('Kopiere otrkey Name ins Clipboard'),
           enabled: otrData.otrkeyBasename != null,
-          onTap: () =>
-              context.read<AppCubit>().copyToClipboard(otrData.name),
+          onTap: () => context.read<AppCubit>().copyToClipboard(otrData.name),
         ),
         MacosPulldownMenuItem(
           title: const Text('Öffne cutlist Datei in VScode'),
@@ -188,9 +186,7 @@ class ListTilePullDownMenu extends StatelessWidget {
               'Alles außer geschnittenes Video in Papierkorb verschieben'),
           enabled: otrData.isCutted,
           onTap: () async {
-            await context
-              .read<AppCubit>()
-              .moveToTrashOrToMovies(otrData.name);
+            await context.read<AppCubit>().moveToTrashOrToMovies(otrData.name);
             BotToast.showText(
               text: 'Dateien in Papierkorb bzw. Film-Ordner verschoben',
               duration: const Duration(seconds: 3),
@@ -209,7 +205,6 @@ class ListTilePullDownMenu extends StatelessWidget {
             );
           },
         ),
-
       ],
     );
   }

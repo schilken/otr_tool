@@ -21,9 +21,11 @@ class SettingsCubit extends Cubit<SettingsState> {
     return this;
   }
 
-  get otrEmail => _prefs.getString('otrEmail') ?? 'not set';
+  String get otrEmail => _prefs.getString('otrEmail') ?? 'not set';
 
-  get otrPassword => _prefs.getString('otrPassword') ?? 'not set';
+  String get otrPassword => _prefs.getString('otrPassword') ?? 'not set';
+
+  bool get showOtrPassword => _prefs.getBool('showOtrPassword') ?? false;
 
   String get otrFolder =>
       _prefs.getString('otrFolder') ??
@@ -72,7 +74,7 @@ class SettingsCubit extends Cubit<SettingsState> {
     print('SettingsCubit emit');
     emit(SettingsLoaded(
       otrEmail,
-      otrPassword,
+      otrPassword.textOrStars(showPassword),
       otrFolder,
       videoFolder,
       avidemuxApp,
@@ -81,13 +83,17 @@ class SettingsCubit extends Cubit<SettingsState> {
     ));
   }
 
-  void toggleShowPassword() {
+  void toggleShowPassword() async {
+    final newValue = !showOtrPassword;
+    await _prefs.setBool('showOtrPassword', newValue);
     final currentState = state as SettingsLoaded;
-    emit(
-      currentState.copyWith(
-          showPassword: !currentState.showPassword,
-          password: currentState.showPassword ? otrPassword : '**********'),
-    );
+    emit(currentState.copyWith(
+      showPassword: newValue,
+      password: otrPassword.textOrStars(newValue),
+    ));
   }
+}
 
+extension PasswordExtension on String {
+  String textOrStars(bool show) => show ? this : '**********';
 }

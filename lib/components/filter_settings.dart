@@ -2,7 +2,8 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:macos_ui/macos_ui.dart';
-import 'package:otr_browser/cubit/settings_cubit.dart';
+
+import '../preferences/settings_cubit.dart';
 
 class FilterSettings extends StatelessWidget {
   const FilterSettings({

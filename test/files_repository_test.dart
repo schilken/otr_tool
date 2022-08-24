@@ -1,6 +1,6 @@
 import 'package:otr_browser/model/otr_data.dart';
 import 'package:test/test.dart';
-import 'package:otr_browser/files_repository.dart';
+import 'package:otr_browser/services/files_repository.dart';
 
 main() {
   final pathList = [

@@ -7,7 +7,6 @@ import 'package:path/path.dart' as p;
 import 'cutlist_parser.dart';
 
 class VideoCutter {
-
   cutVideo(String otrFolder, String videoFilename, cutlistFilename,
       StreamController<String> loggingStreamController,
       {bool dryRun = true}) async {
@@ -36,7 +35,7 @@ class VideoCutter {
     }
   }
 
-Future<bool> fileExists(String filename) async {
+  Future<bool> fileExists(String filename) async {
     final dir = await currentDirectory;
     final filePath = p.join(dir.path, filename);
     return await File(filePath).exists();
