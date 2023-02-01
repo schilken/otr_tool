@@ -25,48 +25,54 @@ main() {
       expect(
           otrDataList[0],
           OtrData(
-            'otrkey',
-            'otrkey_TVOON_DE.mpg.HQ.avi.otrkey',
-            null,
-            null,
-            null,
+            name: 'otrkey',
+            otrkeyBasename: 'otrkey_TVOON_DE.mpg.HQ.avi.otrkey',
+            cutlistBasename: null,
+            decodedBasename: null,
+            cuttedBasename: null,
           ));
       expect(
           otrDataList[1],
           OtrData(
-            'otrkey_cutlist',
-            'otrkey_cutlist_TVOON_DE.mpg.HQ.avi.otrkey',
-            'otrkey_cutlist_TVOON_DE.mpg.HQ.avi.cutlist',
-            null,
-            null,
+            name: 'otrkey_cutlist',
+            otrkeyBasename: 'otrkey_cutlist_TVOON_DE.mpg.HQ.avi.otrkey',
+            cutlistBasename: 'otrkey_cutlist_TVOON_DE.mpg.HQ.avi.cutlist',
+            decodedBasename: null,
+            cuttedBasename: null,
           ));
       expect(
           otrDataList[2],
           OtrData(
-            'otrkey_cutlist_decoded',
-            'otrkey_cutlist_decoded_TVOON_DE.mpg.HQ.avi.otrkey',
-            'otrkey_cutlist_decoded_TVOON_DE.mpg.HQ.avi.cutlist',
-            'otrkey_cutlist_decoded_TVOON_DE.mpg.HQ.avi',
-            null,
+            name: 'otrkey_cutlist_decoded',
+            otrkeyBasename: 'otrkey_cutlist_decoded_TVOON_DE.mpg.HQ.avi.otrkey',
+            cutlistBasename:
+                'otrkey_cutlist_decoded_TVOON_DE.mpg.HQ.avi.cutlist',
+            decodedBasename: 'otrkey_cutlist_decoded_TVOON_DE.mpg.HQ.avi',
+            cuttedBasename: null,
           ));
       expect(
           otrDataList[3],
           OtrData(
-            'otrkey_cutlist_decoded_cut',
-            'otrkey_cutlist_decoded_cut_TVOON_DE.mpg.HQ.avi.otrkey',
-            'otrkey_cutlist_decoded_cut_TVOON_DE.mpg.HQ.avi.cutlist',
-            'otrkey_cutlist_decoded_cut_TVOON_DE.mpg.HQ.avi',
-            'otrkey_cutlist_decoded_cut_TVOON_DE-cut.mpg.HQ.avi',
+            name: 'otrkey_cutlist_decoded_cut',
+            otrkeyBasename:
+                'otrkey_cutlist_decoded_cut_TVOON_DE.mpg.HQ.avi.otrkey',
+            cutlistBasename:
+                'otrkey_cutlist_decoded_cut_TVOON_DE.mpg.HQ.avi.cutlist',
+            decodedBasename: 'otrkey_cutlist_decoded_cut_TVOON_DE.mpg.HQ.avi',
+            cuttedBasename:
+                'otrkey_cutlist_decoded_cut_TVOON_DE-cut.mpg.HQ.avi',
           ));
       expect(otrDataList[3].isExactCutlist, true, reason: 'isExactCutlist');
       expect(
           otrDataList[4],
           OtrData(
-            'otrkey_not_exact_cutlist_decoded',
-            null,
-            'otrkey_not_exact_cutlist_decoded_TVOON_DE.mpg.HD.avi.cutlist',
-            'otrkey_not_exact_cutlist_decoded_TVOON_DE.mpg.HQ.avi',
-            null,
+            name: 'otrkey_not_exact_cutlist_decoded',
+            otrkeyBasename: null,
+            cutlistBasename:
+                'otrkey_not_exact_cutlist_decoded_TVOON_DE.mpg.HD.avi.cutlist',
+            decodedBasename:
+                'otrkey_not_exact_cutlist_decoded_TVOON_DE.mpg.HQ.avi',
+            cuttedBasename: null,
           ));
       expect(otrDataList[4].isExactCutlist, false,
           reason: 'is not ExactCutlist');   

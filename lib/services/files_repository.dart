@@ -73,18 +73,18 @@ class FilesRepository {
     final nameSet = filePaths.map(nameFromPath).toSet();
     for (final name in nameSet) {
       final otrData = OtrData(
-        name,
-        filePaths.firstWhereOrNull((path) =>
+        name: name,
+        otrkeyBasename: filePaths.firstWhereOrNull((path) =>
             nameFromPath(path) == name && p.extension(path) == '.otrkey'),
-        filePaths.firstWhereOrNull((path) =>
+        cutlistBasename: filePaths.firstWhereOrNull((path) =>
             nameFromPath(path) == name && p.extension(path) == '.cutlist'),
-        filePaths.firstWhereOrNull((path) {
+        decodedBasename: filePaths.firstWhereOrNull((path) {
           return nameFromPath(path) == name &&
               p.extension(path) != '.otrkey' &&
               p.extension(path) != '.cutlist' &&
               !p.basename(path).contains('_TVOON_DE-cut');
         }),
-        filePaths.firstWhereOrNull((path) =>
+        cuttedBasename: filePaths.firstWhereOrNull((path) =>
             nameFromPath(path) == name &&
             p.basename(path).contains('_TVOON_DE-cut')),
       );

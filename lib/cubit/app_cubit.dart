@@ -53,7 +53,7 @@ class AppCubit extends Cubit<AppState> {
   init() async {
     print('AppCubit.init');
     await scanFolder(folderPath: _settingsCubit.otrFolder);
-    search();
+    await search();
   }
 
   Future<void> search() async {
@@ -92,7 +92,7 @@ class AppCubit extends Cubit<AppState> {
     allFilePaths.sort((a, b) => a.compareTo(b));
     _fullOtrDataList = filesRepository.consolidateOtrFiles(allFilePaths);
     _currentFolderPath = folderPath;
-    search();
+    await search();
   }
 
   void openEditor(String? filename) {
@@ -106,7 +106,7 @@ class AppCubit extends Cubit<AppState> {
     Process.run('open', ['-R', filePath]);
   }
 
-  cutVideo(String videoFilename, String cutlistFilename) async {
+  Future<void> cutVideo(String videoFilename, String cutlistFilename) async {
     print('cutVideo: $videoFilename');
     final currentState = state as DetailsLoaded;
     final streamController = StreamController<String>.broadcast();
@@ -135,18 +135,27 @@ class AppCubit extends Cubit<AppState> {
     emit(currentState.copyWith(sidebarPageIndex: index));
   }
 
-  decodeVideo(String filename) async {
+  decodeAndCutVideo(String otrkeyBasename, String cutlistBasename) async {
+    await decodeVideo(otrkeyBasename);
+    final decodedBasename = otrkeyBasename.replaceFirst('.otrkey', '');
+    print('decodeAndCutVideo#decodedBasename: ${decodedBasename}');
+  }
+
+  Future<void> decodeVideo(String filename) async {
     print('decodeVideo: $filename');
+    var completer = Completer();
     final streamController = StreamController<String>.broadcast();
     _runDecodeCommand(filename, streamController);
     final currentState = state as DetailsLoaded;
     emit(currentState.copyWith(
         sidebarPageIndex: 1, commandStdoutStream: streamController.stream));
-    streamController.stream.listen((line) {}).onDone(() {
+    streamController.stream.listen((line) {}).onDone(() async {
       print('decodeVideo: done');
       Future<void>.delayed(const Duration(milliseconds: 500));
-      reScanFolder();
+      await reScanFolder();
+      completer.complete;
     });
+    return completer.future;
   }
 
   Future<void> _runDecodeCommand(
@@ -268,4 +277,5 @@ class AppCubit extends Cubit<AppState> {
     }
     scanFolder(folderPath: _settingsCubit.otrFolder);
   }
+
 }

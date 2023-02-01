@@ -8,12 +8,13 @@ class OtrData extends Equatable {
   final String? decodedBasename;
   final String? cuttedBasename;
 
-  OtrData(
-    this.name,
+  OtrData({
+    required this.name,
     this.otrkeyBasename,
     this.cutlistBasename,
     this.decodedBasename,
     this.cuttedBasename,
+  }
   );
 
   bool get hasOtrkey => otrkeyBasename != null;
