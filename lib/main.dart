@@ -118,11 +118,14 @@ class _MainViewState extends State<MainView> {
           ],
         ),
       ],
-      body: BlocBuilder<AppCubit, AppState>(
+      child: BlocBuilder<AppCubit, AppState>(
         builder: (context, state) {
           if (state is DetailsLoaded) {
             return MacosWindow(
               sidebar: Sidebar(
+                decoration: BoxDecoration(
+                  color: Colors.grey.shade200,
+                ),
                 minWidth: 200,
                 top: FilterSettings(),
                 builder: (context, scrollController) => SidebarItems(

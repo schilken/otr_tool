@@ -8,18 +8,20 @@ import 'package:otr_browser/components/toolbar_searchfield.dart';
 
 ToolBar getCustomToolBar(BuildContext context) {
   return ToolBar(
+    leading: MacosIconButton(
+      icon: const MacosIcon(
+        CupertinoIcons.sidebar_left,
+        size: 40,
+        color: CupertinoColors.black,
+      ),
+      onPressed: () {
+        MacosWindowScope.of(context).toggleSidebar();
+      },
+    ),
+
     title: const Text('OTR Browser'),
     titleWidth: 250.0,
     actions: [
-      ToolBarIconButton(
-        label: 'Toggle Sidebar',
-        icon: const MacosIcon(CupertinoIcons.sidebar_left),
-        showLabel: false,
-        tooltipMessage: 'Toggle Sidebar',
-        onPressed: () {
-          MacosWindowScope.of(context).toggleSidebar();
-        },
-      ),
       ToolBarSpacer(spacerUnits: 3),
       ToolBarPullDownButton(
         label: "Actions",

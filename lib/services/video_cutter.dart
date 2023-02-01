@@ -24,7 +24,7 @@ class VideoCutter {
     }
     scrtiptLines.addAll(segmentLines);
     loggingStreamController.add('${segmentLines.length} segment(s) found');
-    await saveScript(scrtiptLines, 'custom_cut_script.py');
+    await saveScript(scrtiptLines, customScriptPath);
     String outputFilePath =
         videoFilePath.replaceFirst('_TVOON_DE', '_TVOON_DE-cut');
     if (dryRun) {
@@ -35,11 +35,13 @@ class VideoCutter {
     }
   }
 
-  Future<bool> fileExists(String filename) async {
-    final dir = await currentDirectory;
-    final filePath = p.join(dir.path, filename);
-    return await File(filePath).exists();
-  }
+  String get customScriptPath => p.join('/tmp', 'custom_cut_script.py');
+
+  // Future<bool> temporaryFileExists(String filename) async {
+  //   final dir = Directory.systemTemp;
+  //   final filePath = p.join(dir.path, filename);
+  //   return await File(filePath).exists();
+  // }
 
   Future<List<String>> getSegmentsFromFile(
       String videoFilename, String cutlistFilename) async {
@@ -53,10 +55,6 @@ class VideoCutter {
     }
   }
 
-  Future<Directory> get currentDirectory async {
-    return Directory.current;
-  }
-
   Future<List<String>> loadScriptTemplate() async {
     String textasset = "assets/files/cut_script_template.py";
     String text = await rootBundle.loadString(textasset);
@@ -68,9 +66,7 @@ class VideoCutter {
     return lines;
   }
 
-  Future<void> saveScript(List<String> lines, String filename) async {
-    final dir = await currentDirectory;
-    final filePath = p.join(dir.path, filename);
+  Future<void> saveScript(List<String> lines, String filePath) async {
     final File infoFile = File(filePath);
     await infoFile.writeAsString(lines.join('\n'));
   }
@@ -80,14 +76,14 @@ class VideoCutter {
       StreamController<String> streamController) {
     streamController.add('Running avidemux_cli ...');
     var process = Process.start(
-      'script',
+      '/usr/bin/script',
       [
-        'cutter.log',
+        '/tmp/cutter.log',
         '/Applications/Avidemux_2.8.0.app/Contents/MacOS/avidemux_cli',
         '--load',
         inputFilename,
         '--run',
-        'custom_cut_script.py',
+        customScriptPath,
         '--save',
         outputFilename,
         '--quit',
