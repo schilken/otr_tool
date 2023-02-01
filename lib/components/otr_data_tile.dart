@@ -132,15 +132,15 @@ class ListTilePullDownMenu extends StatelessWidget {
     return MacosPulldownButton(
       icon: CupertinoIcons.ellipsis_circle,
       items: [
-        // MacosPulldownMenuItem(
-        //   title: const Text('Decodiere&Schneide Video'),
-        //   enabled:
-        //       otrData.otrkeyBasename != null && otrData.cutlistBasename != null,
-        //   onTap: () => context.read<AppCubit>().decodeAndCutVideo(
-        //         otrData.otrkeyBasename!,
-        //         otrData.cutlistBasename!,
-        //       ),
-        // ),
+        MacosPulldownMenuItem(
+          title: const Text('Decodiere&Schneide Video'),
+          enabled:
+              otrData.otrkeyBasename != null && otrData.cutlistBasename != null,
+          onTap: () => context.read<AppCubit>().decodeAndCutVideo(
+                otrData.otrkeyBasename!,
+                otrData.cutlistBasename!,
+              ),
+        ),
 
         MacosPulldownMenuItem(
           title: const Text('Decodiere otrkey'),

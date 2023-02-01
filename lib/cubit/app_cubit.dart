@@ -139,6 +139,8 @@ class AppCubit extends Cubit<AppState> {
     await decodeVideo(otrkeyBasename);
     final decodedBasename = otrkeyBasename.replaceFirst('.otrkey', '');
     print('decodeAndCutVideo#decodedBasename: ${decodedBasename}');
+    await Future<void>.delayed(const Duration(milliseconds: 500));
+    await cutVideo(decodedBasename, cutlistBasename);
   }
 
   Future<void> decodeVideo(String filename) async {
@@ -151,9 +153,9 @@ class AppCubit extends Cubit<AppState> {
         sidebarPageIndex: 1, commandStdoutStream: streamController.stream));
     streamController.stream.listen((line) {}).onDone(() async {
       print('decodeVideo: done');
-      Future<void>.delayed(const Duration(milliseconds: 500));
+      await Future<void>.delayed(const Duration(milliseconds: 500));
       await reScanFolder();
-      completer.complete;
+      completer.complete();
     });
     return completer.future;
   }
