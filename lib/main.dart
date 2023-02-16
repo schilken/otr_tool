@@ -29,7 +29,7 @@ void main(List<String> args) {
         windowController: WindowController.fromWindowId(windowId),
         args: arguments,
       ));
-    } 
+    }
   } else {
     runApp(App());
   }
@@ -111,7 +111,6 @@ class _MainViewState extends State<MainView> {
                   ..show();
               },
             ),
-
             const PlatformProvidedMenuItem(
               type: PlatformProvidedMenuItemType.quit,
             ),
