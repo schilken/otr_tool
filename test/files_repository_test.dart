@@ -75,7 +75,7 @@ main() {
             cuttedBasename: null,
           ));
       expect(otrDataList[4].isExactCutlist, false,
-          reason: 'is not ExactCutlist');   
+          reason: 'is not ExactCutlist');
     });
   });
 }

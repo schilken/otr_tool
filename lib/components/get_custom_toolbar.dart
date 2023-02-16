@@ -18,7 +18,6 @@ ToolBar getCustomToolBar(BuildContext context) {
         MacosWindowScope.of(context).toggleSidebar();
       },
     ),
-
     title: const Text('OTR Browser'),
     titleWidth: 250.0,
     actions: [

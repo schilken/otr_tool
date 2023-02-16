@@ -141,7 +141,6 @@ class ListTilePullDownMenu extends StatelessWidget {
                 otrData.cutlistBasename!,
               ),
         ),
-
         MacosPulldownMenuItem(
           title: const Text('Decodiere otrkey'),
           enabled: otrData.otrkeyBasename != null,

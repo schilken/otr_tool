@@ -35,12 +35,10 @@ class HookedSearchField extends HookWidget {
     this.placeholder,
     required this.onChanged,
     required this.onSubmitted,
-
   }) : super(key: key);
   final String? placeholder;
   final StringCallback onChanged;
   final StringCallback onSubmitted;
-
 
   @override
   Widget build(BuildContext context) {

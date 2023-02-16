@@ -174,18 +174,18 @@ class AppCubit extends Cubit<AppState> {
     );
 
     process.stdout
-          .transform(utf8.decoder)
-          .transform(const LineSplitter())
-          .forEach(
+        .transform(utf8.decoder)
+        .transform(const LineSplitter())
+        .forEach(
       (line) {
         streamController.add(line);
 //        print(line);
       },
-          )
-          .whenComplete(() {
-        streamController.add('Stream closed in whenComplete');
-        return streamController.close();
-      }).onError((error, stackTrace) {
+    ).whenComplete(() {
+      streamController.add('Stream closed in whenComplete');
+      return streamController.close();
+    }).onError(
+      (error, stackTrace) {
         streamController.add('Stream closed onError');
         return streamController.close();
       },
@@ -279,5 +279,4 @@ class AppCubit extends Cubit<AppState> {
     }
     scanFolder(folderPath: _settingsCubit.otrFolder);
   }
-
 }

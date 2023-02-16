@@ -99,6 +99,7 @@ class DetailsLoaded extends AppState {
       commandStdoutStream: commandStdoutStream ?? this.commandStdoutStream,
     );
   }
+
   @override
   List<Object?> get props => [
         details,
@@ -110,5 +111,4 @@ class DetailsLoaded extends AppState {
         selectedOtrkeyPath,
         commandStdoutStream,
       ];
-
 }
