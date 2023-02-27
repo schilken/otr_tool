@@ -210,7 +210,7 @@ class AppCubit extends Cubit<AppState> {
       result = 'moveOtrkey: $successCount Dateien Kopiert';
       scanFolder(folderPath: _settingsCubit.otrFolder);
     } else {
-      result = 'moveOtrkey: keine Dateien gefunden';
+      return '';
     }
     return result;
   }

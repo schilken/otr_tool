@@ -1,3 +1,4 @@
+import 'package:bot_toast/bot_toast.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -7,13 +8,34 @@ import 'package:otr_browser/cubit/app_cubit.dart';
 import '../components/get_custom_toolbar.dart';
 import '../components/otr_data_tile.dart';
 
-class MainPage extends StatelessWidget {
+class MainPage extends StatefulWidget {
   const MainPage({super.key});
+
+  @override
+  State<MainPage> createState() => _MainPageState();
+}
+
+class _MainPageState extends State<MainPage> {
+  @override
+  void initState() {
+    print('MainPage.initState');
+    context.read<AppCubit>().moveOtrkey().then((result) {
+      if (result.isNotEmpty) {
+        BotToast.showText(
+          text: result,
+          duration: const Duration(seconds: 3),
+          align: const Alignment(0, 0.3),
+        );
+      }
+    });
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
     return Builder(builder: (context) {
       return MacosScaffold(
+        backgroundColor: Colors.white,
         toolBar: getCustomToolBar(context),
         children: [
           ContentArea(

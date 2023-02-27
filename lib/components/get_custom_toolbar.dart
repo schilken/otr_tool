@@ -43,7 +43,9 @@ ToolBar getCustomToolBar(BuildContext context) {
               title: const Text(
                   "Kopiere OTRKEY + cutlist vom Downloads Verzeichnis"),
               onTap: () async {
-                final result = await context.read<AppCubit>().moveOtrkey();
+                String result = await context.read<AppCubit>().moveOtrkey();
+                result =
+                    (result.isNotEmpty) ? result : 'Keine OTR-Dateien gefunden';
                 BotToast.showText(
                   text: result,
                   duration: const Duration(seconds: 3),
