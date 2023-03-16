@@ -50,3 +50,4 @@ app.*.map.json
 *.cutlist
 otrdecoder
 custom_cut_script.py
+.fvm/flutter_sdk

@@ -133,6 +133,23 @@ class ListTilePullDownMenu extends StatelessWidget {
       icon: CupertinoIcons.ellipsis_circle,
       items: [
         MacosPulldownMenuItem(
+          title: const Text('Decodieren&Schneiden&Kopieren'),
+          enabled:
+              otrData.otrkeyBasename != null && otrData.cutlistBasename != null,
+          onTap: () async {
+            await context.read<AppCubit>().decodeCutAndCopyVideo(
+                  otrData.otrkeyBasename!,
+                  otrData.cutlistBasename!,
+                  otrData.name,
+                );
+            BotToast.showText(
+              text: 'Dateien in Papierkorb bzw. Film-Ordner verschoben',
+              duration: const Duration(seconds: 3),
+              align: const Alignment(0, 0.3),
+            );
+          },
+        ),
+        MacosPulldownMenuItem(
           title: const Text('Decodiere&Schneide Video'),
           enabled:
               otrData.otrkeyBasename != null && otrData.cutlistBasename != null,

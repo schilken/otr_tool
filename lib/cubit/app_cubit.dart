@@ -108,6 +108,7 @@ class AppCubit extends Cubit<AppState> {
 
   Future<void> cutVideo(String videoFilename, String cutlistFilename) async {
     print('cutVideo: $videoFilename');
+    var completer = Completer();
     final currentState = state as DetailsLoaded;
     final streamController = StreamController<String>.broadcast();
 
@@ -123,8 +124,12 @@ class AppCubit extends Cubit<AppState> {
       print('cutVideo: done');
       Future<void>.delayed(const Duration(milliseconds: 500));
       reScanFolder();
+      completer.complete();
     });
+    return completer.future;
+
   }
+
 
   copyToClipboard(String path) {
     Clipboard.setData(ClipboardData(text: path));
@@ -135,7 +140,16 @@ class AppCubit extends Cubit<AppState> {
     emit(currentState.copyWith(sidebarPageIndex: index));
   }
 
-  decodeAndCutVideo(String otrkeyBasename, String cutlistBasename) async {
+  Future<void> decodeCutAndCopyVideo(
+      String otrkeyBasename, String cutlistBasename, String name) async {
+    await decodeAndCutVideo(otrkeyBasename, cutlistBasename);
+    await Future<void>.delayed(const Duration(milliseconds: 500));
+    await reScanFolder();
+    await moveToTrashOrToMovies(name);
+  }
+
+  Future<void> decodeAndCutVideo(
+      String otrkeyBasename, String cutlistBasename) async {
     await decodeVideo(otrkeyBasename);
     final decodedBasename = otrkeyBasename.replaceFirst('.otrkey', '');
     print('decodeAndCutVideo#decodedBasename: ${decodedBasename}');
@@ -234,6 +248,7 @@ class AppCubit extends Cubit<AppState> {
     final otrData =
         _filteredOtrDataList.firstWhere((otrData) => otrData.name == name);
     bool removeDecodedFile = otrData.isdeCoded;
+    print('moveToTrashOrToMovies ${otrData.isCutted}');
     if (otrData.isCutted) {
       bool rc = await filesRepository.moveOtrFile(
         _settingsCubit.otrFolder,
@@ -250,7 +265,6 @@ class AppCubit extends Cubit<AppState> {
         removeDecodedFile = false;
       }
     }
-
     if (otrData.hasOtrkey) {
       await filesRepository.moveToTrash(
           _currentFolderPath, otrData.otrkeyBasename!);
@@ -279,4 +293,5 @@ class AppCubit extends Cubit<AppState> {
     }
     scanFolder(folderPath: _settingsCubit.otrFolder);
   }
+
 }
