@@ -8,6 +8,7 @@ import 'package:otr_browser/cubit/app_cubit.dart';
 import '../components/get_custom_toolbar.dart';
 import '../components/otr_data_tile.dart';
 
+
 class MainPage extends StatefulWidget {
   const MainPage({super.key});
 
@@ -16,6 +17,7 @@ class MainPage extends StatefulWidget {
 }
 
 class _MainPageState extends State<MainPage> {
+
   @override
   void initState() {
     print('MainPage.initState');

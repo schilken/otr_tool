@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:convert';
 
 import 'package:bot_toast/bot_toast.dart';
@@ -7,6 +8,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:macos_ui/macos_ui.dart';
+import 'package:otr_browser/logging_stream.dart';
 import 'package:otr_browser/pages/about_window.dart';
 import 'package:otr_browser/cubit/app_cubit.dart';
 import 'package:otr_browser/services/files_repository.dart';
@@ -17,6 +19,7 @@ import 'preferences/settings_cubit.dart';
 import 'preferences/settings_page.dart';
 
 void main(List<String> args) {
+  loggingStreamController = StreamController<String>.broadcast();
   print('main: $args');
   if (args.firstOrNull == 'multi_window') {
     final windowId = int.parse(args[1]);
@@ -154,7 +157,7 @@ class _MainViewState extends State<MainView> {
                 index: state.sidebarPageIndex,
                 children: [
                   MainPage(),
-                  LoggerPage(state.commandStdoutStream ?? Stream.empty()),
+                  LoggerPage(loggingStreamController.stream),
                   SettingsPage(),
                 ],
               ),

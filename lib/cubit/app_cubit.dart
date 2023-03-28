@@ -7,9 +7,9 @@ import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/services.dart';
-import 'package:meta/meta.dart';
 import 'package:otr_browser/services/files_repository.dart';
 
+import '../logging_stream.dart';
 import '../model/otr_data.dart';
 import '../preferences/settings_cubit.dart';
 import '../services/video_cutter.dart';
@@ -22,7 +22,7 @@ class AppCubit extends Cubit<AppState> {
     this.filesRepository,
   )   : _settingsCubit = settingsCubit,
         super(AppInitial()) {
-    print('create AppCubit');
+    debugPrint('create AppCubit');
     if (settingsCubit.state is SettingsLoaded) {
 //      _applyFilters(_settingsCubit.state as SettingsLoaded);
     }
@@ -33,35 +33,24 @@ class AppCubit extends Cubit<AppState> {
     });
   }
   final FilesRepository filesRepository;
-  String? _primaryWord;
   String _currentFolderPath = "no file selected";
   final SettingsCubit _settingsCubit;
   List<OtrData> _fullOtrDataList = [];
-  final List<OtrData> _filteredOtrDataList = [];
 
   // pathname → loist of 10 lines following hit
   final sectionsMap = <String, List<String>>{};
 
-  void setPrimarySearchWord(String? word) {
-    print('setPrimarySearchWord: $word');
-    _primaryWord = word;
-    if (_primaryWord != null && (_primaryWord ?? '').isEmpty) {
-      _primaryWord = null;
-    }
-  }
-
   init() async {
-    print('AppCubit.init');
+    debugPrint('AppCubit.init');
     await scanFolder(folderPath: _settingsCubit.otrFolder);
   }
-
 
   Future<void> reScanFolder() async {
     return scanFolder(folderPath: _currentFolderPath);
   }
 
   Future<void> scanFolder({required String folderPath}) async {
-    print('scanFolder: $folderPath');
+    debugPrint('scanFolder: $folderPath');
     _settingsCubit.setOtrFolder(folderPath);
     emit(DetailsLoading());
     await Future.delayed(const Duration(seconds: 1));
@@ -82,7 +71,7 @@ class AppCubit extends Cubit<AppState> {
 
   void openEditor(String? filename) {
     final filePath = p.join(_settingsCubit.otrFolder, filename);
-    print('openEditor: $filePath');
+    debugPrint('openEditor: $filePath');
     Process.run('/usr/local/bin/code', [filePath]);
   }
 
@@ -92,34 +81,31 @@ class AppCubit extends Cubit<AppState> {
   }
 
   openTrash() {
-    print('openTrash');
+    debugPrint('openTrash');
     Process.run('open', ['/Users/aschilken/.Trash']);
   }
 
   Future<void> cutVideo(String videoFilename, String cutlistFilename) async {
-    print('cutVideo: $videoFilename');
+    loggingStreamController.add('cutVideo: started');
+    debugPrint('cutVideo: $videoFilename');
     var completer = Completer();
     final currentState = state as DetailsLoaded;
-    final streamController = StreamController<String>.broadcast();
 
-    emit(currentState.copyWith(
-        sidebarPageIndex: 1, commandStdoutStream: streamController.stream));
+    emit(currentState.copyWith(sidebarPageIndex: 1));
 
     await Future.delayed(const Duration(milliseconds: 500));
     final videoCutter = VideoCutter();
     videoCutter.cutVideo(_settingsCubit.otrFolder, videoFilename,
-        cutlistFilename, streamController,
+        cutlistFilename, loggingStreamController,
         dryRun: false);
-    streamController.stream.listen((line) {}).onDone(() {
-      print('cutVideo: done');
+    loggingStreamController.stream.listen((line) {}).onDone(() {
+      debugPrint('cutVideo: done');
       Future<void>.delayed(const Duration(milliseconds: 500));
       reScanFolder();
       completer.complete();
     });
     return completer.future;
-
   }
-
 
   copyToClipboard(String path) {
     Clipboard.setData(ClipboardData(text: path));
@@ -142,32 +128,27 @@ class AppCubit extends Cubit<AppState> {
       String otrkeyBasename, String cutlistBasename) async {
     await decodeVideo(otrkeyBasename);
     final decodedBasename = otrkeyBasename.replaceFirst('.otrkey', '');
-    print('decodeAndCutVideo#decodedBasename: ${decodedBasename}');
+    debugPrint('decodeAndCutVideo#decodedBasename: $decodedBasename');
     await Future<void>.delayed(const Duration(milliseconds: 500));
     await cutVideo(decodedBasename, cutlistBasename);
   }
 
   Future<void> decodeVideo(String filename) async {
-    print('decodeVideo: $filename');
-    var completer = Completer();
-    final streamController = StreamController<String>.broadcast();
-    _runDecodeCommand(filename, streamController);
+    debugPrint('decodeVideo: $filename');
     final currentState = state as DetailsLoaded;
-    emit(currentState.copyWith(
-        sidebarPageIndex: 1, commandStdoutStream: streamController.stream));
-    streamController.stream.listen((line) {}).onDone(() async {
-      print('decodeVideo: done');
-      await Future<void>.delayed(const Duration(milliseconds: 500));
-      await reScanFolder();
-      completer.complete();
-    });
-    return completer.future;
+    emit(currentState.copyWith(sidebarPageIndex: 1));
+    await _runDecodeCommand(filename, loggingStreamController);
+    await Future<void>.delayed(const Duration(milliseconds: 500));
+    await reScanFolder();
   }
 
   Future<void> _runDecodeCommand(
     String filename,
-    StreamController<String> streamController,
+    StreamController<String> loggingStreamController,
   ) async {
+    loggingStreamController
+        .add('_runDecodeCommand: ${_settingsCubit.otrdecoderBinary} started');
+    var completer = Completer();
     final workingDirectory = _settingsCubit.otrFolder;
     final otrEmail = _settingsCubit.otrEmail;
     final otrPassword = _settingsCubit.otrPassword;
@@ -176,36 +157,41 @@ class AppCubit extends Cubit<AppState> {
       ['-i', filename, '-e', otrEmail, '-p', otrPassword],
       workingDirectory: workingDirectory,
     );
-
-    process.stdout
+    final stdOutSubscription = process.stdout
         .transform(utf8.decoder)
         .transform(const LineSplitter())
-        .forEach(
+        .listen(
       (line) {
-        streamController.add(line);
-//        print(line);
+        loggingStreamController.add(line);
       },
-    ).whenComplete(() {
-      streamController.add('Stream closed in whenComplete');
-      return streamController.close();
-    }).onError(
+    );
+    stdOutSubscription.onDone(() {
+      loggingStreamController.add('_runDecodeCommand: onDone');
+      loggingStreamController.add('-------------');
+      completer.complete();
+    });
+    stdOutSubscription.onError(
       (error, stackTrace) {
-        streamController.add('Stream closed onError');
-        return streamController.close();
+        loggingStreamController
+            .add('_runDecodeCommand: Error ${error.toString()}');
+        loggingStreamController.add('-------------');
+        completer.complete();
+        return;
       },
     );
     process.stderr
         .transform(utf8.decoder)
         .transform(const LineSplitter())
         .forEach((line) {
-      streamController.add(line);
-      print('stderr >> $line');
+      loggingStreamController.add('_runDecodeCommand: stdErr $line');
+      debugPrint('stderr >> $line');
     });
+    return completer.future;
   }
 
   Future<String> moveOtrkey() async {
     String result;
-//    print('moveOtrkey called');
+//    debugPrint('moveOtrkey called');
     final successCount = await filesRepository.moveAllOtrFiles(
       '/Users/aschilken/Downloads',
       _settingsCubit.otrFolder,
@@ -220,25 +206,25 @@ class AppCubit extends Cubit<AppState> {
   }
 
   void moveCutVideosToVideoFolder() {
-    print('moveCutVideosToVideoFolder');
-    for (final otrData in _filteredOtrDataList) {
+    debugPrint('moveCutVideosToVideoFolder');
+    for (final otrData in _fullOtrDataList) {
       if (otrData.isCutted) {
-        print('${otrData.decodedBasename}');
-        print('${otrData.otrkeyBasename}');
-        print('${otrData.cutlistBasename}');
+        debugPrint('${otrData.decodedBasename}');
+        debugPrint('${otrData.otrkeyBasename}');
+        debugPrint('${otrData.cutlistBasename}');
       }
     }
   }
 
   void cleanUp() {
-    print('cleanUp');
+    debugPrint('cleanUp');
   }
 
   Future<void> moveToTrashOrToMovies(String name) async {
     final otrData =
-        _filteredOtrDataList.firstWhere((otrData) => otrData.name == name);
+        _fullOtrDataList.firstWhere((otrData) => otrData.name == name);
     bool removeDecodedFile = otrData.isdeCoded;
-    print('moveToTrashOrToMovies ${otrData.isCutted}');
+    debugPrint('moveToTrashOrToMovies ${otrData.isCutted}');
     if (otrData.isCutted) {
       bool rc = await filesRepository.moveOtrFile(
         _settingsCubit.otrFolder,
@@ -272,7 +258,7 @@ class AppCubit extends Cubit<AppState> {
 
   moveAllToTrash(String name) async {
     final otrData =
-        _filteredOtrDataList.firstWhere((otrData) => otrData.name == name);
+        _fullOtrDataList.firstWhere((otrData) => otrData.name == name);
     if (otrData.hasOtrkey) {
       await filesRepository.moveToTrash(
           _currentFolderPath, otrData.otrkeyBasename!);
@@ -283,5 +269,4 @@ class AppCubit extends Cubit<AppState> {
     }
     scanFolder(folderPath: _settingsCubit.otrFolder);
   }
-
 }

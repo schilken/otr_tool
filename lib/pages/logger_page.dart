@@ -29,13 +29,10 @@ class _LoggerPageState extends State<LoggerPage> {
     );
   }
 
-  @override
-  void didUpdateWidget(covariant LoggerPage oldWidget) {
-    if (!mounted) {
-      return;
-    }
-    if (_streamSubscription == null) {
-      _streamSubscription = widget._commandStdout.listen(
+@override
+void initState() {
+    super.initState();
+    _streamSubscription = widget._commandStdout.listen(
         (line) {
           setState(
             () {
@@ -43,12 +40,7 @@ class _LoggerPageState extends State<LoggerPage> {
             },
           );
         },
-      )..onDone(() {
-          print('_LoggerPageState done');
-          _streamSubscription = null;
-        });
-    }
-    super.didUpdateWidget(oldWidget);
+    );
   }
 
   onDispose() {

@@ -7,7 +7,8 @@ import 'package:path/path.dart' as p;
 import 'cutlist_parser.dart';
 
 class VideoCutter {
-  cutVideo(String otrFolder, String videoFilename, cutlistFilename,
+
+  Future<void> cutVideo(String otrFolder, String videoFilename, cutlistFilename,
       StreamController<String> loggingStreamController,
       {bool dryRun = true}) async {
     loggingStreamController.add('Starting video cut... $videoFilename');
@@ -31,7 +32,8 @@ class VideoCutter {
       loggingStreamController.add(
           'Dry run, not cutting inputfile, but custom_cut_script.py is generated');
     } else {
-      runCutCommand(videoFilePath, outputFilePath, loggingStreamController);
+      await runCutCommand(
+          videoFilePath, outputFilePath, loggingStreamController);
     }
   }
 
@@ -72,10 +74,11 @@ class VideoCutter {
   }
 
 //  /Applications/Avidemux_2.8.0.app/Contents/MacOS/avidemux_cli --load input.mpg.avi --run "cut-script-2.py" --save "output2.avi" --quit
-  void runCutCommand(String inputFilename, String outputFilename,
-      StreamController<String> streamController) {
-    streamController.add('Running avidemux_cli ...');
-    var process = Process.start(
+  Future<void> runCutCommand(String inputFilename, String outputFilename,
+      StreamController<String> loggingStreamController) async {
+    var completer = Completer();
+    loggingStreamController.add('Running avidemux_cli ...');
+    var process = await Process.start(
       '/usr/bin/script',
       [
         '/tmp/cutter.log',
@@ -89,26 +92,35 @@ class VideoCutter {
         '--quit',
       ],
       runInShell: true,
-    ).then(
-      (proc) => proc.stdout
-          .transform(utf8.decoder)
-          .transform(const LineSplitter())
-          .forEach((line) {
+    );
+    final stdOutSubscription = process.stdout
+        .transform(utf8.decoder)
+        .transform(const LineSplitter())
+        .listen(
+      (line) {
         if (line.contains('Yes')) {
-          streamController.add('stdout >>>>>Yes or No asked!, answered yes');
-          proc.stdin.writeln('y');
+          loggingStreamController
+              .add('stdout >>>>> Yes or No asked!, answered yes');
+          process.stdin.writeln('y');
         }
         if (line.contains('%')) {
-//          print(line);
-          streamController.add(line);
+          loggingStreamController.add(line);
         }
-      }).whenComplete(() {
-        streamController.add('Stream closed in whenComplete');
-        return streamController.close();
-      }).onError((error, stackTrace) {
-        streamController.add('Stream closed onError');
-        return streamController.close();
-      }),
+      },
     );
+    stdOutSubscription.onDone(() {
+      loggingStreamController.add('runCutCommand: onDone');
+      loggingStreamController.add('-------------');
+      completer.complete();
+    });
+    stdOutSubscription.onError(
+      (error, stackTrace) {
+        loggingStreamController.add('runCutCommand: Error ${error.toString()}');
+        loggingStreamController.add('-------------');
+        completer.complete();
+        return;
+      },
+    );
+    return completer.future;
   }
 }
