@@ -6,9 +6,9 @@ import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:macos_ui/macos_ui.dart';
 
 class LoggerPage extends StatefulWidget {
-  const LoggerPage(Stream<String> commandStdout, {super.key})
-      : _commandStdout = commandStdout;
-  final Stream<String> _commandStdout;
+  const LoggerPage(StreamController<String> logginStreamController, {super.key})
+      : _loggingStreamController = logginStreamController;
+  final StreamController<String> _loggingStreamController;
 
   @override
   State<LoggerPage> createState() => _LoggerPageState();
@@ -29,17 +29,31 @@ class _LoggerPageState extends State<LoggerPage> {
     );
   }
 
-@override
-void initState() {
+  @override
+  void initState() {
+    debugPrint('_LoggerPageState.initState');
+    if (!mounted) {
+      return;
+    }
     super.initState();
-    _streamSubscription = widget._commandStdout.listen(
-        (line) {
-          setState(
-            () {
+    _streamSubscription = widget._loggingStreamController.stream.listen(
+      (line) {
+        setState(
+          () {
+            if (_lines.isNotEmpty &&
+                _lines.last.contains('%') &&
+                line.contains('%')) {
+              _lines.removeLast();
               _lines.add(line);
-            },
-          );
-        },
+            } else {
+              _lines.add(line);
+              // Future.delayed(const Duration(milliseconds: 50), () {
+              //   _scrollToEnd(_scrollController);
+              // });
+            }
+          },
+        );
+      },
     );
   }
 
@@ -49,10 +63,11 @@ void initState() {
   }
 
   void _scrollToEnd(ScrollController scrollController) {
+    debugPrint('_scrollToEnd');
     scrollController.animateTo(
       scrollController.position.maxScrollExtent,
       curve: Curves.easeOut,
-      duration: Duration(milliseconds: 10),
+      duration: const Duration(milliseconds: 10),
     );
   }
 
@@ -75,23 +90,15 @@ void initState() {
                         'Logger Ausgabe',
                         style: MacosTheme.of(context).typography.largeTitle,
                       ),
-                      TextButton(onPressed: onClear, child: Text('clear'))
+                      TextButton(onPressed: onClear, child: const Text('clear'))
                     ],
                   ),
                   const SizedBox(height: 20),
-                  const Text(
-                    'Command',
-                    style: TextStyle(fontWeight: FontWeight.bold),
-                  ),
-                  SizedBox(height: 8),
                   Expanded(
                     child: ListView.builder(
                       controller: scrollController,
                       itemCount: _lines.length,
                       itemBuilder: (BuildContext context, int index) {
-                        Future.delayed(Duration.zero, () {
-                          _scrollToEnd(scrollController);
-                        });
                         return Text(_lines[index]);
                       },
                     ),

@@ -20,7 +20,7 @@ class _MainPageState extends State<MainPage> {
 
   @override
   void initState() {
-    print('MainPage.initState');
+    debugPrint('MainPage.initState');
     context.read<AppCubit>().moveOtrkey().then((result) {
       if (result.isNotEmpty) {
         BotToast.showText(
@@ -57,7 +57,9 @@ class _MainPageState extends State<MainPage> {
                               Text(state.currentPathname),
                               MacosIconButton(
                                 onPressed: () =>
-                                    context.read<AppCubit>().reScanFolder(),
+                                    context
+                                    .read<AppCubit>()
+                                    .scanFolder(state.currentPathname),
                                 icon: const MacosIcon(
                                   CupertinoIcons.refresh,
                                 ),

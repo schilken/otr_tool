@@ -136,7 +136,7 @@ class ListTilePullDownMenu extends StatelessWidget {
                   otrData.cutlistBasename!,
                   otrData.name,
                 );
-            await context.read<AppCubit>().openTrash();
+//            await context.read<AppCubit>().openTrash();
             BotToast.showText(
               text: 'Dateien in Papierkorb bzw. Film-Ordner verschoben',
               duration: const Duration(seconds: 3),

@@ -4,6 +4,7 @@ import 'dart:io';
 import 'package:flutter/services.dart';
 import 'package:path/path.dart' as p;
 
+import '../logging_stream.dart';
 import 'cutlist_parser.dart';
 
 class VideoCutter {
@@ -52,7 +53,7 @@ class VideoCutter {
     if (cutlistParser.isValid()) {
       return cutlistParser.segmentLines;
     } else {
-      print('Invalid cutlist');
+      loggingStreamController.add('Invalid cutlist');
       return [];
     }
   }
@@ -98,6 +99,9 @@ class VideoCutter {
         .transform(const LineSplitter())
         .listen(
       (line) {
+        if (line.contains('reconstruct')) {
+          loggingStreamController.add(line);
+        }
         if (line.contains('Yes')) {
           loggingStreamController
               .add('stdout >>>>> Yes or No asked!, answered yes');

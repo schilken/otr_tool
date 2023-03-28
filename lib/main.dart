@@ -156,8 +156,8 @@ class _MainViewState extends State<MainView> {
               child: IndexedStack(
                 index: state.sidebarPageIndex,
                 children: [
-                  MainPage(),
-                  LoggerPage(loggingStreamController.stream),
+                  const MainPage(),
+                  LoggerPage(loggingStreamController),
                   SettingsPage(),
                 ],
               ),
