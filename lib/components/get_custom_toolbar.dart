@@ -4,7 +4,6 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:macos_ui/macos_ui.dart';
 import 'package:otr_browser/cubit/app_cubit.dart';
-import 'package:otr_browser/components/toolbar_searchfield.dart';
 
 ToolBar getCustomToolBar(BuildContext context) {
   return ToolBar(

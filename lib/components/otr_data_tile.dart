@@ -8,7 +8,6 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:macos_ui/macos_ui.dart';
 
 import 'package:otr_browser/cubit/app_cubit.dart';
-import 'package:otr_browser/components/highlighted_text.dart';
 
 import '../model/otr_data.dart';
 
@@ -16,18 +15,15 @@ class OtrDataTile extends StatelessWidget {
   const OtrDataTile({
     Key? key,
     required this.otrData,
-    required this.highlights,
   }) : super(key: key);
   final OtrData otrData;
-  final List<String> highlights;
 
   @override
   Widget build(BuildContext context) {
     return MacosListTile(
-      title: HighlightedText(
-        text: otrData.name,
+      title: Text(
+        otrData.name,
         style: TextStyle(fontWeight: FontWeight.bold),
-        highlights: highlights,
       ),
       subtitle: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -74,13 +70,11 @@ class OtrDataTile extends StatelessWidget {
             children: [
               ListTilePullDownMenu(otrData: otrData),
               const SizedBox(width: 12),
-              HighlightedText(
-                text: otrData.otrkeyBasename ?? '',
+              Text(
+                otrData.otrkeyBasename ?? '',
                 style: const TextStyle(
                   color: Colors.blueGrey,
                 ),
-                highlights: highlights,
-                caseSensitive: false,
               ),
             ],
           ),
@@ -142,6 +136,7 @@ class ListTilePullDownMenu extends StatelessWidget {
                   otrData.cutlistBasename!,
                   otrData.name,
                 );
+            await context.read<AppCubit>().openTrash();
             BotToast.showText(
               text: 'Dateien in Papierkorb bzw. Film-Ordner verschoben',
               duration: const Duration(seconds: 3),
@@ -198,6 +193,7 @@ class ListTilePullDownMenu extends StatelessWidget {
           enabled: otrData.isCutted,
           onTap: () async {
             await context.read<AppCubit>().moveToTrashOrToMovies(otrData.name);
+            await context.read<AppCubit>().openTrash();
             BotToast.showText(
               text: 'Dateien in Papierkorb bzw. Film-Ordner verschoben',
               duration: const Duration(seconds: 3),

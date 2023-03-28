@@ -51,10 +51,7 @@ class _MainPageState extends State<MainPage> {
                           child: Row(
                             mainAxisAlignment: MainAxisAlignment.start,
                             children: [
-                              if (state.fileType == null)
-                                const Text('Paths from File: ')
-                              else
-                                Text('Inhalt von: '),
+                              const Text('OtrFolder:'),
                               Text(state.currentPathname),
                               MacosIconButton(
                                 onPressed: () =>
@@ -63,9 +60,6 @@ class _MainPageState extends State<MainPage> {
                                   CupertinoIcons.refresh,
                                 ),
                               ),
-                              const Spacer(),
-                              Text(
-                                  '${state.fileCount}|${state.primaryHitCount}'),
                             ],
                           ),
                         ),
@@ -80,14 +74,9 @@ class _MainPageState extends State<MainPage> {
                             controller: ScrollController(),
                             itemCount: state.details.length,
                             itemBuilder: (context, index) {
-                              final highlights = [
-                                state.primaryWord ?? '@',
-                              ];
-
                               final detail = state.details[index];
                               return OtrDataTile(
                                 otrData: detail,
-                                highlights: highlights,
                               );
                             },
                             separatorBuilder:
@@ -109,14 +98,6 @@ class _MainPageState extends State<MainPage> {
               );
             },
           ),
-          // ResizablePane(
-          //     minWidth: 300,
-          //     startWidth: 300,
-          //     windowBreakpoint: 500,
-          //     resizableSide: ResizableSide.left,
-          //     builder: (_, __) {
-          //       return const Center(child: Text('Details'));
-          //     })
         ],
       );
     });

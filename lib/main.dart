@@ -10,7 +10,6 @@ import 'package:macos_ui/macos_ui.dart';
 import 'package:otr_browser/pages/about_window.dart';
 import 'package:otr_browser/cubit/app_cubit.dart';
 import 'package:otr_browser/services/files_repository.dart';
-import 'package:otr_browser/components/filter_settings.dart';
 
 import 'pages/logger_page.dart';
 import 'pages/main_page.dart';
@@ -126,7 +125,6 @@ class _MainViewState extends State<MainView> {
                   color: Colors.grey.shade200,
                 ),
                 minWidth: 200,
-                top: FilterSettings(),
                 builder: (context, scrollController) => SidebarItems(
                   currentIndex: state.sidebarPageIndex,
                   onChanged: (index) =>

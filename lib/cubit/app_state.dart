@@ -3,10 +3,6 @@ part of 'app_cubit.dart';
 
 @immutable
 abstract class AppState extends Equatable {
-  final String? primaryWord;
-  AppState({
-    this.primaryWord,
-  });
 }
 
 class AppInitial extends AppState {
@@ -17,16 +13,12 @@ class AppInitial extends AppState {
 class Detail {
   final String? title;
   final String otrKey;
-  final String? previewText;
-  final String? imageUrl;
   final String filePathName;
 
   Detail({
     this.title,
     required this.otrKey,
     required this.filePathName,
-    this.previewText,
-    this.imageUrl,
   });
 
   Detail copyWith({
@@ -39,8 +31,6 @@ class Detail {
     return Detail(
       title: title ?? this.title,
       otrKey: otrKey ?? this.otrKey,
-      previewText: previewText ?? this.previewText,
-      imageUrl: imageUrl ?? this.imageUrl,
       filePathName: filePathName ?? this.filePathName,
     );
   }
@@ -55,7 +45,6 @@ class DetailsLoaded extends AppState {
   final List<OtrData> details;
   final String currentPathname;
   final int fileCount;
-  final int primaryHitCount;
   final String? message;
   final int sidebarPageIndex;
   final String? selectedOtrkeyPath;
@@ -66,15 +55,11 @@ class DetailsLoaded extends AppState {
     required this.details,
     required this.currentPathname,
     required this.fileCount,
-    required this.primaryHitCount,
     required this.sidebarPageIndex,
     this.message,
-    String? primaryWord,
     this.selectedOtrkeyPath,
     this.commandStdoutStream,
-  }) : super(
-          primaryWord: primaryWord,
-        );
+  });
 
   DetailsLoaded copyWith({
     String? fileType,
@@ -92,7 +77,6 @@ class DetailsLoaded extends AppState {
       details: details ?? this.details,
       currentPathname: currentPathname ?? this.currentPathname,
       fileCount: fileCount ?? this.fileCount,
-      primaryHitCount: primaryHitCount ?? this.primaryHitCount,
       message: message ?? this.message,
       sidebarPageIndex: sidebarPageIndex ?? this.sidebarPageIndex,
       selectedOtrkeyPath: selectedOtrkeyPath ?? this.selectedOtrkeyPath,
@@ -105,7 +89,6 @@ class DetailsLoaded extends AppState {
         details,
         currentPathname,
         fileCount,
-        primaryHitCount,
         message,
         sidebarPageIndex,
         selectedOtrkeyPath,

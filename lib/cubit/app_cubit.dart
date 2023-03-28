@@ -53,30 +53,8 @@ class AppCubit extends Cubit<AppState> {
   init() async {
     print('AppCubit.init');
     await scanFolder(folderPath: _settingsCubit.otrFolder);
-    await search();
   }
 
-  Future<void> search() async {
-    emit(DetailsLoading());
-    print('search: $_primaryWord');
-    await Future.delayed(const Duration(milliseconds: 500));
-    _filteredOtrDataList.clear();
-    for (final otrData in _fullOtrDataList) {
-      if (otrData.name.contains(_primaryWord ?? '')) {
-        _filteredOtrDataList.add(otrData);
-      }
-    }
-    emit(
-      DetailsLoaded(
-        currentPathname: _currentFolderPath,
-        fileCount: _fullOtrDataList.length,
-        primaryHitCount: _filteredOtrDataList.length,
-        details: _filteredOtrDataList,
-        primaryWord: _primaryWord,
-        sidebarPageIndex: 0,
-      ),
-    );
-  }
 
   Future<void> reScanFolder() async {
     return scanFolder(folderPath: _currentFolderPath);
@@ -92,7 +70,14 @@ class AppCubit extends Cubit<AppState> {
     allFilePaths.sort((a, b) => a.compareTo(b));
     _fullOtrDataList = filesRepository.consolidateOtrFiles(allFilePaths);
     _currentFolderPath = folderPath;
-    await search();
+    emit(
+      DetailsLoaded(
+        currentPathname: _currentFolderPath,
+        fileCount: _fullOtrDataList.length,
+        details: _fullOtrDataList,
+        sidebarPageIndex: 0,
+      ),
+    );
   }
 
   void openEditor(String? filename) {
@@ -104,6 +89,11 @@ class AppCubit extends Cubit<AppState> {
   showInFinder(String filename) {
     final filePath = p.join(_settingsCubit.otrFolder, filename);
     Process.run('open', ['-R', filePath]);
+  }
+
+  openTrash() {
+    print('openTrash');
+    Process.run('open', ['/Users/aschilken/.Trash']);
   }
 
   Future<void> cutVideo(String videoFilename, String cutlistFilename) async {
