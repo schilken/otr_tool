@@ -8,7 +8,6 @@ import 'package:otr_browser/cubit/app_cubit.dart';
 import '../components/get_custom_toolbar.dart';
 import '../components/otr_data_tile.dart';
 
-
 class MainPage extends StatefulWidget {
   const MainPage({super.key});
 
@@ -17,7 +16,6 @@ class MainPage extends StatefulWidget {
 }
 
 class _MainPageState extends State<MainPage> {
-
   @override
   void initState() {
     debugPrint('MainPage.initState');
@@ -56,8 +54,7 @@ class _MainPageState extends State<MainPage> {
                               const Text('OtrFolder:'),
                               Text(state.currentPathname),
                               MacosIconButton(
-                                onPressed: () =>
-                                    context
+                                onPressed: () => context
                                     .read<AppCubit>()
                                     .scanFolder(state.currentPathname),
                                 icon: const MacosIcon(

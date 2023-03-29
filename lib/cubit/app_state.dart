@@ -2,8 +2,7 @@
 part of 'app_cubit.dart';
 
 @immutable
-abstract class AppState extends Equatable {
-}
+abstract class AppState extends Equatable {}
 
 class AppInitial extends AppState {
   @override

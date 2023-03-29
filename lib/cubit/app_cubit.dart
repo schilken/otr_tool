@@ -244,7 +244,6 @@ class AppCubit extends Cubit<AppState> {
           _currentFolderPath, otrData.otrkeyBasename!);
       loggingStreamController.add(
           'moveToTrashOrToMovies: ${otrData.otrkeyBasename!} in Papierkorb verschoben');
-
     }
     if (otrData.hasCutlist) {
       await filesRepository.moveToTrash(
@@ -257,7 +256,6 @@ class AppCubit extends Cubit<AppState> {
           _currentFolderPath, otrData.decodedBasename!);
       loggingStreamController.add(
           'moveToTrashOrToMovies: ${otrData.decodedBasename!} in Papierkorb verschoben');
-
     }
     reScanFolder();
   }

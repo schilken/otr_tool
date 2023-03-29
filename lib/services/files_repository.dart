@@ -11,7 +11,6 @@ class FilesRepository {
   String? _fileType;
   List<String> _allFilePaths = [];
 
-
   Future<int> moveAllOtrFiles(
       String sourceFolder, String destinationFolder) async {
     var successCount = 0;

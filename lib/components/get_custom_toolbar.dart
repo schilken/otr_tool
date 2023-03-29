@@ -32,9 +32,7 @@ ToolBar getCustomToolBar(BuildContext context) {
               String? selectedDirectory =
                   await FilePicker.platform.getDirectoryPath();
               if (selectedDirectory != null) {
-                context
-                    .read<AppCubit>()
-                    .scanFolder(selectedDirectory);
+                context.read<AppCubit>().scanFolder(selectedDirectory);
               }
             },
           ),

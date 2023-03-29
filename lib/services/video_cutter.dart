@@ -8,7 +8,6 @@ import '../logging_stream.dart';
 import 'cutlist_parser.dart';
 
 class VideoCutter {
-
   Future<void> cutVideo(String otrFolder, String videoFilename, cutlistFilename,
       StreamController<String> loggingStreamController,
       {bool dryRun = true}) async {
