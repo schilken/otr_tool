@@ -194,7 +194,7 @@ class AppCubit extends Cubit<AppState> {
       result = 'moveOtrkey: $successCount Dateien Kopiert';
       loggingStreamController
           .add('moveOtrkey: $successCount Dateien von Downloads geholt');
-      reScanFolder();
+      await scanFolder(_settingsCubit.otrFolder);
     } else {
       return '';
     }
