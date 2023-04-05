@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -142,6 +144,20 @@ class SettingsPage extends StatelessWidget {
                         ),
                         SizedBox(height: 16),
                         const Text(
+                          'Download Folder',
+                          style: TextStyle(fontWeight: FontWeight.bold),
+                        ),
+                        SizedBox(height: 8),
+                        ShowAndSelectFolder(
+                          folder: state.downloadFolder,
+                          onSelected: (String? value) async {
+                            await context
+                                .read<SettingsCubit>()
+                                .setDownloadFolder(value);
+                          },
+                        ),
+                        SizedBox(height: 16),
+                        const Text(
                           'OTR Folder',
                           style: TextStyle(fontWeight: FontWeight.bold),
                         ),
@@ -238,7 +254,9 @@ class ShowAndSelectFolder extends StatelessWidget {
           borderRadius: BorderRadius.circular(7),
           onPressed: () async {
             String? selectedDirectory =
-                await FilePicker.platform.getDirectoryPath();
+                await FilePicker.platform.getDirectoryPath(
+              initialDirectory: Platform.environment['HOME']!,
+            );
             if (selectedDirectory != null) {
               onSelected(selectedDirectory);
             }

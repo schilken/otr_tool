@@ -8,24 +8,18 @@ import '../logging_stream.dart';
 import 'cutlist_parser.dart';
 
 class VideoCutter {
+
   Future<void> cutVideo(String otrFolder, String videoFilename, cutlistFilename,
       StreamController<String> loggingStreamController,
       {bool dryRun = true}) async {
     loggingStreamController.add('Starting video cut... $videoFilename');
-    loggingStreamController.add('loadScriptTemplate()...');
-    List<String> scrtiptLines = await loadScriptTemplate();
-    loggingStreamController.add('getSegmentsFromFile()...');
     final videoFilePath = p.join(otrFolder, videoFilename);
-    final cutlistFilePath = p.join(otrFolder, cutlistFilename);
-    List<String> segmentLines =
-        await getSegmentsFromFile(videoFilePath, cutlistFilePath);
-    if (segmentLines.isEmpty) {
-      loggingStreamController.add('No segments found in input file');
-      return;
-    }
-    scrtiptLines.addAll(segmentLines);
-    loggingStreamController.add('${segmentLines.length} segment(s) found');
-    await saveScript(scrtiptLines, customScriptPath);
+    patchScript(
+        videoFilePath,
+        p.join(
+          otrFolder,
+          cutlistFilename,
+        ));
     String outputFilePath =
         videoFilePath.replaceFirst('_TVOON_DE', '_TVOON_DE-cut');
     if (dryRun) {
@@ -37,13 +31,23 @@ class VideoCutter {
     }
   }
 
-  String get customScriptPath => p.join('/tmp', 'custom_cut_script.py');
+  Future<bool> patchScript(String videoFilePath, String cutlistFilePath) async {
+    loggingStreamController.add('loadScriptTemplate()...');
+    List<String> scriptLines = await loadScriptTemplate();
+    loggingStreamController.add('getSegmentsFromFile()...');
+    List<String> segmentLines =
+        await getSegmentsFromFile(videoFilePath, cutlistFilePath);
+    if (segmentLines.isEmpty) {
+      loggingStreamController.add('No segments found in input file');
+      return false;
+    }
+    loggingStreamController.add('${segmentLines.length} segment(s) found');
+    scriptLines.addAll(segmentLines);
+    await saveScript(scriptLines, customScriptPath);
+    return true;
+  }
 
-  // Future<bool> temporaryFileExists(String filename) async {
-  //   final dir = Directory.systemTemp;
-  //   final filePath = p.join(dir.path, filename);
-  //   return await File(filePath).exists();
-  // }
+  String get customScriptPath => p.join('/tmp', 'custom_cut_script.py');
 
   Future<List<String>> getSegmentsFromFile(
       String videoFilename, String cutlistFilename) async {
@@ -61,10 +65,6 @@ class VideoCutter {
     String textasset = "assets/files/cut_script_template.py";
     String text = await rootBundle.loadString(textasset);
     final lines = text.split('\n');
-    // final dir = await currentDirectory;
-    // final filePath = p.join(dir.path, 'cut_script_template.py');
-    // final File infoFile = File(filePath);
-    // final lines = await infoFile.readAsLines();
     return lines;
   }
 

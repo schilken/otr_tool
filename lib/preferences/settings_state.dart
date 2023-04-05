@@ -16,6 +16,7 @@ class SettingsLoaded extends SettingsState {
   final String videoFolder;
   final String avidemuxApp;
   final String otrdecoderBinary;
+  final String downloadFolder;
   final bool showPassword;
 
   SettingsLoaded(
@@ -25,6 +26,7 @@ class SettingsLoaded extends SettingsState {
     this.videoFolder,
     this.avidemuxApp,
     this.otrdecoderBinary,
+    this.downloadFolder,
     this.showPassword,
   );
 
@@ -36,6 +38,7 @@ class SettingsLoaded extends SettingsState {
         videoFolder,
         avidemuxApp,
         otrdecoderBinary,
+        downloadFolder,
         showPassword,
       ];
 
@@ -46,6 +49,7 @@ class SettingsLoaded extends SettingsState {
     String? videoFolder,
     String? avidemuxApp,
     String? otrdecoderBinary,
+    String? downloadFolder,
     bool? showPassword,
   }) {
     return SettingsLoaded(
@@ -55,6 +59,7 @@ class SettingsLoaded extends SettingsState {
       videoFolder ?? this.videoFolder,
       avidemuxApp ?? this.avidemuxApp,
       otrdecoderBinary ?? this.otrdecoderBinary,
+      downloadFolder ?? this.downloadFolder,
       showPassword ?? this.showPassword,
     );
   }

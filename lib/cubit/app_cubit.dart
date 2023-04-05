@@ -187,7 +187,7 @@ class AppCubit extends Cubit<AppState> {
     String result;
 //    debugPrint('moveOtrkey called');
     final successCount = await filesRepository.moveAllOtrFiles(
-      '/Users/aschilken/Downloads',
+      _settingsCubit.downloadFolder,
       _settingsCubit.otrFolder,
     );
     if (successCount > 0) {
