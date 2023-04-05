@@ -4,7 +4,6 @@ import 'dart:convert';
 import 'package:bot_toast/bot_toast.dart';
 import 'package:collection/collection.dart';
 import 'package:desktop_multi_window/desktop_multi_window.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:macos_ui/macos_ui.dart';
@@ -13,10 +12,8 @@ import 'package:otr_browser/pages/about_window.dart';
 import 'package:otr_browser/cubit/app_cubit.dart';
 import 'package:otr_browser/services/files_repository.dart';
 
-import 'pages/logger_page.dart';
-import 'pages/main_page.dart';
-import 'preferences/settings_cubit.dart';
-import 'preferences/settings_page.dart';
+import 'cubit/settings_cubit.dart';
+import 'pages/main_view.dart';
 
 void main(List<String> args) {
   loggingStreamController = StreamController<String>.broadcast();
@@ -33,7 +30,7 @@ void main(List<String> args) {
       ));
     }
   } else {
-    runApp(App());
+    runApp(const App());
   }
 }
 
@@ -77,98 +74,5 @@ class App extends StatelessWidget {
             ),
           );
         });
-  }
-}
-
-class MainView extends StatefulWidget {
-  const MainView({super.key});
-
-  @override
-  State<MainView> createState() => _MainViewState();
-}
-
-class _MainViewState extends State<MainView> {
-  @override
-  Widget build(BuildContext context) {
-    return PlatformMenuBar(
-      menus: [
-        PlatformMenu(
-          label: 'OpenSourceBrowser',
-          menus: [
-            PlatformMenuItem(
-              label: 'About',
-              onSelected: () async {
-                final window = await DesktopMultiWindow.createWindow(jsonEncode(
-                  {
-                    'args1': 'About',
-                    'args2': 500,
-                    'args3': true,
-                  },
-                ));
-                debugPrint('$window');
-                window
-                  ..setFrame(const Offset(0, 0) & const Size(350, 350))
-                  ..center()
-                  ..setTitle('About otr_browser')
-                  ..show();
-              },
-            ),
-            const PlatformProvidedMenuItem(
-              type: PlatformProvidedMenuItemType.quit,
-            ),
-          ],
-        ),
-      ],
-      child: BlocBuilder<AppCubit, AppState>(
-        builder: (context, state) {
-          if (state is DetailsLoaded) {
-            return MacosWindow(
-              sidebar: Sidebar(
-                decoration: BoxDecoration(
-                  color: Colors.grey.shade200,
-                ),
-                minWidth: 200,
-                builder: (context, scrollController) => SidebarItems(
-                  currentIndex: state.sidebarPageIndex,
-                  onChanged: (index) =>
-                      context.read<AppCubit>().sidebarChanged(index),
-                  items: [
-                    const SidebarItem(
-                      leading: MacosIcon(CupertinoIcons.search),
-                      label: Text('OTR Keys'),
-                    ),
-                    const SidebarItem(
-                      leading: MacosIcon(CupertinoIcons.graph_square),
-                      label: Text('Log'),
-                    ),
-                    const SidebarItem(
-                      leading: MacosIcon(CupertinoIcons.settings),
-                      label: Text('Einstellungen'),
-                    ),
-                  ],
-                ),
-                bottom: const MacosListTile(
-                  leading: MacosIcon(CupertinoIcons.profile_circled),
-                  title: Text('Alfred Schilken'),
-                  subtitle: Text('alfred@schilken.de'),
-                ),
-              ),
-              child: IndexedStack(
-                index: state.sidebarPageIndex,
-                children: [
-                  const MainPage(),
-                  LoggerPage(loggingStreamController),
-                  SettingsPage(),
-                ],
-              ),
-            );
-          } else {
-            return Center(
-              child: CircularProgressIndicator(),
-            );
-          }
-        },
-      ),
-    );
   }
 }

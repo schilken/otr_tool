@@ -11,7 +11,7 @@ import 'package:otr_browser/services/files_repository.dart';
 
 import '../logging_stream.dart';
 import '../model/otr_data.dart';
-import '../preferences/settings_cubit.dart';
+import '../cubit/settings_cubit.dart';
 import '../services/video_cutter.dart';
 
 part 'app_state.dart';
