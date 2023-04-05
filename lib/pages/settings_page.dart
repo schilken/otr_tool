@@ -3,18 +3,18 @@ import 'dart:io';
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:macos_ui/macos_ui.dart';
 
-import '../cubit/settings_cubit.dart';
 import '../components/textfield_dialog.dart';
+import '../providers/providers.dart';
 
 typedef StringCallback = void Function(String);
 
-class SettingsPage extends StatelessWidget {
+class SettingsPage extends ConsumerWidget {
   SettingsPage({super.key});
 
-  promptEmail(BuildContext context) async {
+  promptEmail(BuildContext context, WidgetRef ref) async {
     final email = await textFieldDialog(
       context,
       title: const Text('Enter OTR Email'),
@@ -34,11 +34,11 @@ class SettingsPage extends StatelessWidget {
       textAlign: TextAlign.center,
     );
     if (email != null) {
-      await context.read<SettingsCubit>().setOtrEmail(email);
+      await ref.read(settingsControllerProvider.notifier).setOtrEmail(email);
     }
   }
 
-  promptPassword(BuildContext context) async {
+  promptPassword(BuildContext context, WidgetRef ref) async {
     final password = await textFieldDialog(
       context,
       title: const Text('Enter OTR Password'),
@@ -58,12 +58,16 @@ class SettingsPage extends StatelessWidget {
       textAlign: TextAlign.center,
     );
     if (password != null) {
-      await context.read<SettingsCubit>().setOtrPassword(password);
+      await ref
+          .read(settingsControllerProvider.notifier)
+          .setOtrPassword(password);
     }
   }
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
+    final state = ref.watch(settingsControllerProvider);
+    final settingsController = ref.watch(settingsControllerProvider.notifier);
     return MacosScaffold(
       children: [
         ContentArea(
@@ -71,156 +75,133 @@ class SettingsPage extends StatelessWidget {
           builder: (context, scrollController) {
             return Padding(
               padding: const EdgeInsets.all(40.0),
-              child: BlocBuilder<SettingsCubit, SettingsState>(
-                builder: (context, state) {
-                  if (state is SettingsLoaded) {
-                    print('settingsLoadd: $state');
-                    return Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        Text(
-                          'Einstellungen',
-                          style: MacosTheme.of(context).typography.largeTitle,
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Text(
+                    'Einstellungen',
+                    style: MacosTheme.of(context).typography.largeTitle,
+                  ),
+                  const SizedBox(height: 20),
+                  const Text(
+                    'OTR E-Mail',
+                    style: TextStyle(fontWeight: FontWeight.bold),
+                  ),
+                  SizedBox(height: 8),
+                  Row(
+                    children: [
+                      Text(state.email),
+                      MacosIconButton(
+                        icon: const MacosIcon(
+                          CupertinoIcons.pencil,
                         ),
-                        const SizedBox(height: 20),
-                        const Text(
-                          'OTR E-Mail',
-                          style: TextStyle(fontWeight: FontWeight.bold),
+                        shape: BoxShape.rectangle,
+                        borderRadius: BorderRadius.circular(7),
+                        onPressed: () async {
+                          promptEmail(context, ref);
+                        },
+                      ),
+                    ],
+                  ),
+                  SizedBox(height: 16),
+                  const Text(
+                    'OTR Password',
+                    style: TextStyle(fontWeight: FontWeight.bold),
+                  ),
+                  SizedBox(height: 8),
+                  Row(
+                    children: [
+                      Text(
+                        state.password,
+                      ),
+                      MacosIconButton(
+                        icon: MacosIcon(
+                          size: 60,
+                          state.showPassword
+                              ? CupertinoIcons.eye_slash_fill
+                              : CupertinoIcons.eye,
                         ),
-                        SizedBox(height: 8),
-                        Row(
-                          children: [
-                            Text(state.email),
-                            MacosIconButton(
-                              icon: const MacosIcon(
-                                CupertinoIcons.pencil,
-                              ),
-                              shape: BoxShape.rectangle,
-                              borderRadius: BorderRadius.circular(7),
-                              onPressed: () async {
-                                promptEmail(context);
-                              },
-                            ),
-                          ],
+                        // shape: BoxShape.rectangle,
+                        // borderRadius: BorderRadius.circular(7),
+                        onPressed: () async {
+                          settingsController.toggleShowPassword();
+                        },
+                      ),
+                      MacosIconButton(
+                        icon: const MacosIcon(
+                          CupertinoIcons.pencil,
                         ),
-                        SizedBox(height: 16),
-                        const Text(
-                          'OTR Password',
-                          style: TextStyle(fontWeight: FontWeight.bold),
-                        ),
-                        SizedBox(height: 8),
-                        Row(
-                          children: [
-                            Text(
-                              state.password,
-                            ),
-                            MacosIconButton(
-                              icon: MacosIcon(
-                                size: 60,
-                                state.showPassword
-                                    ? CupertinoIcons.eye_slash_fill
-                                    : CupertinoIcons.eye,
-                              ),
-                              // shape: BoxShape.rectangle,
-                              // borderRadius: BorderRadius.circular(7),
-                              onPressed: () async {
-                                context
-                                    .read<SettingsCubit>()
-                                    .toggleShowPassword();
-                              },
-                            ),
-                            MacosIconButton(
-                              icon: const MacosIcon(
-                                CupertinoIcons.pencil,
-                              ),
-                              shape: BoxShape.rectangle,
-                              borderRadius: BorderRadius.circular(7),
-                              onPressed: () async {
-                                promptPassword(context);
-                              },
-                            ),
-                          ],
-                        ),
-                        SizedBox(height: 16),
-                        const Text(
-                          'Download Folder',
-                          style: TextStyle(fontWeight: FontWeight.bold),
-                        ),
-                        SizedBox(height: 8),
-                        ShowAndSelectFolder(
-                          folder: state.downloadFolder,
-                          onSelected: (String? value) async {
-                            await context
-                                .read<SettingsCubit>()
-                                .setDownloadFolder(value);
-                          },
-                        ),
-                        SizedBox(height: 16),
-                        const Text(
-                          'OTR Folder',
-                          style: TextStyle(fontWeight: FontWeight.bold),
-                        ),
-                        SizedBox(height: 8),
-                        ShowAndSelectFolder(
-                          folder: state.otrFolder,
-                          onSelected: (String? value) async {
-                            await context
-                                .read<SettingsCubit>()
-                                .setOtrFolder(value);
-                          },
-                        ),
-                        SizedBox(height: 16),
-                        const Text(
-                          'Video Folder',
-                          style: TextStyle(fontWeight: FontWeight.bold),
-                        ),
-                        SizedBox(height: 8),
-                        ShowAndSelectFolder(
-                          folder: state.videoFolder,
-                          onSelected: (String value) async {
-                            await context
-                                .read<SettingsCubit>()
-                                .setVideoFolder(value);
-                          },
-                        ),
-                        SizedBox(height: 16),
-                        const Text(
-                          'Avidemux Programm',
-                          style: TextStyle(fontWeight: FontWeight.bold),
-                        ),
-                        SizedBox(height: 8),
-                        ShowAndSelectFile(
-                          filename: state.avidemuxApp,
-                          onSelected: (String value) async {
-                            await context
-                                .read<SettingsCubit>()
-                                .setAvidemuxApp(value);
-                          },
-                        ),
-                        SizedBox(height: 16),
-                        const Text(
-                          'otrdecoder Programm',
-                          style: TextStyle(fontWeight: FontWeight.bold),
-                        ),
-                        SizedBox(height: 8),
-                        ShowAndSelectFile(
-                          filename: state.otrdecoderBinary,
-                          onSelected: (String value) async {
-                            await context
-                                .read<SettingsCubit>()
-                                .setOtrdecoderBinary(value);
-                          },
-                        ),
-                        SizedBox(height: 16),
-                      ],
-                    );
-                  } else {
-                    return Center(
-                      child: CircularProgressIndicator(),
-                    );
-                  }
-                },
+                        shape: BoxShape.rectangle,
+                        borderRadius: BorderRadius.circular(7),
+                        onPressed: () async {
+                          promptPassword(context, ref);
+                        },
+                      ),
+                    ],
+                  ),
+                  SizedBox(height: 16),
+                  const Text(
+                    'Download Folder',
+                    style: TextStyle(fontWeight: FontWeight.bold),
+                  ),
+                  SizedBox(height: 8),
+                  ShowAndSelectFolder(
+                    folder: state.downloadFolder,
+                    onSelected: (String? value) async {
+                      await settingsController.setDownloadFolder(value);
+                    },
+                  ),
+                  SizedBox(height: 16),
+                  const Text(
+                    'OTR Folder',
+                    style: TextStyle(fontWeight: FontWeight.bold),
+                  ),
+                  SizedBox(height: 8),
+                  ShowAndSelectFolder(
+                    folder: state.otrFolder,
+                    onSelected: (String? value) async {
+                      await settingsController.setOtrFolder(value);
+                    },
+                  ),
+                  SizedBox(height: 16),
+                  const Text(
+                    'Video Folder',
+                    style: TextStyle(fontWeight: FontWeight.bold),
+                  ),
+                  SizedBox(height: 8),
+                  ShowAndSelectFolder(
+                    folder: state.videoFolder,
+                    onSelected: (String value) async {
+                      await settingsController.setVideoFolder(value);
+                    },
+                  ),
+                  SizedBox(height: 16),
+                  const Text(
+                    'Avidemux Programm',
+                    style: TextStyle(fontWeight: FontWeight.bold),
+                  ),
+                  SizedBox(height: 8),
+                  ShowAndSelectFile(
+                    filename: state.avidemuxApp,
+                    onSelected: (String value) async {
+                      await settingsController.setAvidemuxApp(value);
+                    },
+                  ),
+                  SizedBox(height: 16),
+                  const Text(
+                    'otrdecoder Programm',
+                    style: TextStyle(fontWeight: FontWeight.bold),
+                  ),
+                  SizedBox(height: 8),
+                  ShowAndSelectFile(
+                    filename: state.otrdecoderBinary,
+                    onSelected: (String value) async {
+                      await settingsController.setOtrdecoderBinary(value);
+                    },
+                  ),
+                  SizedBox(height: 16),
+                ],
               ),
             );
           },

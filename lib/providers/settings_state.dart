@@ -1,15 +1,5 @@
 // ignore_for_file: public_member_api_docs, sort_constructors_first
-part of 'settings_cubit.dart';
-
-@immutable
-abstract class SettingsState extends Equatable {}
-
-class SettingsInitial extends SettingsState {
-  @override
-  List<Object?> get props => [];
-}
-
-class SettingsLoaded extends SettingsState {
+class SettingsState {
   final String email;
   final String password;
   final String otrFolder;
@@ -19,7 +9,7 @@ class SettingsLoaded extends SettingsState {
   final String downloadFolder;
   final bool showPassword;
 
-  SettingsLoaded(
+  SettingsState(
     this.email,
     this.password,
     this.otrFolder,
@@ -30,19 +20,7 @@ class SettingsLoaded extends SettingsState {
     this.showPassword,
   );
 
-  @override
-  List<Object?> get props => [
-        email,
-        password,
-        otrFolder,
-        videoFolder,
-        avidemuxApp,
-        otrdecoderBinary,
-        downloadFolder,
-        showPassword,
-      ];
-
-  SettingsLoaded copyWith({
+  SettingsState copyWith({
     String? email,
     String? password,
     String? otrFolder,
@@ -52,7 +30,7 @@ class SettingsLoaded extends SettingsState {
     String? downloadFolder,
     bool? showPassword,
   }) {
-    return SettingsLoaded(
+    return SettingsState(
       email ?? this.email,
       password ?? this.password,
       otrFolder ?? this.otrFolder,

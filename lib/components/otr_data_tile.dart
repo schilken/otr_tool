@@ -1,13 +1,11 @@
 // ignore_for_file: public_member_api_docs, sort_constructors_first
-import 'dart:io';
 
 import 'package:bot_toast/bot_toast.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:macos_ui/macos_ui.dart';
-
-import 'package:otr_browser/cubit/app_cubit.dart';
+import 'package:otr_browser/providers/providers.dart';
 
 import '../model/otr_data.dart';
 
@@ -113,7 +111,7 @@ class AlternativeTexts extends StatelessWidget {
   }
 }
 
-class ListTilePullDownMenu extends StatelessWidget {
+class ListTilePullDownMenu extends ConsumerWidget {
   const ListTilePullDownMenu({
     Key? key,
     required this.otrData,
@@ -122,7 +120,8 @@ class ListTilePullDownMenu extends StatelessWidget {
   final OtrData otrData;
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
+    final appController = ref.watch(appControllerProvider.notifier);
     return MacosPulldownButton(
       icon: CupertinoIcons.ellipsis_circle,
       items: [
@@ -131,7 +130,7 @@ class ListTilePullDownMenu extends StatelessWidget {
           enabled:
               otrData.otrkeyBasename != null && otrData.cutlistBasename != null,
           onTap: () async {
-            await context.read<AppCubit>().decodeCutAndCopyVideo(
+            await appController.decodeCutAndCopyVideo(
                   otrData.otrkeyBasename!,
                   otrData.cutlistBasename!,
                   otrData.name,
@@ -148,7 +147,7 @@ class ListTilePullDownMenu extends StatelessWidget {
           title: const Text('Decodiere&Schneide Video'),
           enabled:
               otrData.otrkeyBasename != null && otrData.cutlistBasename != null,
-          onTap: () => context.read<AppCubit>().decodeAndCutVideo(
+          onTap: () => appController.decodeAndCutVideo(
                 otrData.otrkeyBasename!,
                 otrData.cutlistBasename!,
               ),
@@ -157,13 +156,13 @@ class ListTilePullDownMenu extends StatelessWidget {
           title: const Text('Decodiere otrkey'),
           enabled: otrData.otrkeyBasename != null,
           onTap: () =>
-              context.read<AppCubit>().decodeVideo(otrData.otrkeyBasename!),
+              appController.decodeVideo(otrData.otrkeyBasename!),
         ),
         MacosPulldownMenuItem(
           title: const Text('Schneide Video'),
           enabled: otrData.decodedBasename != null &&
               otrData.cutlistBasename != null,
-          onTap: () => context.read<AppCubit>().cutVideo(
+          onTap: () => appController.cutVideo(
                 otrData.decodedBasename!,
                 otrData.cutlistBasename!,
               ),
@@ -173,18 +172,18 @@ class ListTilePullDownMenu extends StatelessWidget {
           title: const Text('Zeige otrkey Datei im Finder'),
           enabled: otrData.otrkeyBasename != null,
           onTap: () =>
-              context.read<AppCubit>().showInFinder(otrData.otrkeyBasename!),
+              appController.showInFinder(otrData.otrkeyBasename!),
         ),
         MacosPulldownMenuItem(
           title: const Text('Kopiere otrkey Name ins Clipboard'),
           enabled: otrData.otrkeyBasename != null,
-          onTap: () => context.read<AppCubit>().copyToClipboard(otrData.name),
+          onTap: () => appController.copyToClipboard(otrData.name),
         ),
         MacosPulldownMenuItem(
           title: const Text('Öffne cutlist Datei in VScode'),
           enabled: otrData.cutlistBasename != null,
           onTap: () =>
-              context.read<AppCubit>().openEditor(otrData.cutlistBasename),
+              appController.openEditor(otrData.cutlistBasename),
         ),
         const MacosPulldownMenuDivider(),
         MacosPulldownMenuItem(
@@ -192,8 +191,8 @@ class ListTilePullDownMenu extends StatelessWidget {
               'Alles außer geschnittenes Video in Papierkorb verschieben'),
           enabled: otrData.isCutted,
           onTap: () async {
-            await context.read<AppCubit>().moveToTrashOrToMovies(otrData.name);
-            await context.read<AppCubit>().openTrash();
+            await appController.moveToTrashOrToMovies(otrData.name);
+            await appController.openTrash();
             BotToast.showText(
               text: 'Dateien in Papierkorb bzw. Film-Ordner verschoben',
               duration: const Duration(seconds: 3),
@@ -204,7 +203,7 @@ class ListTilePullDownMenu extends StatelessWidget {
         MacosPulldownMenuItem(
           title: const Text('Alles in Papierkorb verschieben'),
           onTap: () async {
-            await context.read<AppCubit>().moveAllToTrash(otrData.name);
+            await appController.moveAllToTrash(otrData.name);
             BotToast.showText(
               text: 'Dateien in Papierkorb verschoben',
               duration: const Duration(seconds: 3),

@@ -3,25 +3,26 @@ import 'dart:convert';
 import 'package:desktop_multi_window/desktop_multi_window.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:macos_ui/macos_ui.dart';
 import 'package:otr_browser/logging_stream.dart';
-import 'package:otr_browser/cubit/app_cubit.dart';
 
+import '../providers/providers.dart';
 import 'logger_page.dart';
 import 'main_page.dart';
 import 'settings_page.dart';
 
-class MainView extends StatefulWidget {
+class MainView extends ConsumerStatefulWidget {
   const MainView({super.key});
 
   @override
-  State<MainView> createState() => _MainViewState();
+  ConsumerState<MainView> createState() => _MainViewState();
 }
 
-class _MainViewState extends State<MainView> {
+class _MainViewState extends ConsumerState<MainView> {
   @override
   Widget build(BuildContext context) {
+    final pageIndex = ref.watch(pageIndexProvider);
     return PlatformMenuBar(
       menus: [
         PlatformMenu(
@@ -51,55 +52,45 @@ class _MainViewState extends State<MainView> {
           ],
         ),
       ],
-      child: BlocBuilder<AppCubit, AppState>(
-        builder: (context, state) {
-          if (state is DetailsLoaded) {
-            return MacosWindow(
-              sidebar: Sidebar(
-                decoration: BoxDecoration(
-                  color: Colors.grey.shade200,
-                ),
-                minWidth: 200,
-                builder: (context, scrollController) => SidebarItems(
-                  currentIndex: state.sidebarPageIndex,
-                  onChanged: (index) =>
-                      context.read<AppCubit>().sidebarChanged(index),
-                  items: [
-                    const SidebarItem(
-                      leading: MacosIcon(CupertinoIcons.search),
-                      label: Text('OTR Keys'),
-                    ),
-                    const SidebarItem(
-                      leading: MacosIcon(CupertinoIcons.graph_square),
-                      label: Text('Log'),
-                    ),
-                    const SidebarItem(
-                      leading: MacosIcon(CupertinoIcons.settings),
-                      label: Text('Einstellungen'),
-                    ),
-                  ],
-                ),
-                bottom: const MacosListTile(
-                  leading: MacosIcon(CupertinoIcons.profile_circled),
-                  title: Text('Alfred Schilken'),
-                  subtitle: Text('alfred@schilken.de'),
-                ),
+      child: MacosWindow(
+        sidebar: Sidebar(
+          decoration: BoxDecoration(
+            color: Colors.grey.shade200,
+          ),
+          minWidth: 200,
+          builder: (context, scrollController) => SidebarItems(
+            currentIndex: pageIndex,
+            onChanged: (index) =>
+                ref.read(pageIndexProvider.notifier).setPageIndex(index),
+            items: const [
+              SidebarItem(
+                leading: MacosIcon(CupertinoIcons.search),
+                label: Text('OTR Keys'),
               ),
-              child: IndexedStack(
-                index: state.sidebarPageIndex,
-                children: [
-                  const MainPage(),
-                  LoggerPage(loggingStreamController),
-                  SettingsPage(),
-                ],
+              SidebarItem(
+                leading: MacosIcon(CupertinoIcons.graph_square),
+                label: Text('Log'),
               ),
-            );
-          } else {
-            return Center(
-              child: CircularProgressIndicator(),
-            );
-          }
-        },
+              SidebarItem(
+                leading: MacosIcon(CupertinoIcons.settings),
+                label: Text('Einstellungen'),
+              ),
+            ],
+          ),
+          bottom: const MacosListTile(
+            leading: MacosIcon(CupertinoIcons.profile_circled),
+            title: Text('Alfred Schilken'),
+            subtitle: Text('alfred@schilken.de'),
+          ),
+        ),
+        child: IndexedStack(
+          index: pageIndex,
+          children: [
+            const MainPage(),
+            LoggerPage(loggingStreamController),
+            SettingsPage(),
+          ],
+        ),
       ),
     );
   }

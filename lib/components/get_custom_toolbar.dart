@@ -1,11 +1,13 @@
 import 'package:bot_toast/bot_toast.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/cupertino.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:macos_ui/macos_ui.dart';
-import 'package:otr_browser/cubit/app_cubit.dart';
 
-ToolBar getCustomToolBar(BuildContext context) {
+import '../providers/providers.dart';
+
+ToolBar getCustomToolBar(BuildContext context, WidgetRef ref) {
+  final appController = ref.watch(appControllerProvider.notifier);
   return ToolBar(
     leading: MacosIconButton(
       icon: const MacosIcon(
@@ -32,7 +34,7 @@ ToolBar getCustomToolBar(BuildContext context) {
               String? selectedDirectory =
                   await FilePicker.platform.getDirectoryPath();
               if (selectedDirectory != null) {
-                context.read<AppCubit>().scanFolder(selectedDirectory);
+                appController.scanFolder();
               }
             },
           ),
@@ -40,7 +42,7 @@ ToolBar getCustomToolBar(BuildContext context) {
               title: const Text(
                   "Kopiere OTRKEY + cutlist vom Downloads Verzeichnis"),
               onTap: () async {
-                String result = await context.read<AppCubit>().moveOtrkey();
+                String result = await appController.moveOtrkey();
                 result =
                     (result.isNotEmpty) ? result : 'Keine OTR-Dateien gefunden';
                 BotToast.showText(
@@ -53,43 +55,16 @@ ToolBar getCustomToolBar(BuildContext context) {
               title: const Text(
                   "Verschiebe geschnittene Otrkeys ins Video-Verzeichnis"),
               onTap: () async {
-                context.read<AppCubit>().moveCutVideosToVideoFolder();
+                appController.moveCutVideosToVideoFolder();
               }),
           MacosPulldownMenuItem(
               title: const Text("Delete Otrkeys, cutlists and uncut Videos"),
               onTap: () async {
-                context.read<AppCubit>().cleanUp();
+                appController.cleanUp();
               }),
           const MacosPulldownMenuDivider(),
         ],
       ),
-      // const ToolBarDivider(),
-      // ToolbarSearchfield(
-      //   placeholder: 'Primary word',
-      //   onChanged: (word) =>
-      //       context.read<AppCubit>().setPrimarySearchWord(word),
-      //   onSubmitted: (word) {
-      //     context.read<AppCubit>().setPrimarySearchWord(word);
-      //     context.read<AppCubit>().search();
-      //   },
-      // ),
-      // ToolBarIconButton(
-      //   label: "Search",
-      //   icon: const MacosIcon(
-      //     CupertinoIcons.search,
-      //   ),
-      //   onPressed: () => context.read<AppCubit>().search(),
-      //   showLabel: false,
-      // ),
-      // const ToolBarDivider(),
-      // ToolBarIconButton(
-      //   label: "Share",
-      //   icon: const MacosIcon(
-      //     CupertinoIcons.share,
-      //   ),
-      //   onPressed: () => debugPrint("pressed"),
-      //   showLabel: false,
-      // ),
     ],
   );
 }

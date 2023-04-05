@@ -1,25 +1,26 @@
 import 'package:bot_toast/bot_toast.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:macos_ui/macos_ui.dart';
-import 'package:otr_browser/cubit/app_cubit.dart';
 
 import '../components/get_custom_toolbar.dart';
 import '../components/otr_data_tile.dart';
+import '../providers/providers.dart';
 
-class MainPage extends StatefulWidget {
+class MainPage extends ConsumerStatefulWidget {
   const MainPage({super.key});
 
   @override
-  State<MainPage> createState() => _MainPageState();
+  ConsumerState<MainPage> createState() => _MainPageState();
 }
 
-class _MainPageState extends State<MainPage> {
+class _MainPageState extends ConsumerState<MainPage> {
+
   @override
   void initState() {
     debugPrint('MainPage.initState');
-    context.read<AppCubit>().moveOtrkey().then((result) {
+    ref.read(appControllerProvider.notifier).moveOtrkey().then((result) {
       if (result.isNotEmpty) {
         BotToast.showText(
           text: result,
@@ -33,17 +34,17 @@ class _MainPageState extends State<MainPage> {
 
   @override
   Widget build(BuildContext context) {
+    final appState = ref.watch(appControllerProvider);
+    final appController = ref.watch(appControllerProvider.notifier);
+
     return Builder(builder: (context) {
       return MacosScaffold(
         backgroundColor: Colors.white,
-        toolBar: getCustomToolBar(context),
+        toolBar: getCustomToolBar(context, ref),
         children: [
           ContentArea(
             builder: (context, scrollController) {
-              return BlocBuilder<AppCubit, AppState>(
-                builder: (context, state) {
-                  if (state is DetailsLoaded) {
-                    return Column(
+              return Column(
                       children: [
                         Container(
                           color: Colors.blueGrey[100],
@@ -52,11 +53,9 @@ class _MainPageState extends State<MainPage> {
                             mainAxisAlignment: MainAxisAlignment.start,
                             children: [
                               const Text('OtrFolder:'),
-                              Text(state.currentPathname),
+                        Text(appState.currentPathname),
                               MacosIconButton(
-                                onPressed: () => context
-                                    .read<AppCubit>()
-                                    .scanFolder(state.currentPathname),
+                          onPressed: () => appController.scanFolder(),
                                 icon: const MacosIcon(
                                   CupertinoIcons.refresh,
                                 ),
@@ -64,18 +63,18 @@ class _MainPageState extends State<MainPage> {
                             ],
                           ),
                         ),
-                        if (state.message != null)
+                  if (appState.message != null)
                           Container(
                               padding: const EdgeInsets.all(20),
                               color: Colors.red[100],
-                              child: Text(state.message!)),
+                        child: Text(appState.message!)),
                         const SizedBox(height: 12),
                         Expanded(
                           child: ListView.separated(
                             controller: ScrollController(),
-                            itemCount: state.details.length,
+                      itemCount: appState.details.length,
                             itemBuilder: (context, index) {
-                              final detail = state.details[index];
+                        final detail = appState.details[index];
                               return OtrDataTile(
                                 otrData: detail,
                               );
@@ -89,13 +88,7 @@ class _MainPageState extends State<MainPage> {
                           ),
                         ),
                         const SizedBox(height: 12),
-                      ],
-                    );
-                  } else if (state is DetailsLoading) {
-                    return const CupertinoActivityIndicator();
-                  }
-                  return const Center(child: Text('No file selected'));
-                },
+                ],
               );
             },
           ),

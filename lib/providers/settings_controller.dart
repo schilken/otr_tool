@@ -1,26 +1,29 @@
-import 'dart:async';
 import 'dart:io';
 
-import 'package:bloc/bloc.dart';
-import 'package:equatable/equatable.dart';
-import 'package:meta/meta.dart';
+import 'package:flutter/foundation.dart';
+import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:path/path.dart' as p;
 
-part 'settings_state.dart';
+import 'settings_state.dart';
 
-class SettingsCubit extends Cubit<SettingsState> {
-  SettingsCubit() : super(SettingsInitial()) {
-    print('create SettingsCubit');
-  }
+class SettingsController extends Notifier<SettingsState> {
   late SharedPreferences _prefs;
   bool showPassword = false;
 
-  Future<SettingsCubit> initialize() async {
-    await Future.delayed(Duration(milliseconds: 1000));
-    _prefs = await SharedPreferences.getInstance();
-    emitSettingsLoaded();
-    return this;
+  @override
+  SettingsState build() {
+    debugPrint('AppController.build');
+    return SettingsState(
+      otrEmail,
+      otrPassword.textOrStars(showPassword),
+      otrFolder,
+      videoFolder,
+      avidemuxApp,
+      otrdecoderBinary,
+      downloadFolder,
+      showPassword,
+    );
   }
 
   String get otrEmail => _prefs.getString('otrEmail') ?? 'not set';
@@ -47,64 +50,50 @@ class SettingsCubit extends Cubit<SettingsState> {
   Future<void> setOtrFolder(directoryPath) async {
     final reducedPath = _startWithUsersFolder(directoryPath);
     await _prefs.setString('otrFolder', reducedPath);
-    emitSettingsLoaded();
+//    emitSettingsLoaded();
   }
 
   Future<void> setDownloadFolder(directoryPath) async {
     final reducedPath = _startWithUsersFolder(directoryPath);
     await _prefs.setString('downloadFolder', reducedPath);
-    emitSettingsLoaded();
+    //   emitSettingsLoaded();
   }
 
   Future<void> setVideoFolder(directoryPath) async {
     final reducedPath = _startWithUsersFolder(directoryPath);
     await _prefs.setString('videoFolder', reducedPath);
-    emitSettingsLoaded();
+    //   emitSettingsLoaded();
   }
 
   Future<void> setAvidemuxApp(value) async {
     await _prefs.setString('avidemuxApp', value);
-    emitSettingsLoaded();
+    //   emitSettingsLoaded();
   }
 
   Future<void> setOtrdecoderBinary(directoryPath) async {
     final reducedPath = _startWithUsersFolder(directoryPath);
     await _prefs.setString('otrdecoderBinary', reducedPath);
-    emitSettingsLoaded();
+    //   emitSettingsLoaded();
   }
 
   Future<void> setOtrEmail(value) async {
     await _prefs.setString('otrEmail', value);
-    emitSettingsLoaded();
+    //   emitSettingsLoaded();
   }
 
   Future<void> setOtrPassword(value) async {
     await _prefs.setString('otrPassword', value);
-    emitSettingsLoaded();
-  }
-
-  void emitSettingsLoaded() {
-    print('SettingsCubit emit');
-    emit(SettingsLoaded(
-      otrEmail,
-      otrPassword.textOrStars(showPassword),
-      otrFolder,
-      videoFolder,
-      avidemuxApp,
-      otrdecoderBinary,
-      downloadFolder,
-      showPassword,
-    ));
+    //   emitSettingsLoaded();
   }
 
   void toggleShowPassword() async {
     final newValue = !showOtrPassword;
     await _prefs.setBool('showOtrPassword', newValue);
-    final currentState = state as SettingsLoaded;
-    emit(currentState.copyWith(
-      showPassword: newValue,
-      password: otrPassword.textOrStars(newValue),
-    ));
+    //final currentState = state as SettingsLoaded;
+    // emit(currentState.copyWith(
+    //   showPassword: newValue,
+    //   password: otrPassword.textOrStars(newValue),
+    // ));
   }
 
   String _startWithUsersFolder(String fullPathName) {
@@ -115,6 +104,11 @@ class SettingsCubit extends Cubit<SettingsState> {
     return fullPathName;
   }
 }
+
+final settingsControllerProvider =
+    NotifierProvider<SettingsController, SettingsState>(() {
+  return SettingsController();
+});
 
 extension PasswordExtension on String {
   String textOrStars(bool show) => show ? this : '**********';

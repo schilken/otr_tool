@@ -1,0 +1,132 @@
+{
+    "extension": "linecounter",
+    "version": "0.2.7",
+    "workspace": "/Users/aschilken/flutterdev/my_projects/otr_browser",
+    "linecount": [
+        {
+            "version": "0.2.7",
+            "counttime": "2023-04-05 14:43:21",
+            "filesum": 18,
+            "codesum": 1970,
+            "commentsum": 68,
+            "blanksum": 158,
+            "statistics": {
+                ".dart": {
+                    "code": 1970,
+                    "comment": 68,
+                    "blank": 158
+                }
+            },
+            "filelist": [
+                {
+                    "blank": 1,
+                    "code": 67,
+                    "comment": 27,
+                    "filename": "lib/components/get_custom_toolbar.dart"
+                },
+                {
+                    "blank": 10,
+                    "code": 206,
+                    "comment": 2,
+                    "filename": "lib/components/otr_data_tile.dart"
+                },
+                {
+                    "blank": 9,
+                    "code": 189,
+                    "comment": 20,
+                    "filename": "lib/components/textfield_dialog.dart"
+                },
+                {
+                    "blank": 25,
+                    "code": 247,
+                    "comment": 4,
+                    "filename": "lib/cubit/app_cubit.dart"
+                },
+                {
+                    "blank": 10,
+                    "code": 85,
+                    "comment": 1,
+                    "filename": "lib/cubit/app_state.dart"
+                },
+                {
+                    "blank": 23,
+                    "code": 98,
+                    "comment": 0,
+                    "filename": "lib/cubit/settings_cubit.dart"
+                },
+                {
+                    "blank": 6,
+                    "code": 59,
+                    "comment": 1,
+                    "filename": "lib/cubit/settings_state.dart"
+                },
+                {
+                    "blank": 1,
+                    "code": 2,
+                    "comment": 0,
+                    "filename": "lib/logging_stream.dart"
+                },
+                {
+                    "blank": 5,
+                    "code": 72,
+                    "comment": 1,
+                    "filename": "lib/main.dart"
+                },
+                {
+                    "blank": 5,
+                    "code": 32,
+                    "comment": 0,
+                    "filename": "lib/model/otr_data.dart"
+                },
+                {
+                    "blank": 3,
+                    "code": 51,
+                    "comment": 0,
+                    "filename": "lib/pages/about_window.dart"
+                },
+                {
+                    "blank": 9,
+                    "code": 102,
+                    "comment": 3,
+                    "filename": "lib/pages/logger_page.dart"
+                },
+                {
+                    "blank": 5,
+                    "code": 101,
+                    "comment": 0,
+                    "filename": "lib/pages/main_page.dart"
+                },
+                {
+                    "blank": 5,
+                    "code": 101,
+                    "comment": 0,
+                    "filename": "lib/pages/main_view.dart"
+                },
+                {
+                    "blank": 11,
+                    "code": 293,
+                    "comment": 2,
+                    "filename": "lib/pages/settings_page.dart"
+                },
+                {
+                    "blank": 10,
+                    "code": 65,
+                    "comment": 2,
+                    "filename": "lib/services/cutlist_parser.dart"
+                },
+                {
+                    "blank": 11,
+                    "code": 81,
+                    "comment": 4,
+                    "filename": "lib/services/files_repository.dart"
+                },
+                {
+                    "blank": 9,
+                    "code": 119,
+                    "comment": 1,
+                    "filename": "lib/services/video_cutter.dart"
+                }
+            ]
+        }
+    ]
+}

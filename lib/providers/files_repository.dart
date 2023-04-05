@@ -2,6 +2,7 @@
 import 'dart:io';
 
 import 'package:collection/collection.dart';
+import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:path/path.dart' as p;
 
 import '../model/otr_data.dart';
@@ -94,3 +95,7 @@ class FilesRepository {
     return process.stdout.split('\n');
   }
 }
+
+final filesRepositoryProvider = Provider<FilesRepository>(
+  (ref) => FilesRepository(),
+);

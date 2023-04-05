@@ -1,13 +1,6 @@
 // ignore_for_file: public_member_api_docs, sort_constructors_first
-part of 'app_cubit.dart';
 
-@immutable
-abstract class AppState extends Equatable {}
-
-class AppInitial extends AppState {
-  @override
-  List<Object?> get props => [];
-}
+import '../model/otr_data.dart';
 
 class Detail {
   final String? title;
@@ -23,8 +16,6 @@ class Detail {
   Detail copyWith({
     String? title,
     String? otrKey,
-    String? previewText,
-    String? imageUrl,
     String? filePathName,
   }) {
     return Detail(
@@ -35,62 +26,47 @@ class Detail {
   }
 }
 
-class DetailsLoading extends AppState {
-  List<Object?> get props => [];
-}
-
-class DetailsLoaded extends AppState {
+class AppState {
   final String? fileType;
   final List<OtrData> details;
   final String currentPathname;
   final int fileCount;
   final String? message;
-  final int sidebarPageIndex;
   final String? selectedOtrkeyPath;
   final Stream<String>? commandStdoutStream;
+  final bool isLoading;
 
-  DetailsLoaded({
+  AppState({
     this.fileType,
     required this.details,
     required this.currentPathname,
     required this.fileCount,
-    required this.sidebarPageIndex,
     this.message,
     this.selectedOtrkeyPath,
     this.commandStdoutStream,
+    required this.isLoading,
   });
 
-  DetailsLoaded copyWith({
+  AppState copyWith({
     String? fileType,
     List<OtrData>? details,
     String? currentPathname,
     int? fileCount,
     int? primaryHitCount,
     String? message,
-    int? sidebarPageIndex,
     String? selectedOtrkeyPath,
     Stream<String>? commandStdoutStream,
+    bool? isLoading,
   }) {
-    return DetailsLoaded(
+    return AppState(
       fileType: fileType ?? this.fileType,
       details: details ?? this.details,
       currentPathname: currentPathname ?? this.currentPathname,
       fileCount: fileCount ?? this.fileCount,
       message: message ?? this.message,
-      sidebarPageIndex: sidebarPageIndex ?? this.sidebarPageIndex,
       selectedOtrkeyPath: selectedOtrkeyPath ?? this.selectedOtrkeyPath,
       commandStdoutStream: commandStdoutStream ?? this.commandStdoutStream,
+      isLoading: isLoading ?? this.isLoading,
     );
   }
-
-  @override
-  List<Object?> get props => [
-        details,
-        currentPathname,
-        fileCount,
-        message,
-        sidebarPageIndex,
-        selectedOtrkeyPath,
-        commandStdoutStream,
-      ];
 }

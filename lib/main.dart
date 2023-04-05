@@ -5,18 +5,19 @@ import 'package:bot_toast/bot_toast.dart';
 import 'package:collection/collection.dart';
 import 'package:desktop_multi_window/desktop_multi_window.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:macos_ui/macos_ui.dart';
 import 'package:otr_browser/logging_stream.dart';
 import 'package:otr_browser/pages/about_window.dart';
-import 'package:otr_browser/cubit/app_cubit.dart';
-import 'package:otr_browser/services/files_repository.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
-import 'cubit/settings_cubit.dart';
 import 'pages/main_view.dart';
+import 'providers/providers.dart';
 
-void main(List<String> args) {
+void main(List<String> args) async {
   loggingStreamController = StreamController<String>.broadcast();
+  WidgetsFlutterBinding.ensureInitialized();
+  final sharedPreferences = await SharedPreferences.getInstance();
   print('main: $args');
   if (args.firstOrNull == 'multi_window') {
     final windowId = int.parse(args[1]);
@@ -30,7 +31,14 @@ void main(List<String> args) {
       ));
     }
   } else {
-    runApp(const App());
+    runApp(
+      ProviderScope(
+        overrides: [
+          sharedPreferencesProvider.overrideWithValue(sharedPreferences),
+        ],
+        child: const App(),
+      ),
+    );
   }
 }
 
@@ -40,28 +48,7 @@ class App extends StatelessWidget {
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
-    return FutureBuilder<SettingsCubit>(
-        future: SettingsCubit().initialize(),
-        builder: (context, snapshot) {
-          print('builder: ${snapshot.hasData}');
-          if (!snapshot.hasData) {
-            return Container();
-          }
-          return RepositoryProvider(
-            create: (context) => FilesRepository(),
-            child: MultiBlocProvider(
-              providers: [
-                BlocProvider.value(
-                  value: snapshot.data!,
-                ),
-                BlocProvider(
-                  create: (context) => AppCubit(
-                    context.read<SettingsCubit>(),
-                    context.read<FilesRepository>(),
-                  )..init(),
-                ),
-              ],
-              child: MacosApp(
+    return MacosApp(
                 title: 'otr_browser',
                 theme: MacosThemeData.light(),
                 darkTheme: MacosThemeData.dark(),
@@ -69,10 +56,7 @@ class App extends StatelessWidget {
                 home: const MainView(),
                 debugShowCheckedModeBanner: false,
                 builder: BotToastInit(),
-                navigatorObservers: [BotToastNavigatorObserver()],
-              ),
-            ),
-          );
-        });
+      navigatorObservers: [BotToastNavigatorObserver()],
+    );
   }
 }
