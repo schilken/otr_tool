@@ -1,6 +1,4 @@
-import 'dart:convert';
 
-import 'package:desktop_multi_window/desktop_multi_window.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
@@ -20,9 +18,18 @@ class MainView extends ConsumerStatefulWidget {
 }
 
 class _MainViewState extends ConsumerState<MainView> {
+  final appLegalese = '© ${DateTime.now().year} Alfred Schilken';
+  final apppIcon = Image.asset(
+    'assets/images/app_icon_32x32@2x.png',
+    width: 64,
+    height: 64,
+  );
+
   @override
   Widget build(BuildContext context) {
     final pageIndex = ref.watch(pageIndexProvider);
+    final appVersion =
+        ref.read(sharedPreferencesProvider).getString('appVersion');
     return PlatformMenuBar(
       menus: const [
         PlatformMenu(
@@ -63,10 +70,21 @@ class _MainViewState extends ConsumerState<MainView> {
               ),
             ],
           ),
-          bottom: const MacosListTile(
-            leading: MacosIcon(CupertinoIcons.profile_circled),
-            title: Text('Alfred Schilken'),
-            subtitle: Text('alfred@schilken.de'),
+          bottom: MacosListTile(
+            leading: const MacosIcon(CupertinoIcons.info_circle),
+            title: const Text(
+              'OTR Browser',
+              style: TextStyle(
+                color: Colors.blueGrey,
+              ),
+            ),
+            subtitle: Text('Version $appVersion'),
+            onClick: () => showLicensePage(
+              context: context,
+              applicationName: 'OTR Browser',
+              applicationLegalese: appLegalese,
+              applicationIcon: apppIcon,
+            ),
           ),
         ),
         child: IndexedStack(

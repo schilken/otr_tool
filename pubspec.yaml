@@ -1,7 +1,7 @@
 name: otr_browser
 description: browse otrkey files, decode and cut
 publish_to: "none"
-version: 1.0.0+1
+version: 1.0.1
 
 environment:
   sdk: ">=2.18.6 <3.0.0"
@@ -19,6 +19,7 @@ dependencies:
   hooks_riverpod: ^2.3.2
   macos_ui: ^1.11.1
   path: ^1.8.1
+  pubspec_parse: ^1.2.2
   shared_preferences: ^2.0.15
 
 dev_dependencies:
@@ -41,3 +42,5 @@ flutter:
   # To add assets to your application, add an assets section, like this:
   assets:
     - assets/files/cut_script_template.py
+    - assets/images/app_icon_32x32@2x.png
+    - pubspec.yaml

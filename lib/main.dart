@@ -1,16 +1,14 @@
 import 'dart:async';
-import 'dart:convert';
 
 import 'package:bot_toast/bot_toast.dart';
-import 'package:collection/collection.dart';
-import 'package:desktop_multi_window/desktop_multi_window.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:macos_ui/macos_ui.dart';
+import 'package:pubspec_parse/pubspec_parse.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import 'logging_stream.dart';
-import 'pages/about_window.dart';
 import 'pages/main_view.dart';
 import 'providers/providers.dart';
 
@@ -18,6 +16,11 @@ void main(List<String> args) async {
   loggingStreamController = StreamController<String>.broadcast();
   WidgetsFlutterBinding.ensureInitialized();
   final sharedPreferences = await SharedPreferences.getInstance();
+  final pubspec = Pubspec.parse(await rootBundle.loadString('pubspec.yaml'));
+  final version = pubspec.version;
+  debugPrint('version from pubspec.yaml: $version');
+  await sharedPreferences.setString('appVersion', version.toString());
+
   debugPrint('main: $args');
   runApp(
     ProviderScope(
