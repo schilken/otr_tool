@@ -24,30 +24,11 @@ class _MainViewState extends ConsumerState<MainView> {
   Widget build(BuildContext context) {
     final pageIndex = ref.watch(pageIndexProvider);
     return PlatformMenuBar(
-      menus: [
+      menus: const [
         PlatformMenu(
           label: 'OTR Browser',
           menus: [
-            PlatformMenuItem(
-              label: 'About',
-              onSelected: () async {
-                final window = await DesktopMultiWindow.createWindow(jsonEncode(
-                  {
-                    'args1': 'About',
-                    'args2': 500,
-                    'args3': true,
-                  },
-                  ),
-                );
-                debugPrint('$window');
-                window
-                  ..setFrame(const Offset(0, 0) & const Size(350, 350))
-                  ..center()
-                  ..setTitle('About otr_browser')
-                  ..show();
-              },
-            ),
-            const PlatformProvidedMenuItem(
+            PlatformProvidedMenuItem(
               type: PlatformProvidedMenuItemType.quit,
             ),
           ],

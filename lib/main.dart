@@ -19,28 +19,14 @@ void main(List<String> args) async {
   WidgetsFlutterBinding.ensureInitialized();
   final sharedPreferences = await SharedPreferences.getInstance();
   debugPrint('main: $args');
-  if (args.firstOrNull == 'multi_window') {
-    final windowId = int.parse(args[1]);
-    final arguments = args[2].isEmpty
-        ? const <String, dynamic>{}
-        : jsonDecode(args[2]) as Map<String, dynamic>;
-    if (arguments['args1'] == 'About') {
-      runApp(AboutWindow(
-        windowController: WindowController.fromWindowId(windowId),
-        args: arguments,
-        ),
-      );
-    }
-  } else {
-    runApp(
-      ProviderScope(
-        overrides: [
-          sharedPreferencesProvider.overrideWithValue(sharedPreferences),
-        ],
-        child: const App(),
-      ),
-    );
-  }
+  runApp(
+    ProviderScope(
+      overrides: [
+        sharedPreferencesProvider.overrideWithValue(sharedPreferences),
+      ],
+      child: const App(),
+    ),
+  );
 }
 
 class App extends StatelessWidget {
@@ -50,13 +36,13 @@ class App extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MacosApp(
-                title: 'otr_browser',
-                theme: MacosThemeData.light(),
-                darkTheme: MacosThemeData.dark(),
-                themeMode: ThemeMode.system,
-                home: const MainView(),
-                debugShowCheckedModeBanner: false,
-                builder: BotToastInit(),
+      title: 'otr_browser',
+      theme: MacosThemeData.light(),
+      darkTheme: MacosThemeData.dark(),
+      themeMode: ThemeMode.system,
+      home: const MainView(),
+      debugShowCheckedModeBanner: false,
+      builder: BotToastInit(),
       navigatorObservers: [BotToastNavigatorObserver()],
     );
   }
