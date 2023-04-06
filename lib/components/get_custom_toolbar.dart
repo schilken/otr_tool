@@ -26,18 +26,7 @@ ToolBar getCustomToolBar(BuildContext context, WidgetRef ref) {
       ToolBarPullDownButton(
         label: "Actions",
         icon: CupertinoIcons.ellipsis_circle,
-        tooltipMessage: "Perform tasks with the selected items",
         items: [
-          MacosPulldownMenuItem(
-            title: const Text("Wähle Verzeichnis der otrkey Dateien"),
-            onTap: () async {
-              String? selectedDirectory =
-                  await FilePicker.platform.getDirectoryPath();
-              if (selectedDirectory != null) {
-                appController.scanFolder();
-              }
-            },
-          ),
           MacosPulldownMenuItem(
               title: const Text(
                   "Kopiere OTRKEY + cutlist vom Downloads Verzeichnis"),
@@ -62,7 +51,6 @@ ToolBar getCustomToolBar(BuildContext context, WidgetRef ref) {
               onTap: () async {
                 appController.cleanUp();
               }),
-          const MacosPulldownMenuDivider(),
         ],
       ),
     ],
