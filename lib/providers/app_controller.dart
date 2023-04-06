@@ -23,7 +23,7 @@ class AppController extends Notifier<AppState> {
     _filesRepository = ref.watch(filesRepositoryProvider);
     _settingsState = ref.watch(settingsControllerProvider);
     return (AppState(
-      currentPathname: '',
+      currentPathname: _settingsState.otrFolder,
       details: [],
       fileCount: 0,
       isLoading: false,
@@ -109,7 +109,9 @@ class AppController extends Notifier<AppState> {
     var completer = Completer();
     final workingDirectory = _settingsState.otrFolder;
     final otrEmail = _settingsState.otrEmail;
-    final otrPassword = _settingsState.otrPassword;
+    // this is the raw password without ***** handling
+    final otrPassword =
+        ref.read(settingsControllerProvider.notifier).otrPassword;
     final process = await Process.start(
       _settingsState.otrdecoderBinary,
       ['-i', filename, '-e', otrEmail, '-p', otrPassword],
@@ -169,10 +171,11 @@ class AppController extends Notifier<AppState> {
       result = 'moveOtrkey: $successCount Dateien Kopiert';
       loggingStreamController
           .add('moveOtrkey: $successCount Dateien von Downloads geholt');
-      await scanFolder();
     } else {
+      await scanFolder();
       return '';
     }
+    await scanFolder();
     return result;
   }
 
