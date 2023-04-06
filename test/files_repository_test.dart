@@ -1,8 +1,8 @@
 import 'package:otr_browser/model/otr_data.dart';
-import 'package:test/test.dart';
 import 'package:otr_browser/providers/files_repository.dart';
+import 'package:test/test.dart';
 
-main() {
+void main() {
   final pathList = [
     'otrkey_TVOON_DE.mpg.HQ.avi.otrkey',
     'otrkey_cutlist_TVOON_DE.mpg.HQ.avi.otrkey',

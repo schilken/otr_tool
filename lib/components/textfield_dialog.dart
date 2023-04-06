@@ -45,7 +45,7 @@ Future<String?> textFieldDialog(
   return showDialog(
     context: context,
     barrierDismissible: barrierDismissible,
-    builder: (BuildContext context) {
+    builder: (context) {
       return _PromptDialog(
         title: title,
         description: description,
@@ -72,7 +72,6 @@ Future<String?> textFieldDialog(
 
 class _PromptDialog extends StatefulWidget {
   const _PromptDialog({
-    Key? key,
     this.title,
     this.description,
     this.textOK,
@@ -91,7 +90,7 @@ class _PromptDialog extends StatefulWidget {
     required this.showPasswordIcon,
     required this.textCapitalization,
     required this.textAlign,
-  }) : super(key: key);
+  });
 
   final Widget? title;
   final Widget? description;
@@ -182,7 +181,7 @@ class __PromptDialogState extends State<_PromptDialog> {
                 autofocus: widget.autoFocus,
                 keyboardType: widget.keyboardType,
                 textInputAction: widget.textInputAction,
-                onChanged: (String text) => value = text,
+                onChanged: (text) => value = text,
                 obscureText: stateObscureText,
                 obscuringCharacter: widget.obscuringCharacter,
                 textCapitalization: widget.textCapitalization,

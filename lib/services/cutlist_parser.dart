@@ -8,7 +8,7 @@ class CutlistParser {
     this._lines,
   );
 
-  isValid() {
+  bool isValid() {
     return true; // getValue('General', 'ApplyToFile') == _videoFilename;
   }
 

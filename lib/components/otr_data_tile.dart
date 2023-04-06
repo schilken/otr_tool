@@ -5,15 +5,15 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:macos_ui/macos_ui.dart';
-import 'package:otr_browser/providers/providers.dart';
 
 import '../model/otr_data.dart';
+import '../providers/providers.dart';
 
 class OtrDataTile extends StatelessWidget {
   const OtrDataTile({
-    Key? key,
+    super.key,
     required this.otrData,
-  }) : super(key: key);
+  });
   final OtrData otrData;
 
   @override
@@ -21,7 +21,7 @@ class OtrDataTile extends StatelessWidget {
     return MacosListTile(
       title: Text(
         otrData.name,
-        style: TextStyle(fontWeight: FontWeight.bold),
+        style: const TextStyle(fontWeight: FontWeight.bold),
       ),
       subtitle: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -35,36 +35,36 @@ class OtrDataTile extends StatelessWidget {
               first: 'OTR Key vorhanden',
               second: 'Kein OTR Key vorhanden',
             ),
-            SizedBox(width: 12),
+              const SizedBox(width: 12),
             AlternativeTexts(
               showFirst: otrData.isdeCoded,
               first: 'schon decodiert',
               second: 'noch nicht decodiert',
             ),
-            SizedBox(width: 12),
+              const SizedBox(width: 12),
             AlternativeTexts(
               showFirst: otrData.hasCutlist,
               first: 'Cutlist vorhanden',
               second: 'Keine Cutlist vorhanden',
             ),
-            SizedBox(width: 12),
+              const SizedBox(width: 12),
             AlternativeTexts(
               showFirst: otrData.isExactCutlist,
               first: 'exakter Name',
               second: 'anderer Name',
             ),
-            SizedBox(width: 12),
+              const SizedBox(width: 12),
             AlternativeTexts(
               showFirst: otrData.isCutted,
               first: 'schon geschnitten',
               second: 'noch nicht geschnitten',
             ),
-          ]),
+            ],
+          ),
           const SizedBox(
             height: 12,
           ),
           Row(
-            crossAxisAlignment: CrossAxisAlignment.center,
             children: [
               ListTilePullDownMenu(otrData: otrData),
               const SizedBox(width: 12),
@@ -84,13 +84,13 @@ class OtrDataTile extends StatelessWidget {
 
 class AlternativeTexts extends StatelessWidget {
   const AlternativeTexts({
-    Key? key,
+    super.key,
     required this.showFirst,
     required this.first,
     required this.second,
     this.firstColor = Colors.blueGrey,
     this.secondColor = Colors.red,
-  }) : super(key: key);
+  });
   final bool showFirst;
   final String first;
   final String second;
@@ -113,9 +113,9 @@ class AlternativeTexts extends StatelessWidget {
 
 class ListTilePullDownMenu extends ConsumerWidget {
   const ListTilePullDownMenu({
-    Key? key,
+    super.key,
     required this.otrData,
-  }) : super(key: key);
+  });
 
   final OtrData otrData;
 
@@ -188,7 +188,8 @@ class ListTilePullDownMenu extends ConsumerWidget {
         const MacosPulldownMenuDivider(),
         MacosPulldownMenuItem(
           title: const Text(
-              'Alles außer geschnittenes Video in Papierkorb verschieben'),
+            'Alles außer geschnittenes Video in Papierkorb verschieben',
+          ),
           enabled: otrData.isCutted,
           onTap: () async {
             await appController.moveToTrashOrToMovies(otrData.name);

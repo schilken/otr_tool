@@ -1,8 +1,6 @@
 import 'dart:async';
 
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:macos_ui/macos_ui.dart';
 
 class LoggerPage extends StatefulWidget {
@@ -23,9 +21,7 @@ class _LoggerPageState extends State<LoggerPage> {
       return;
     }
     setState(
-      () {
-        _lines.clear();
-      },
+      _lines.clear,
     );
   }
 
@@ -57,7 +53,7 @@ class _LoggerPageState extends State<LoggerPage> {
     );
   }
 
-  onDispose() {
+  void onDispose() {
     _streamSubscription?.cancel();
     super.dispose();
   }
@@ -79,10 +75,9 @@ class _LoggerPageState extends State<LoggerPage> {
           minWidth: 500,
           builder: (context, scrollController) {
             return Padding(
-              padding: const EdgeInsets.all(40.0),
+              padding: const EdgeInsets.all(40),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
-                mainAxisAlignment: MainAxisAlignment.start,
                 children: [
                   Row(
                     children: [
@@ -98,7 +93,7 @@ class _LoggerPageState extends State<LoggerPage> {
                     child: ListView.builder(
                       controller: scrollController,
                       itemCount: _lines.length,
-                      itemBuilder: (BuildContext context, int index) {
+                      itemBuilder: (context, index) {
                         return Text(_lines[index]);
                       },
                     ),

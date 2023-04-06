@@ -48,53 +48,48 @@ class SettingsController extends Notifier<SettingsState> {
   String get otrdecoderBinary =>
       _prefs.getString('otrdecoderBinary') ?? '/Applications/avidemux2.8.app';
 
-  Future<void> setOtrFolder(directoryPath) async {
+  Future<void> setOtrFolder(String directoryPath) async {
     final reducedPath = _startWithUsersFolder(directoryPath);
     await _prefs.setString('otrFolder', reducedPath);
 //    emitSettingsLoaded();
   }
 
-  Future<void> setDownloadFolder(directoryPath) async {
+  Future<void> setDownloadFolder(String directoryPath) async {
     final reducedPath = _startWithUsersFolder(directoryPath);
     await _prefs.setString('downloadFolder', reducedPath);
     //   emitSettingsLoaded();
   }
 
-  Future<void> setVideoFolder(directoryPath) async {
+  Future<void> setVideoFolder(String directoryPath) async {
     final reducedPath = _startWithUsersFolder(directoryPath);
     await _prefs.setString('videoFolder', reducedPath);
     //   emitSettingsLoaded();
   }
 
-  Future<void> setAvidemuxApp(value) async {
+  Future<void> setAvidemuxApp(String value) async {
     await _prefs.setString('avidemuxApp', value);
     //   emitSettingsLoaded();
   }
 
-  Future<void> setOtrdecoderBinary(directoryPath) async {
+  Future<void> setOtrdecoderBinary(String directoryPath) async {
     final reducedPath = _startWithUsersFolder(directoryPath);
     await _prefs.setString('otrdecoderBinary', reducedPath);
     //   emitSettingsLoaded();
   }
 
-  Future<void> setOtrEmail(value) async {
+  Future<void> setOtrEmail(String value) async {
     await _prefs.setString('otrEmail', value);
     //   emitSettingsLoaded();
   }
 
-  Future<void> setOtrPassword(value) async {
+  Future<void> setOtrPassword(String value) async {
     await _prefs.setString('otrPassword', value);
     //   emitSettingsLoaded();
   }
 
-  void toggleShowPassword() async {
+  Future<void> toggleShowPassword() async {
     final newValue = !showOtrPassword;
     await _prefs.setBool('showOtrPassword', newValue);
-    //final currentState = state as SettingsLoaded;
-    // emit(currentState.copyWith(
-    //   showPassword: newValue,
-    //   password: otrPassword.textOrStars(newValue),
-    // ));
   }
 
   String _startWithUsersFolder(String fullPathName) {

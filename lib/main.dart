@@ -7,10 +7,10 @@ import 'package:desktop_multi_window/desktop_multi_window.dart';
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:macos_ui/macos_ui.dart';
-import 'package:otr_browser/logging_stream.dart';
-import 'package:otr_browser/pages/about_window.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
+import 'logging_stream.dart';
+import 'pages/about_window.dart';
 import 'pages/main_view.dart';
 import 'providers/providers.dart';
 
@@ -18,17 +18,18 @@ void main(List<String> args) async {
   loggingStreamController = StreamController<String>.broadcast();
   WidgetsFlutterBinding.ensureInitialized();
   final sharedPreferences = await SharedPreferences.getInstance();
-  print('main: $args');
+  debugPrint('main: $args');
   if (args.firstOrNull == 'multi_window') {
     final windowId = int.parse(args[1]);
     final arguments = args[2].isEmpty
-        ? const {}
+        ? const <String, dynamic>{}
         : jsonDecode(args[2]) as Map<String, dynamic>;
     if (arguments['args1'] == 'About') {
       runApp(AboutWindow(
         windowController: WindowController.fromWindowId(windowId),
         args: arguments,
-      ));
+        ),
+      );
     }
   } else {
     runApp(

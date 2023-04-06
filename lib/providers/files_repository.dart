@@ -9,15 +9,15 @@ import '../model/otr_data.dart';
 
 class FilesRepository {
   String? currentFolderPath;
-  String? _fileType;
-  List<String> _allFilePaths = [];
 
   Future<int> moveAllOtrFiles(
-      String sourceFolder, String destinationFolder) async {
+    String sourceFolder,
+    String destinationFolder,
+  ) async {
     var successCount = 0;
-    List<String> list = await findOtrFiles(sourceFolder);
+    final list = await findOtrFiles(sourceFolder);
     for (final file in list) {
-      bool rc = await moveOtrFile(sourceFolder, destinationFolder, file);
+      final rc = await moveOtrFile(sourceFolder, destinationFolder, file);
       if (rc) {
         successCount++;
       }
@@ -26,20 +26,24 @@ class FilesRepository {
   }
 
   Future<bool> moveOtrFile(
-      String sourceFolder, String destinationFolder, String filename) async {
+    String sourceFolder,
+    String destinationFolder,
+    String filename,
+  ) async {
     final src = p.join(sourceFolder, filename);
     final dst = p.join(destinationFolder, filename);
-    print('moveOtrFile: $src -> $dst');
-    bool rc = await moveFile(src, dst);
+//    print('moveOtrFile: $src -> $dst');
+    final rc = await moveFile(src, dst);
     return rc;
   }
 
   Future<List<String>> findOtrFiles(String folderPath) async {
-    final Directory dir = Directory(folderPath);
+    final dir = Directory(folderPath);
     final list = await dir
         .list()
         .where((entry) =>
-            p.basename(entry.path).contains('_TVOON_DE') && entry is File)
+              p.basename(entry.path).contains('_TVOON_DE') && entry is File,
+        )
         .map((entity) => p.basename(entity.path))
         .toList();
     return list;
@@ -48,15 +52,17 @@ class FilesRepository {
   String nameFromPath(String path) => path.split('_TVOON_DE').first;
 
   List<OtrData> consolidateOtrFiles(List<String> filePaths) {
-    final List<OtrData> list = [];
+    final list = <OtrData>[];
     final nameSet = filePaths.map(nameFromPath).toSet();
     for (final name in nameSet) {
       final otrData = OtrData(
         name: name,
         otrkeyBasename: filePaths.firstWhereOrNull((path) =>
-            nameFromPath(path) == name && p.extension(path) == '.otrkey'),
+              nameFromPath(path) == name && p.extension(path) == '.otrkey',
+        ),
         cutlistBasename: filePaths.firstWhereOrNull((path) =>
-            nameFromPath(path) == name && p.extension(path) == '.cutlist'),
+              nameFromPath(path) == name && p.extension(path) == '.cutlist',
+        ),
         decodedBasename: filePaths.firstWhereOrNull((path) {
           return nameFromPath(path) == name &&
               p.extension(path) != '.otrkey' &&
@@ -65,7 +71,8 @@ class FilesRepository {
         }),
         cuttedBasename: filePaths.firstWhereOrNull((path) =>
             nameFromPath(path) == name &&
-            p.basename(path).contains('_TVOON_DE-cut')),
+              p.basename(path).contains('_TVOON_DE-cut'),
+        ),
       );
       list.add(otrData);
     }
@@ -78,21 +85,21 @@ class FilesRepository {
       // prefer using rename as it is probably faster
       final newFile = await sourceFile.rename(newPath);
       return await newFile.exists();
-    } on FileSystemException catch (e) {
+    } on FileSystemException {
       // if rename fails, copy the source file and then delete it
       final newFile = await sourceFile.copy(newPath);
       await sourceFile.delete();
-      return await newFile.exists();
+      return newFile.exists();
     }
   }
 
 // osascript -e "tell application \"Finder\" to delete POSIX file \"${PWD}/${InputFile}\""
   Future<List<String>> moveToTrash(String workingDir, String filename) async {
-    var process = await Process.run('osascript', [
+    final process = await Process.run('osascript', [
       '-e',
-      'tell application "Finder" to delete POSIX file "${workingDir}/${filename}"'
+      'tell application "Finder" to delete POSIX file "$workingDir/$filename"'
     ]);
-    return process.stdout.split('\n');
+    return (process.stdout as String).split('\n');
   }
 }
 

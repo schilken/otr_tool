@@ -5,7 +5,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:macos_ui/macos_ui.dart';
-import 'package:otr_browser/logging_stream.dart';
+import '../logging_stream.dart';
 
 import '../providers/providers.dart';
 import 'logger_page.dart';
@@ -37,7 +37,8 @@ class _MainViewState extends ConsumerState<MainView> {
                     'args2': 500,
                     'args3': true,
                   },
-                ));
+                  ),
+                );
                 debugPrint('$window');
                 window
                   ..setFrame(const Offset(0, 0) & const Size(350, 350))
@@ -88,7 +89,7 @@ class _MainViewState extends ConsumerState<MainView> {
           children: [
             const MainPage(),
             LoggerPage(loggingStreamController),
-            SettingsPage(),
+            const SettingsPage(),
           ],
         ),
       ),

@@ -1,5 +1,4 @@
 import 'package:bot_toast/bot_toast.dart';
-import 'package:file_picker/file_picker.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:macos_ui/macos_ui.dart';
@@ -20,18 +19,19 @@ ToolBar getCustomToolBar(BuildContext context, WidgetRef ref) {
       },
     ),
     title: const Text('OTR Browser'),
-    titleWidth: 250.0,
+    titleWidth: 250,
     actions: [
-      ToolBarSpacer(spacerUnits: 3),
+      const ToolBarSpacer(spacerUnits: 3),
       ToolBarPullDownButton(
-        label: "Actions",
+        label: 'Actions',
         icon: CupertinoIcons.ellipsis_circle,
         items: [
           MacosPulldownMenuItem(
               title: const Text(
-                  "Kopiere OTRKEY + cutlist vom Downloads Verzeichnis"),
+              'Kopiere OTRKEY + cutlist vom Downloads Verzeichnis',
+            ),
               onTap: () async {
-                String result = await appController.moveOtrkey();
+              var result = await appController.moveOtrkey();
                 result =
                     (result.isNotEmpty) ? result : 'Keine OTR-Dateien gefunden';
                 BotToast.showText(
@@ -39,18 +39,22 @@ ToolBar getCustomToolBar(BuildContext context, WidgetRef ref) {
                   duration: const Duration(seconds: 3),
                   align: const Alignment(0, 0.3),
                 );
-              }),
+            },
+          ),
           MacosPulldownMenuItem(
               title: const Text(
-                  "Verschiebe geschnittene Otrkeys ins Video-Verzeichnis"),
+              'Verschiebe geschnittene Otrkeys ins Video-Verzeichnis',
+            ),
               onTap: () async {
                 appController.moveCutVideosToVideoFolder();
-              }),
+            },
+          ),
           MacosPulldownMenuItem(
-              title: const Text("Delete Otrkeys, cutlists and uncut Videos"),
+            title: const Text('Delete Otrkeys, cutlists and uncut Videos'),
               onTap: () async {
                 appController.cleanUp();
-              }),
+            },
+          ),
         ],
       ),
     ],

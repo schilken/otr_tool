@@ -2,7 +2,6 @@ import 'dart:io';
 
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/cupertino.dart';
-import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:macos_ui/macos_ui.dart';
 
@@ -12,9 +11,9 @@ import '../providers/providers.dart';
 typedef StringCallback = void Function(String);
 
 class SettingsPage extends ConsumerWidget {
-  SettingsPage({super.key});
+  const SettingsPage({super.key});
 
-  promptEmail(BuildContext context, WidgetRef ref) async {
+  Future<void> promptEmail(BuildContext context, WidgetRef ref) async {
     final email = await textFieldDialog(
       context,
       title: const Text('Enter OTR Email'),
@@ -23,7 +22,7 @@ class SettingsPage extends ConsumerWidget {
       initialValue: '',
       textOK: const Text('OK'),
       textCancel: const Text('Abbrechen'),
-      validator: (String? value) {
+      validator: (value) {
         if (value == null || value.isEmpty || value.length < 2) {
           return 'Mindestens 2 Buchstaben oder Ziffern';
         }
@@ -38,16 +37,17 @@ class SettingsPage extends ConsumerWidget {
     }
   }
 
-  promptPassword(BuildContext context, WidgetRef ref) async {
+  Future<void> promptPassword(BuildContext context, WidgetRef ref) async {
     final password = await textFieldDialog(
       context,
       title: const Text('Enter OTR Password'),
       description: const Text(
-          'The Password you use to login to onlinetvrecorder.com.\n'),
+        'The Password you use to login to onlinetvrecorder.com.\n',
+      ),
       initialValue: '',
       textOK: const Text('OK'),
       textCancel: const Text('Abbrechen'),
-      validator: (String? value) {
+      validator: (value) {
         if (value == null || value.isEmpty || value.length < 2) {
           return 'Mindestens 2 Buchstaben oder Ziffern';
         }
@@ -74,7 +74,7 @@ class SettingsPage extends ConsumerWidget {
           minWidth: 500,
           builder: (context, scrollController) {
             return Padding(
-              padding: const EdgeInsets.all(40.0),
+              padding: const EdgeInsets.all(40),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 mainAxisAlignment: MainAxisAlignment.center,
@@ -88,7 +88,7 @@ class SettingsPage extends ConsumerWidget {
                     'OTR E-Mail',
                     style: TextStyle(fontWeight: FontWeight.bold),
                   ),
-                  SizedBox(height: 8),
+                  const SizedBox(height: 8),
                   Row(
                     children: [
                       Text(state.otrEmail),
@@ -96,7 +96,6 @@ class SettingsPage extends ConsumerWidget {
                         icon: const MacosIcon(
                           CupertinoIcons.pencil,
                         ),
-                        shape: BoxShape.rectangle,
                         borderRadius: BorderRadius.circular(7),
                         onPressed: () async {
                           promptEmail(context, ref);
@@ -104,12 +103,12 @@ class SettingsPage extends ConsumerWidget {
                       ),
                     ],
                   ),
-                  SizedBox(height: 16),
+                  const SizedBox(height: 16),
                   const Text(
                     'OTR Password',
                     style: TextStyle(fontWeight: FontWeight.bold),
                   ),
-                  SizedBox(height: 8),
+                  const SizedBox(height: 8),
                   Row(
                     children: [
                       Text(
@@ -132,7 +131,6 @@ class SettingsPage extends ConsumerWidget {
                         icon: const MacosIcon(
                           CupertinoIcons.pencil,
                         ),
-                        shape: BoxShape.rectangle,
                         borderRadius: BorderRadius.circular(7),
                         onPressed: () async {
                           promptPassword(context, ref);
@@ -140,67 +138,67 @@ class SettingsPage extends ConsumerWidget {
                       ),
                     ],
                   ),
-                  SizedBox(height: 16),
+                  const SizedBox(height: 16),
                   const Text(
                     'Download Folder',
                     style: TextStyle(fontWeight: FontWeight.bold),
                   ),
-                  SizedBox(height: 8),
+                  const SizedBox(height: 8),
                   ShowAndSelectFolder(
                     folder: state.downloadFolder,
-                    onSelected: (String? value) async {
+                    onSelected: (value) async {
                       await settingsController.setDownloadFolder(value);
                     },
                   ),
-                  SizedBox(height: 16),
+                  const SizedBox(height: 16),
                   const Text(
                     'OTR Folder',
                     style: TextStyle(fontWeight: FontWeight.bold),
                   ),
-                  SizedBox(height: 8),
+                  const SizedBox(height: 8),
                   ShowAndSelectFolder(
                     folder: state.otrFolder,
-                    onSelected: (String? value) async {
+                    onSelected: (value) async {
                       await settingsController.setOtrFolder(value);
                     },
                   ),
-                  SizedBox(height: 16),
+                  const SizedBox(height: 16),
                   const Text(
                     'Video Folder',
                     style: TextStyle(fontWeight: FontWeight.bold),
                   ),
-                  SizedBox(height: 8),
+                  const SizedBox(height: 8),
                   ShowAndSelectFolder(
                     folder: state.videoFolder,
-                    onSelected: (String value) async {
+                    onSelected: (value) async {
                       await settingsController.setVideoFolder(value);
                     },
                   ),
-                  SizedBox(height: 16),
+                  const SizedBox(height: 16),
                   const Text(
                     'Avidemux Programm',
                     style: TextStyle(fontWeight: FontWeight.bold),
                   ),
-                  SizedBox(height: 8),
+                  const SizedBox(height: 8),
                   ShowAndSelectFile(
                     filename: state.avidemuxApp,
-                    onSelected: (String value) async {
+                    onSelected: (value) async {
                       await settingsController.setAvidemuxApp(value);
                     },
                   ),
-                  SizedBox(height: 16),
+                  const SizedBox(height: 16),
                   const Text(
                     'otrdecoder Programm',
                     style: TextStyle(fontWeight: FontWeight.bold),
                   ),
-                  SizedBox(height: 8),
+                  const SizedBox(height: 8),
                   ShowAndSelectFile(
                     filename: state.otrdecoderBinary,
-                    onSelected: (String value) async {
+                    onSelected: (value) async {
                       await settingsController.setOtrdecoderBinary(value);
                     },
                   ),
-                  SizedBox(height: 16),
+                  const SizedBox(height: 16),
                 ],
               ),
             );
@@ -231,12 +229,11 @@ class ShowAndSelectFolder extends StatelessWidget {
           icon: const MacosIcon(
             CupertinoIcons.folder_open,
           ),
-          shape: BoxShape.rectangle,
           borderRadius: BorderRadius.circular(7),
           onPressed: () async {
-            String? selectedDirectory =
+            final selectedDirectory =
                 await FilePicker.platform.getDirectoryPath(
-              initialDirectory: Platform.environment['HOME']!,
+              initialDirectory: Platform.environment['HOME'],
             );
             if (selectedDirectory != null) {
               onSelected(selectedDirectory);
@@ -268,10 +265,9 @@ class ShowAndSelectFile extends StatelessWidget {
           icon: const MacosIcon(
             CupertinoIcons.folder_open,
           ),
-          shape: BoxShape.rectangle,
           borderRadius: BorderRadius.circular(7),
           onPressed: () async {
-            FilePickerResult? filePickerResult =
+            final filePickerResult =
                 await FilePicker.platform.pickFiles(
               type: FileType.custom,
               allowedExtensions: ['app'],

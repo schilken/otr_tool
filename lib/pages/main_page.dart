@@ -49,13 +49,12 @@ class _MainPageState extends ConsumerState<MainPage> {
                         Container(
                           color: Colors.blueGrey[100],
                           padding: const EdgeInsets.fromLTRB(12, 20, 20, 20),
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.start,
+                      child: Row(
                             children: [
                               const Text('OtrFolder:'),
                         Text(appState.currentPathname),
                               MacosIconButton(
-                          onPressed: () => appController.scanFolder(),
+                            onPressed: appController.scanFolder,
                                 icon: const MacosIcon(
                                   CupertinoIcons.refresh,
                                 ),
@@ -67,7 +66,8 @@ class _MainPageState extends ConsumerState<MainPage> {
                           Container(
                               padding: const EdgeInsets.all(20),
                               color: Colors.red[100],
-                        child: Text(appState.message!)),
+                        child: Text(appState.message!),
+                      ),
                         const SizedBox(height: 12),
                         Expanded(
                           child: ListView.separated(
@@ -80,7 +80,7 @@ class _MainPageState extends ConsumerState<MainPage> {
                               );
                             },
                             separatorBuilder:
-                                (BuildContext context, int index) {
+                                (context, index) {
                               return const Divider(
                                 thickness: 2,
                               );
@@ -94,6 +94,7 @@ class _MainPageState extends ConsumerState<MainPage> {
           ),
         ],
       );
-    });
+      },
+    );
   }
 }
