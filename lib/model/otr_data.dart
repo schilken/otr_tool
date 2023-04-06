@@ -1,7 +1,6 @@
-import 'package:equatable/equatable.dart';
 import 'package:path/path.dart' as p;
 
-class OtrData extends Equatable {
+class OtrData {
   final String name;
   final String? otrkeyBasename;
   final String? cutlistBasename;
@@ -26,12 +25,4 @@ class OtrData extends Equatable {
       isdeCoded &&
       p.basenameWithoutExtension(cutlistBasename!) == decodedBasename!;
 
-  @override
-  List<Object?> get props => [
-        name,
-        otrkeyBasename,
-        cutlistBasename,
-        decodedBasename,
-        cuttedBasename,
-      ];
 }
