@@ -3,9 +3,9 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 export 'app_controller.dart';
 export 'app_state.dart';
+export 'files_repository.dart';
 export 'settings_controller.dart';
 export 'settings_state.dart';
-export 'files_repository.dart';
 
 final sharedPreferencesProvider = Provider<SharedPreferences>(
   (ref) => throw UnimplementedError(),

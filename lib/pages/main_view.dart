@@ -26,7 +26,7 @@ class _MainViewState extends ConsumerState<MainView> {
     return PlatformMenuBar(
       menus: [
         PlatformMenu(
-          label: 'OpenSourceBrowser',
+          label: 'OTR Browser',
           menus: [
             PlatformMenuItem(
               label: 'About',
@@ -61,8 +61,12 @@ class _MainViewState extends ConsumerState<MainView> {
           minWidth: 200,
           builder: (context, scrollController) => SidebarItems(
             currentIndex: pageIndex,
-            onChanged: (index) =>
-                ref.read(pageIndexProvider.notifier).setPageIndex(index),
+            onChanged: (index) {
+              if (index == 0) {
+                ref.read(appControllerProvider.notifier).scanFolder();
+              }
+              ref.read(pageIndexProvider.notifier).setPageIndex(index);
+            },
             items: const [
               SidebarItem(
                 leading: MacosIcon(CupertinoIcons.search),

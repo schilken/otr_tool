@@ -193,7 +193,7 @@ class ListTilePullDownMenu extends ConsumerWidget {
           enabled: otrData.isCutted,
           onTap: () async {
             await appController.moveToTrashOrToMovies(otrData.name);
-            await appController.openTrash();
+            appController.openTrash();
             BotToast.showText(
               text: 'Dateien in Papierkorb bzw. Film-Ordner verschoben',
               duration: const Duration(seconds: 3),
