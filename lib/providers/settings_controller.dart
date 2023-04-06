@@ -5,7 +5,7 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:path/path.dart' as p;
 
-import 'settings_state.dart';
+import 'providers.dart';
 
 class SettingsController extends Notifier<SettingsState> {
   late SharedPreferences _prefs;
@@ -13,7 +13,8 @@ class SettingsController extends Notifier<SettingsState> {
 
   @override
   SettingsState build() {
-    debugPrint('AppController.build');
+    debugPrint('SettingsController.build');
+    _prefs = ref.watch(sharedPreferencesProvider);
     return SettingsState(
       otrEmail,
       otrPassword.textOrStars(showPassword),

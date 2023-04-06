@@ -1,7 +1,7 @@
 // ignore_for_file: public_member_api_docs, sort_constructors_first
 class SettingsState {
-  final String email;
-  final String password;
+  final String otrEmail;
+  final String otrPassword;
   final String otrFolder;
   final String videoFolder;
   final String avidemuxApp;
@@ -10,8 +10,8 @@ class SettingsState {
   final bool showPassword;
 
   SettingsState(
-    this.email,
-    this.password,
+    this.otrEmail,
+    this.otrPassword,
     this.otrFolder,
     this.videoFolder,
     this.avidemuxApp,
@@ -21,8 +21,8 @@ class SettingsState {
   );
 
   SettingsState copyWith({
-    String? email,
-    String? password,
+    String? otrEmail,
+    String? otrPassword,
     String? otrFolder,
     String? videoFolder,
     String? avidemuxApp,
@@ -31,8 +31,8 @@ class SettingsState {
     bool? showPassword,
   }) {
     return SettingsState(
-      email ?? this.email,
-      password ?? this.password,
+      otrEmail ?? this.otrEmail,
+      otrPassword ?? this.otrPassword,
       otrFolder ?? this.otrFolder,
       videoFolder ?? this.videoFolder,
       avidemuxApp ?? this.avidemuxApp,

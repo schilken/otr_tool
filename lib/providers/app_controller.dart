@@ -9,11 +9,10 @@ import 'package:path/path.dart' as p;
 import '../logging_stream.dart';
 import '../model/otr_data.dart';
 import '../services/video_cutter.dart';
-import 'app_state.dart';
 import 'providers.dart';
 
 class AppController extends Notifier<AppState> {
-  late SettingsController _settingsCubit;
+  late SettingsState _settingsState;
   late FilesRepository _filesRepository;
 
   List<OtrData> _fullOtrDataList = [];
@@ -22,6 +21,7 @@ class AppController extends Notifier<AppState> {
   AppState build() {
     debugPrint('AppController.build');
     _filesRepository = ref.watch(filesRepositoryProvider);
+    _settingsState = ref.watch(settingsControllerProvider);
     return (AppState(
       currentPathname: '',
       details: [],
@@ -31,15 +31,15 @@ class AppController extends Notifier<AppState> {
   }
 
   Future<void> scanFolder() async {
-    debugPrint('scanFolder: ${_settingsCubit.otrFolder}');
+    debugPrint('scanFolder: ${_settingsState.otrFolder}');
     state = state.copyWith(
       isLoading: true,
     );
 
     await Future.delayed(const Duration(seconds: 1));
-    _filesRepository.currentFolderPath = _settingsCubit.otrFolder;
+    _filesRepository.currentFolderPath = _settingsState.otrFolder;
     final allFilePaths =
-        await _filesRepository.findOtrFiles(_settingsCubit.otrFolder);
+        await _filesRepository.findOtrFiles(_settingsState.otrFolder);
     allFilePaths.sort((a, b) => a.compareTo(b));
     _fullOtrDataList = _filesRepository.consolidateOtrFiles(allFilePaths);
     state = state.copyWith(
@@ -50,19 +50,19 @@ class AppController extends Notifier<AppState> {
 
   Future<void> reScanFolder() async {
     final allFilePaths =
-        await _filesRepository.findOtrFiles(_settingsCubit.otrFolder);
+        await _filesRepository.findOtrFiles(_settingsState.otrFolder);
     allFilePaths.sort((a, b) => a.compareTo(b));
     _fullOtrDataList = _filesRepository.consolidateOtrFiles(allFilePaths);
   }
 
   void openEditor(String? filename) {
-    final filePath = p.join(_settingsCubit.otrFolder, filename);
+    final filePath = p.join(_settingsState.otrFolder, filename);
     debugPrint('openEditor: $filePath');
     Process.run('/usr/local/bin/code', [filePath]);
   }
 
   showInFinder(String filename) {
-    final filePath = p.join(_settingsCubit.otrFolder, filename);
+    final filePath = p.join(_settingsState.otrFolder, filename);
     Process.run('open', ['-R', filePath]);
   }
 
@@ -105,13 +105,13 @@ class AppController extends Notifier<AppState> {
     StreamController<String> loggingStreamController,
   ) async {
     loggingStreamController
-        .add('_runDecodeCommand: ${_settingsCubit.otrdecoderBinary} started');
+        .add('_runDecodeCommand: ${_settingsState.otrdecoderBinary} started');
     var completer = Completer();
-    final workingDirectory = _settingsCubit.otrFolder;
-    final otrEmail = _settingsCubit.otrEmail;
-    final otrPassword = _settingsCubit.otrPassword;
+    final workingDirectory = _settingsState.otrFolder;
+    final otrEmail = _settingsState.otrEmail;
+    final otrPassword = _settingsState.otrPassword;
     final process = await Process.start(
-      _settingsCubit.otrdecoderBinary,
+      _settingsState.otrdecoderBinary,
       ['-i', filename, '-e', otrEmail, '-p', otrPassword],
       workingDirectory: workingDirectory,
     );
@@ -151,7 +151,7 @@ class AppController extends Notifier<AppState> {
     ref.read(pageIndexProvider.notifier).setPageIndex(1);
     await Future.delayed(const Duration(milliseconds: 500));
     final videoCutter = VideoCutter();
-    await videoCutter.cutVideo(_settingsCubit.otrFolder, videoFilename,
+    await videoCutter.cutVideo(_settingsState.otrFolder, videoFilename,
         cutlistFilename, loggingStreamController,
         dryRun: false);
     Future<void>.delayed(const Duration(milliseconds: 500));
@@ -162,8 +162,8 @@ class AppController extends Notifier<AppState> {
     String result;
 //    debugPrint('moveOtrkey called');
     final successCount = await _filesRepository.moveAllOtrFiles(
-      _settingsCubit.downloadFolder,
-      _settingsCubit.otrFolder,
+      _settingsState.downloadFolder,
+      _settingsState.otrFolder,
     );
     if (successCount > 0) {
       result = 'moveOtrkey: $successCount Dateien Kopiert';
@@ -198,17 +198,17 @@ class AppController extends Notifier<AppState> {
     debugPrint('moveToTrashOrToMovies ${otrData.isCutted}');
     if (otrData.isCutted) {
       bool rc = await _filesRepository.moveOtrFile(
-        _settingsCubit.otrFolder,
-        _settingsCubit.videoFolder,
+        _settingsState.otrFolder,
+        _settingsState.videoFolder,
         otrData.cuttedBasename!,
       );
       loggingStreamController.add(
-          'moveToTrashOrToMovies: otrData.cuttedBasename! nach ${_settingsCubit.videoFolder} verschoben');
+          'moveToTrashOrToMovies: otrData.cuttedBasename! nach ${_settingsState.videoFolder} verschoben');
     } else {
       if (otrData.isdeCoded) {
         bool rc = await _filesRepository.moveOtrFile(
-          _settingsCubit.otrFolder,
-          _settingsCubit.videoFolder,
+          _settingsState.otrFolder,
+          _settingsState.videoFolder,
           otrData.decodedBasename!,
         );
         removeDecodedFile = false;
@@ -216,19 +216,19 @@ class AppController extends Notifier<AppState> {
     }
     if (otrData.hasOtrkey) {
       await _filesRepository.moveToTrash(
-          _settingsCubit.otrFolder, otrData.otrkeyBasename!);
+          _settingsState.otrFolder, otrData.otrkeyBasename!);
       loggingStreamController.add(
           'moveToTrashOrToMovies: ${otrData.otrkeyBasename!} in Papierkorb verschoben');
     }
     if (otrData.hasCutlist) {
       await _filesRepository.moveToTrash(
-          _settingsCubit.otrFolder, otrData.cutlistBasename!);
+          _settingsState.otrFolder, otrData.cutlistBasename!);
       loggingStreamController.add(
           'moveToTrashOrToMovies: ${otrData.cutlistBasename!} in Papierkorb verschoben');
     }
     if (removeDecodedFile) {
       await _filesRepository.moveToTrash(
-          _settingsCubit.otrFolder, otrData.decodedBasename!);
+          _settingsState.otrFolder, otrData.decodedBasename!);
       loggingStreamController.add(
           'moveToTrashOrToMovies: ${otrData.decodedBasename!} in Papierkorb verschoben');
     }
@@ -240,11 +240,11 @@ class AppController extends Notifier<AppState> {
         _fullOtrDataList.firstWhere((otrData) => otrData.name == name);
     if (otrData.hasOtrkey) {
       await _filesRepository.moveToTrash(
-          _settingsCubit.otrFolder, otrData.otrkeyBasename!);
+          _settingsState.otrFolder, otrData.otrkeyBasename!);
     }
     if (otrData.hasCutlist) {
       await _filesRepository.moveToTrash(
-          _settingsCubit.otrFolder, otrData.cutlistBasename!);
+          _settingsState.otrFolder, otrData.cutlistBasename!);
     }
     scanFolder();
   }

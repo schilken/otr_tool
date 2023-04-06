@@ -91,7 +91,7 @@ class SettingsPage extends ConsumerWidget {
                   SizedBox(height: 8),
                   Row(
                     children: [
-                      Text(state.email),
+                      Text(state.otrEmail),
                       MacosIconButton(
                         icon: const MacosIcon(
                           CupertinoIcons.pencil,
@@ -113,7 +113,7 @@ class SettingsPage extends ConsumerWidget {
                   Row(
                     children: [
                       Text(
-                        state.password,
+                        state.otrPassword,
                       ),
                       MacosIconButton(
                         icon: MacosIcon(
