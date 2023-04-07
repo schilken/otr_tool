@@ -75,9 +75,9 @@ class SettingsPage extends ConsumerWidget {
           builder: (context, scrollController) {
             return Padding(
               padding: const EdgeInsets.all(40),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                mainAxisAlignment: MainAxisAlignment.center,
+              child: ListView(
+                // crossAxisAlignment: CrossAxisAlignment.start,
+                // mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   Text(
                     'Einstellungen',
@@ -140,7 +140,7 @@ class SettingsPage extends ConsumerWidget {
                   ),
                   const SizedBox(height: 16),
                   const Text(
-                    'Download Folder',
+                    'Download Verzeichnis',
                     style: TextStyle(fontWeight: FontWeight.bold),
                   ),
                   const SizedBox(height: 8),
@@ -152,7 +152,7 @@ class SettingsPage extends ConsumerWidget {
                   ),
                   const SizedBox(height: 16),
                   const Text(
-                    'OTR Folder',
+                    'OTR Verzeichnis',
                     style: TextStyle(fontWeight: FontWeight.bold),
                   ),
                   const SizedBox(height: 8),
@@ -164,7 +164,7 @@ class SettingsPage extends ConsumerWidget {
                   ),
                   const SizedBox(height: 16),
                   const Text(
-                    'Video Folder',
+                    'Video Verzeichnis',
                     style: TextStyle(fontWeight: FontWeight.bold),
                   ),
                   const SizedBox(height: 8),

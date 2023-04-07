@@ -6,6 +6,7 @@ import 'package:macos_ui/macos_ui.dart';
 import '../logging_stream.dart';
 
 import '../providers/providers.dart';
+import 'help_page.dart';
 import 'logger_page.dart';
 import 'main_page.dart';
 import 'settings_page.dart';
@@ -68,6 +69,11 @@ class _MainViewState extends ConsumerState<MainView> {
                 leading: MacosIcon(CupertinoIcons.settings),
                 label: Text('Einstellungen'),
               ),
+              SidebarItem(
+                leading: MacosIcon(CupertinoIcons.info_circle),
+                label: Text('Hilfe'),
+              ),
+
             ],
           ),
           bottom: MacosListTile(
@@ -93,6 +99,7 @@ class _MainViewState extends ConsumerState<MainView> {
             const MainPage(),
             LoggerPage(loggingStreamController),
             const SettingsPage(),
+            const HelpPage(),
           ],
         ),
       ),

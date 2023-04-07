@@ -51,7 +51,7 @@ class _MainPageState extends ConsumerState<MainPage> {
                           padding: const EdgeInsets.fromLTRB(12, 20, 20, 20),
                       child: Row(
                             children: [
-                              const Text('OtrFolder:'),
+                          const Text('OTR-Verzeichnis:'),
                         Text(appState.currentPathname),
                               MacosIconButton(
                             onPressed: appController.scanFolder,
