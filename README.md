@@ -1,4 +1,4 @@
-# otr_browser
+# otr_tool
 
 A starter Flutter app for macOS with `macos_ui`.
 

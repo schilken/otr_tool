@@ -5,18 +5,18 @@
     "version": "0.2.0",
     "configurations": [
         {
-            "name": "otr_browser",
+            "name": "otr_tool",
             "request": "launch",
             "type": "dart"
         },
         {
-            "name": "otr_browser (profile mode)",
+            "name": "otr_tool (profile mode)",
             "request": "launch",
             "type": "dart",
             "flutterMode": "profile"
         },
         {
-            "name": "otr_browser (release mode)",
+            "name": "otr_tool (release mode)",
             "request": "launch",
             "type": "dart",
             "flutterMode": "release"

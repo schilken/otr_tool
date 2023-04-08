@@ -6,9 +6,9 @@ import 'package:macos_ui/macos_ui.dart';
 import '../components/get_custom_toolbar.dart';
 
 const _helpMarkdown = '''
-# OTR Browser für macOS
+# OTR Tool für macOS
 
-## OTR Brower ist eine grafische Benutzeroberfläche zum Dekodieren und Schneiden von Otrkeys unter macOS
+## OTR Tool ist eine grafische Benutzeroberfläche zum Dekodieren und Schneiden von Otrkeys unter macOS
 
 ## Konfigurieren
 - Öffne die Einstellungen
@@ -22,7 +22,7 @@ const _helpMarkdown = '''
 ## Verwenden
 - Lade deine otrkey Dateien und die Schneidelisten ins Download Verzeichnis, beispielsweise von https://otr.datenkeller.net
 - Starte die App, um alle otrkey und Schneidelisten vom Download-Verzeichnis ins OTR-Verzeichnis zu kopieren
-- Falls OTR Browser schon geöffnet ist, klicke auf das refresh-Icon
+- Falls OTR Tool schon geöffnet ist, klicke auf das refresh-Icon
 - Wähle im Menu den Eintrag **Dekodieren&Schneiden&Kopieren** aus
 - Die geschnittenen Videos findest du im Video-Verzeichnis
 ''';

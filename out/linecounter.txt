@@ -3,7 +3,7 @@ EXTENSION NAME : linecounter
 EXTENSION VERSION : 0.2.7
 -------------------------------------------------------------------------------
 count time : 2023-04-06 14:51:42
-count workspace : /Users/aschilken/flutterdev/my_projects/otr_browser
+count workspace : /Users/aschilken/flutterdev/my_projects/otr_tool
 total files : 19
 total code lines : 1874
 total comment lines : 51
@@ -39,7 +39,7 @@ EXTENSION NAME : linecounter
 EXTENSION VERSION : 0.2.7
 -------------------------------------------------------------------------------
 count time : 2023-04-06 15:14:08
-count workspace : /Users/aschilken/flutterdev/my_projects/otr_browser
+count workspace : /Users/aschilken/flutterdev/my_projects/otr_tool
 total files : 19
 total code lines : 1862
 total comment lines : 51

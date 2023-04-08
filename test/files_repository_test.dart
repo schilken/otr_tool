@@ -1,5 +1,5 @@
-import 'package:otr_browser/model/otr_data.dart';
-import 'package:otr_browser/providers/files_repository.dart';
+import 'package:otr_tool/model/otr_data.dart';
+import 'package:otr_tool/providers/files_repository.dart';
 import 'package:test/test.dart';
 
 void main() {

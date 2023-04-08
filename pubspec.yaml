@@ -1,4 +1,4 @@
-name: otr_browser
+name: otr_tool
 description: browse otrkey files, decode and cut
 publish_to: "none"
 version: 1.0.1

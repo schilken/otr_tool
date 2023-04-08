@@ -34,7 +34,7 @@ class _MainViewState extends ConsumerState<MainView> {
     return PlatformMenuBar(
       menus: const [
         PlatformMenu(
-          label: 'OTR Browser',
+          label: 'OTR Tool',
           menus: [
             PlatformProvidedMenuItem(
               type: PlatformProvidedMenuItemType.quit,
@@ -79,7 +79,7 @@ class _MainViewState extends ConsumerState<MainView> {
           bottom: MacosListTile(
             leading: const MacosIcon(CupertinoIcons.info_circle),
             title: const Text(
-              'OTR Browser',
+              'OTR Tool',
               style: TextStyle(
                 color: Colors.blueGrey,
               ),
@@ -87,7 +87,7 @@ class _MainViewState extends ConsumerState<MainView> {
             subtitle: Text('Version $appVersion'),
             onClick: () => showLicensePage(
               context: context,
-              applicationName: 'OTR Browser',
+              applicationName: 'OTR Tool',
               applicationLegalese: appLegalese,
               applicationIcon: apppIcon,
             ),
