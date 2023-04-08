@@ -84,13 +84,17 @@ class SettingsController extends Notifier<SettingsState> {
 
   Future<void> setOtrPassword(String password) async {
     await _prefs.setString('otrPassword', password);
-    state = state.copyWith(otrPassword: password);
+    state =
+        state.copyWith(otrPassword: otrPassword.textOrStars(_showOtrPassword));
   }
 
   Future<void> toggleShowPassword() async {
     _showOtrPassword = !_showOtrPassword;
     state =
-        state.copyWith(otrPassword: otrPassword.textOrStars(_showOtrPassword));
+        state.copyWith(
+      otrPassword: otrPassword.textOrStars(_showOtrPassword),
+      showPassword: _showOtrPassword,
+    );
   }
 
   String _startWithUsersFolder(String fullPathName) {
