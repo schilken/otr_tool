@@ -8,7 +8,7 @@ import '../components/get_custom_toolbar.dart';
 const _helpMarkdown = '''
 # OTR Tool für macOS
 
-## OTR Tool ist eine grafische Benutzeroberfläche zum Dekodieren und Schneiden von Otrkeys unter macOS
+## OTR Tool ist eine grafische Benutzeroberfläche zum Dekodieren und Schneiden von Otrkey Video Dateien unter macOS
 
 ## Konfigurieren
 - Öffne die Einstellungen

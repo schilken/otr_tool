@@ -1,17 +1,16 @@
-# otr_tool
+# OTR Tool for macOS
 
-A starter Flutter app for macOS with `macos_ui`.
+## OTR Tool is a graphical user interface for decoding and cutting otrkey video files on macOS.
 
-## Getting Started
+> Works only on macOS!
 
-This project is a starting point for a Flutter application specifically targeting macOS and uses the `macos_ui` plugin
-to achieve UI and UX that match their native AppKit counterparts as closely as possible.
+## Install
 
-A few resources to get you started if this is your first Flutter project:
+If you are a Flutter developer build and run the OTRTool app yourself:
+- clone the repository
+- `cd otr_tool`
+- `flutter run -d macos`
 
-- [Lab: Write your first Flutter app](https://docs.flutter.dev/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://docs.flutter.dev/cookbook)
+Or download an executable from GitHub releases.
 
-For help getting started with Flutter development, view the
-[online documentation](https://docs.flutter.dev/), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+
