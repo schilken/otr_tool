@@ -66,7 +66,7 @@ class SettingsPage extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final state = ref.watch(settingsControllerProvider);
+    final settingsState = ref.watch(settingsControllerProvider);
     final settingsController = ref.watch(settingsControllerProvider.notifier);
     return MacosScaffold(
       children: [
@@ -91,7 +91,7 @@ class SettingsPage extends ConsumerWidget {
                   const SizedBox(height: 8),
                   Row(
                     children: [
-                      Text(state.otrEmail),
+                      Text(settingsState.otrEmail),
                       MacosIconButton(
                         icon: const MacosIcon(
                           CupertinoIcons.pencil,
@@ -112,12 +112,12 @@ class SettingsPage extends ConsumerWidget {
                   Row(
                     children: [
                       Text(
-                        state.otrPassword,
+                        settingsState.otrPassword,
                       ),
                       MacosIconButton(
                         icon: MacosIcon(
                           size: 60,
-                          state.showPassword
+                          settingsState.showPassword
                               ? CupertinoIcons.eye_slash_fill
                               : CupertinoIcons.eye,
                         ),
@@ -145,7 +145,7 @@ class SettingsPage extends ConsumerWidget {
                   ),
                   const SizedBox(height: 8),
                   ShowAndSelectFolder(
-                    folder: state.downloadFolder,
+                    folder: settingsState.downloadFolder,
                     onSelected: (value) async {
                       await settingsController.setDownloadFolder(value);
                     },
@@ -157,7 +157,7 @@ class SettingsPage extends ConsumerWidget {
                   ),
                   const SizedBox(height: 8),
                   ShowAndSelectFolder(
-                    folder: state.otrFolder,
+                    folder: settingsState.otrFolder,
                     onSelected: (value) async {
                       await settingsController.setOtrFolder(value);
                     },
@@ -169,7 +169,7 @@ class SettingsPage extends ConsumerWidget {
                   ),
                   const SizedBox(height: 8),
                   ShowAndSelectFolder(
-                    folder: state.videoFolder,
+                    folder: settingsState.videoFolder,
                     onSelected: (value) async {
                       await settingsController.setVideoFolder(value);
                     },
@@ -181,7 +181,7 @@ class SettingsPage extends ConsumerWidget {
                   ),
                   const SizedBox(height: 8),
                   ShowAndSelectFile(
-                    filename: state.avidemuxApp,
+                    filename: settingsState.avidemuxApp,
                     onSelected: (value) async {
                       await settingsController.setAvidemuxApp(value);
                     },
@@ -193,7 +193,7 @@ class SettingsPage extends ConsumerWidget {
                   ),
                   const SizedBox(height: 8),
                   ShowAndSelectFile(
-                    filename: state.otrdecoderBinary,
+                    filename: settingsState.otrdecoderBinary,
                     onSelected: (value) async {
                       await settingsController.setOtrdecoderBinary(value);
                     },
