@@ -169,6 +169,22 @@ class ListTilePullDownMenu extends ConsumerWidget {
         ),
         const MacosPulldownMenuDivider(),
         MacosPulldownMenuItem(
+          title: const Text('Öffne Video in Avidemux'),
+          enabled: otrData.decodedBasename != null &&
+              otrData.cutlistBasename == null,
+          onTap: () => appController.openVideoInAvidemux(
+            otrData.decodedBasename!,
+          ),
+        ),
+        MacosPulldownMenuItem(
+          title: const Text('Kopiere Video in Files'),
+          enabled: otrData.decodedBasename != null && otrData.isCutted,
+          onTap: () => appController.copyCutVideo(
+            otrData.name,
+          ),
+        ),
+        const MacosPulldownMenuDivider(),
+        MacosPulldownMenuItem(
           title: const Text('Zeige otrkey Datei im Finder'),
           enabled: otrData.otrkeyBasename != null,
           onTap: () =>

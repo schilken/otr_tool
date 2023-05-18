@@ -271,6 +271,33 @@ class AppController extends Notifier<AppState> {
     }
     await scanFolder();
   }
+
+  Future<void> openVideoInAvidemux(String videoFilename) async {
+    final filePath = p.join(_settingsState.otrFolder, videoFilename);
+    final appName = p.basename(_settingsState.avidemuxApp);
+    // if (!File(appName).existsSync()) {
+    //   debugPrint('does not exist: $appName');
+    //   return;
+    // }
+
+    if (await File(filePath).exists()) {
+      try {
+        final process = await Process.run('open', ['-a', appName, filePath]);
+        if (process.exitCode != 0) {
+          debugPrint('openVideoInAvidemux stderr: ${process.stderr}');
+        }
+      } on Exception catch (e) {
+        debugPrint('openVideoInAvidemux $e');
+      }
+    } else {
+      throw 'File does not exist: $filePath';
+    }
+  }
+
+  Future<void> copyCutVideo(String name) async {
+    await reScanFolder();
+    await moveToTrashOrToMovies(name);
+  }
 }
 
 final appControllerProvider = NotifierProvider<AppController, AppState>(() {
